@@ -1,0 +1,371 @@
+:root{
+    --fondo: #e0a617;
+    --sombra: #BB0081;
+    --claro: #BB0081;
+    --oscuro: #BB0081;
+    --bg: #1c3ea9;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+body {
+    font-family: Arial, sans-serif;
+    background: black;
+    /* background: url('/assets/images/bg/fondo.jpg'); */
+    /* background-size: cover; */
+    /* color: white; */
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+p{
+    margin: 0.25rem;
+}
+
+.bg-header {
+    /* background: linear-gradient(180deg, #250431 30%, #4F0D4D);
+    box-shadow: black 5px 0px 15px; */
+    background: var(--bg);
+}
+header .logo img {
+    width: 100px;
+}
+header nav ul {
+    display: flex;
+    list-style: none;
+}
+header nav ul li {
+    margin: 0 15px;
+}
+header nav ul li a {
+    color: black;
+    text-decoration: none;
+    font-weight: bolder;
+}
+header .sponsors{
+    display: flex;
+    align-items: center;
+}
+header .sponsors img {
+    width: 40px;
+}
+.navbar-toggler-icon{
+    filter: brightness(0) invert(1);
+}
+main {
+    text-align: center;
+    padding: 30px 0 10px;
+}
+.comprar-tickets{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    /* margin-top: 5px; */
+}
+.comprar-tickets a {
+    display: flex;
+    max-width: max-content;
+    padding: 8px 30px;
+    margin: 0px 0px 10px;
+    background: linear-gradient(180deg, var(--claro) 15%, var(--oscuro));
+    color: white!important;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 8px;
+/*    box-shadow: black 0px 0px 5px inset;*/
+    justify-content: center;
+    align-items: center;
+    transition: all 0.15s ease-in-out;
+}
+.comprar-tickets a i{
+    margin-right: 10px;
+}
+.comprar-tickets a:hover {
+    font-weight: bolder;
+    cursor: pointer;
+    transform: scale(1.05) rotate(0.01turn);
+}
+.btn-ticket {
+    background: linear-gradient(180deg, var(--claro) 15%, var(--oscuro));
+    border-radius: 24px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white!important;
+    box-shadow: black 0px 0px 5px inset;
+    transition: all 0.25s linear;
+}
+.btn-ticket:hover {
+    color: white;
+    font-weight: bolder;
+    transform: scale(1.05) rotate(-0.01turn);
+}
+.nav{
+    align-items: center;
+}
+.whatsapp {
+    position:fixed;
+    bottom:15px;
+    /* right:30px; */
+    left: 1px;
+    /* background-color:#25d366; */
+    color:#FFF;
+    text-align:center;
+    z-index:100;
+}
+.whatsapp img{
+    width:65px;
+    height:65px;
+}
+.social_links_footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 5px;
+}
+.social_links_footer ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.social_links_footer ul li img {
+    display: block;
+    max-width: 40px;
+}
+footer {
+    background-color: var(--bg);
+    text-align: center;
+    padding: 10px 0;
+}
+footer .img-brand{
+    max-height: 30px;
+    margin: 15px 0;
+}
+footer .footer-links a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 5px 0;
+}
+.footer-links{
+    margin: 30px 0;
+    flex-direction: column;
+    align-items: center;
+}
+footer p {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: white;
+}
+footer a{
+    color: white;
+}
+.w-80{
+    width: 50% !important;
+}
+.w-80{
+    width: 80% !important;
+}
+.w-90{
+    width: 90% !important;
+}
+@media (min-width: 768px){
+    .social_links_footer ul li img {
+        max-width: 65px;
+    }
+}
+@media (min-width: 992px){
+    main {
+        padding: 20px 0;
+    }
+    header .sponsors img {
+        width: 60px;
+    }
+    footer .img-brand{
+        max-height: 70px;
+    }
+    .w-lg-75{
+        width: 75% !important;
+    }
+    .w-lg-100{
+        width: 100% !important;
+    }
+    /* .comprar-tickets{
+        margin-top: 20px;
+    }  */
+    .comprar-tickets a {
+        font-size: 1.5em;
+    }
+    footer {
+        padding: 20px 0 30px;
+        margin-top: 10px;
+    }
+}
+@media (max-width: 991px){
+    .navbar-collapse{
+        display: flex !important;
+        flex-direction: column;
+        position: fixed;
+        left: 0px;
+        bottom: 0px;
+        width: 100%;
+        max-width: 350px;
+        height: 100vh;
+        padding: 80px 15px;
+        /* background: linear-gradient(180deg, #250431 30%, #4F0D4D); */
+        background: var(--fondo);
+        transform: translateX(-100%);
+        transition: all .4s ease;
+    }
+    .navbar-collapse.show{
+        transform: translateX(0);
+    }
+    .navbar-collapse .navbar-nav{
+        height: 100%;
+        width: 100%;
+        align-items: flex-start;
+    }
+    .navbar-collapse .navbar-nav li:not(:last-child){
+        margin-bottom: 5px;
+    }
+    .navbar-collapse .navbar-nav li:last-child{
+        margin-top: 15px;
+    }
+    .navbar-collapse .navbar-nav li a:not(.btn){
+        display: block;
+        color: #fff;
+        padding: 10px 0;
+    }
+    .navbar-collapse .navbar-toggler{
+        margin-left: auto;
+        margin-bottom: 30px
+    }
+    .navbar-collapse .navbar-toggler svg{
+        width: 20px;
+        height: 20px;
+    }
+}
+
+
+.wrapper {
+	/* padding-top: 40px; */
+	padding-bottom: 40px;
+}
+.wrapper:focus {
+	outline: 0;
+}
+
+.clash-card {
+	background: white;
+	width: 350px;
+	display: inline-block;
+	margin: auto;
+	border-radius: 19px;
+	position: relative;
+	text-align: center;
+	box-shadow: -1px 15px 30px -12px black;
+	z-index: 10;
+}
+
+.clash-card__image {
+	position: relative;
+	height: 540px;
+	margin-bottom: 100px;
+	border-top-left-radius: 14px;
+	border-top-right-radius: 14px;
+}
+
+.clash-card__image--barbarian {
+	background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/195612/barbarian-bg.jpg");
+	background-size: cover;
+}
+.clash-card__image--barbarian img {
+	width: 350px;
+	/* position: absolute;
+	top: 0px;
+	left: 0px; */
+}
+
+.clash-card__level {
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: 700;
+	margin-bottom: 3px;
+}
+
+.clash-card__level--barbarian {
+	color: #EC9B3B;
+}
+
+.clash-card__unit-name {
+	font-size: 26px;
+	color: black;
+	font-weight: 900;
+	margin-bottom: 5px;
+}
+
+.clash-card__unit-description {
+	padding: 5px 20px;
+	/* margin-bottom: 10px; */
+}
+
+.clash-card__unit-stats--barbarian {
+	background: var(--sombra);
+}
+.clash-card__unit-stats--barbarian .one-third:first-child {
+	border-right: 1px solid #BD7C2F;
+}
+
+.clash-card__unit-stats {
+	color: white;
+	font-weight: 700;
+	border-bottom-left-radius: 14px;
+	border-bottom-right-radius: 14px;
+}
+.clash-card__unit-stats .one-third {
+	width: 50%;
+	float: left;
+	padding: 20px 15px;
+}
+.clash-card__unit-stats sup {
+	position: absolute;
+	bottom: 4px;
+	font-size: 45%;
+	margin-left: 2px;
+}
+.clash-card__unit-stats .stat {
+	position: relative;
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+.clash-card__unit-stats .stat-value {
+	text-transform: uppercase;
+	font-weight: 400;
+	font-size: 12px;
+}
+.clash-card__unit-stats .no-border {
+	border-right: none;
+}
+
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+}
+
+.progress-bar {
+    overflow: visible !important;
+/*    color: #070707 !important;*/
+    color: black!important;
+}
