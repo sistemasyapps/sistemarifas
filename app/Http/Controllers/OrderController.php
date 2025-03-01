@@ -22,21 +22,6 @@ class OrderController extends Controller
             cant DESC
         limit 10");
 
-        $add=[
-            // (object) array(
-            //     "client_id" => 9991,
-            //     "cant" => "686",
-            //     "nombre" => "JOHAN ALIGIERI"
-            // ),
-            // (object) array(
-            //     "client_id" => 9990,
-            //     "cant" => "295",
-            //     "nombre" => "JOSE RODRIGUEZ"
-            // ),
-        ];
-
-        array_push($top,...$add);
-        // $top[1]->cant = 475;
         usort($top, fn ($a, $b) => $a->cant < $b->cant);
 
         $data = [
