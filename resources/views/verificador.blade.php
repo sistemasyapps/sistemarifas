@@ -1,8 +1,9 @@
-@extends('layout.app')
+@extends('nuevo.layout')
 
-  <link href="{{asset('assets/css/verificador.css')}}" rel="stylesheet">
+  <link href="{{asset('assets/css/verificador.css?ver=1')}}" rel="stylesheet">
 
 @section("content") 
+  @include('nuevo.header')
   <div class="contact-section">
     <div class="container contact-container text-center">
       <div class="col-11 contact-title-section text-center card">
@@ -10,6 +11,7 @@
         <p class="contact-subtitle mb-2">DE BOLETOS</p>
         <div id="boxsearchcel" >
           <form>
+            @if(!isset($links) || count($links) == 0)
             <div class="input-field col-12 s12 m6">
               <input placeholder="" id="findPhone" name="cedula" type="number" class="form-control" maxlength="16" required="">
               <label for="findPhone" class="active">Introduzca número de c&eacute;dula</label>
@@ -19,6 +21,7 @@
                     <i class="fa fa-search" aria-hidden="true"></i> Buscar
                 </button>
             </div>
+            @endif
             @foreach ($links as $i => $link)
 
               @if($link->estatus == '0')
@@ -28,8 +31,10 @@
               @endif
 
               @if($link->estatus == '1')
-              <a href='https://ganaconandreaaular.com/ticket/{{$link->uuid}}' target="_blank">
-                https://ganaconandreaaular.com/ticket/{{$link->uuid}}
+              <h2>Haga clic en el link de abajo para ver sus tickets</h2>
+              <hr />
+              <a href="{{config('app.url')}}/ticket/{{$link->uuid}}" target="_blank">
+                {{config('app.url')}}/ticket/{{$link->uuid}}
               </a>
               <hr />
               @endif

@@ -6,9 +6,13 @@ use App\Models\Order;
 use App\Helpers\RaffleHelper;
 use App\Models\Option;
 use App\Models\Raffle;
+use App\Models\MetodoPago;
+use App\Models\Rrss;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class WebsiteController extends Controller
 {
@@ -16,22 +20,76 @@ class WebsiteController extends Controller
     {
         $raffles = RaffleHelper::getActiveRaffles();
 
-        $array = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiempre","Octubre","Noviembre","Diciembre"];
+        $meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiempre","Octubre","Noviembre","Diciembre"];
 
-        foreach($raffles as $i => $raffle){
-            $raffle->queda = $this->getDisponibles($raffle);
-            $raffle->barra = $this->getBarra($raffle)->barra;
-            $raffle->mes = $array[date("n",strtotime($raffle->fecha_final)) - 1];
-        }
+        $rafflesData = $raffles->mapWithKeys(function($raffle) {
+            return [$raffle->id => $this->getBarraOptimizado($raffle)];
+        });
 
-        $data = [
-            "BCV" => (Option::where("clave","BCV")->pluck("valor")->toArray())[0],
-            "whatsapp" => (Option::where("clave","Whatsapp")->pluck("valor")->toArray())[0],
-            "patrocinadores" => Sponsor::All(),
-            "raffles" => $raffles,
-        ];
+        $staticData = Cache::remember('home_static_data', 1440, function() {
+            $options = Option::All()->pluck('valor', 'clave');
+            $whatsapp = $options->get('Whatsapp');
+            $logo = $options->get('logo');
 
-        return view('home',$data);
+            return [
+                'whatsapp' => $whatsapp,
+                'logo' => $logo,
+                'patrocinadores' => Sponsor::all(['id', 'nombre', 'imagen']),
+                'rrss' => Rrss::where("estatus",1)->get(['id', 'tipo', 'link'])
+            ];
+        });
+
+        $raffles->each(function($raffle) use ($rafflesData, $meses) {
+            $barra = ($raffle->estatus_compra == 0) ? 0 : $rafflesData[$raffle->id];
+
+            $raffle->queda = $rafflesData[$raffle->id] * 100;
+            $raffle->barra = ($barra < 0.00) ? 0.00 : $barra;
+            $raffle->mes = $meses[date("n", strtotime($raffle->fecha_final)) - 1];
+        });
+
+        return view('home', array_merge($staticData, [
+            'raffles' => $raffles
+        ]));
+    }
+
+    public function HomeNuevo()
+    {
+        $raffles = RaffleHelper::getActiveRaffles();
+        $currentRaffle = $raffles->first();
+        $remainingRaffles = array_slice($raffles->toArray(), 1);
+
+        $meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiempre","Octubre","Noviembre","Diciembre"];
+
+        $rafflesData = $raffles->mapWithKeys(function($raffle) {
+            return [$raffle->id => $this->getBarraOptimizado($raffle)];
+        });
+
+         $staticData = Cache::remember('home_static_data', 1440, function() {
+            $options = Option::All()->pluck('valor', 'clave');
+            $whatsapp = $options->get('Whatsapp');
+            $logo = $options->get('logo');
+
+            return [
+                'whatsapp' => $whatsapp,
+                'logo' => $logo,
+                'patrocinadores' => Sponsor::all(['id', 'nombre', 'imagen']),
+                'rrss' => Rrss::where("estatus",1)->get(['id', 'tipo', 'link'])
+            ];
+        });
+
+        $raffles->each(function($raffle) use ($rafflesData, $meses) {
+            $barra = ($raffle->estatus_compra == 0) ? 0 : $rafflesData[$raffle->id];
+
+            $raffle->queda = $rafflesData[$raffle->id] * 100;
+            $raffle->barra = ($barra < 0.00) ? 0.00 : $barra;
+            $raffle->mes = $meses[date("n", strtotime($raffle->fecha_final)) - 1];
+            $raffle->dia = date("d", strtotime($raffle->fecha_final));
+        });
+
+        return view('nuevo.nuevo', array_merge($staticData, [
+            'raffle' => $currentRaffle,
+            'raffles' => $remainingRaffles
+        ]));
     }
 
     public function HomeTest()
@@ -42,10 +100,17 @@ class WebsiteController extends Controller
     public function RafflePage(Raffle $raffle)
     {
         $currentRaffle = RaffleHelper::getCurrentRaffle();
-        if($raffle->id > 0){
+       
+        $isLogged = false;
+        $show = false;
+
+        if (Auth::check()) {
+            $isLogged = true;
+        }
+
+         if($raffle->id > 0){
             $currentRaffle = $raffle;
         }
-        
 
         if($currentRaffle == null){
             return redirect('/');
@@ -53,11 +118,24 @@ class WebsiteController extends Controller
 
         $disponibles = $this->getDisponibles($currentRaffle);
 
+        if( ($disponibles < 9999 && $currentRaffle->estatus_compra == 1) || $isLogged) {
+            $show = true;
+        }
+
+        $options = Option::All()->pluck('valor', 'clave');
+        $logo = $options->get('logo');
+        $bcv = $options->get('BCV');
+        $cantidad_minima = $options->get('cantidad_minima');
+
         $data = [
-            "BCV" => (Option::where("clave","BCV")->pluck("valor")->toArray())[0],
+            "BCV" => $bcv,
+            "cantidad_minima" => $cantidad_minima,
+            "logo" => $logo,
             "Barra" => $this->getBarra($currentRaffle)->barra,
+            "metodos" => MetodoPago::where("estatus",1)->get(),
             "rifa" => $currentRaffle,
-            "queda" => $disponibles
+            "queda" => $currentRaffle->estatus_compra == 1 ? $disponibles : 0,
+            "logged" => $isLogged
         ];
         
         return view('compra',$data);
@@ -65,13 +143,16 @@ class WebsiteController extends Controller
 
     public function Reporte(string $uuid)
     {
+        $options = Option::All()->pluck('valor', 'clave');
+        $logo = $options->get('logo');
         Log::info('Orden para reporte uuid: '.$uuid);
         try{
             $order = Order::with("client","numbers")->where("uuid","=",$uuid)->first();
-            $numbers = $order->numbers->pluck('numero_generado')->toArray();
+            $numbers = $order->numbers;
             $data = [
                 "order" => $order,
                 "numbers" => $numbers,
+                "logo" => $logo,
                 "from" => "url",
             ];
         } catch(Exception $e) {
@@ -108,12 +189,38 @@ class WebsiteController extends Controller
             ->get();
         }
         
+        $options = Option::All()->pluck('valor', 'clave');
+        $whatsapp = $options->get('Whatsapp');
+        $logo = $options->get('logo');
+
         $data = [
-            "whatsapp" => (Option::where("clave","Whatsapp")->pluck("valor")->toArray())[0],
+            "whatsapp" => $whatsapp,
+            "logo" => $logo,
             "patrocinadores" => Sponsor::All(),
             "links" => $links,
-            "raffle" => $raffle
+            "raffle" => $raffle,
+            "rrss" => Rrss::where("estatus",1)->get(),
         ];
         return view('verificador',$data);
+    }
+
+    private function getBarraOptimizado(Raffle $currentRaffle){
+    
+        $cacheKey = "raffle_progress_{$currentRaffle->id}";
+
+        return Cache::remember($cacheKey, now()->addMinutes(1), function () use ($currentRaffle) {
+            $percentage = DB::table('orders')
+                ->where('raffle_id', $currentRaffle->id)
+                ->where('estatus', '<>', 2)
+                ->sum('cantidad');
+
+            if ($currentRaffle->cantidad_max <= 0) {
+                return 100;
+            }
+
+            $progress = 100 - (($percentage * 100) / $currentRaffle->cantidad_max);
+            
+            return round($progress, 2);
+        });
     }
 }

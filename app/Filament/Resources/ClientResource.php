@@ -38,9 +38,7 @@ class ClientResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('telefono')
-                    ->tel()
-                    ->required()
-                    ->maxLength(11),
+                    ->maxLength(255),
             ]);
     }
 

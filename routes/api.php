@@ -1,26 +1,29 @@
 <?php
 
-use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\UploadController;
+use App\Http\Controllers\Api\FirebasePushController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::get('/user', function (Request $request) {
     return $request->user();
+})->middleware('auth:sanctum');
+
+Route::get('/',function(Request $request) {
+    echo 'Wokring';
 });
 
 Route::post('/orderCliente', [OrderController::class, 'create']);
 Route::post('/orderAdmin/{order}/approve', [OrderController::class, 'approve']);
 Route::post('/orderAdmin/{order}/cancel', [OrderController::class, 'cancel']);
+Route::post('/orderAdmin/{order}/returnOrder', [OrderController::class, 'returnOrder']);
 Route::post('/orderAdmin/{order}/delete', [OrderController::class, 'delete']);
+Route::post('/orderAdmin/{order}/modifyOrder', [OrderController::class, 'modifyOrder']);
+
 Route::get('/getBarra/{raffle?}', [OrderController::class,'getBarra'])->name("barraRealTime");
+
+Route::post('/uploadLogo', [UploadController::class, 'uploadLogo']);
+
+Route::post('/toTopic/{token}', [FirebasePushController::class, 'toTopic']);
+Route::get('/pruebaNotificaction', [FirebasePushController::class, 'testSending']);

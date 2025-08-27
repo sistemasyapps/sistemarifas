@@ -29,9 +29,16 @@ class RaffleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Radio::make('estatus')
+                    ->required()
                     ->options([
                         '0' => 'Cerrada',
                         '1' => 'Activa',
+                    ]),
+                    Forms\Components\Radio::make('estatus_compra')
+                    ->required()
+                    ->options([
+                        '0' => 'Cerrar Compras',
+                        '1' => 'Activar Compras',
                     ]),
                 Forms\Components\TextInput::make('cantidad_max')
                     ->required()
@@ -50,12 +57,8 @@ class RaffleResource extends Resource
                     ->native(false)
                     ->displayFormat("d/m/Y")
                     ->required(),
-                Forms\Components\FileUpload::make('imagen_texto'),
                 Forms\Components\FileUpload::make('imagen_premio'),
                 Forms\Components\FileUpload::make('imagen_banner'),
-                TinyEditor::make('descripcion')
-                    ->profile('full')
-                    ->columnSpan('full')
             ]);
     }
 

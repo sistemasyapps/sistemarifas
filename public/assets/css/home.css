@@ -3,7 +3,7 @@
     --sombra: #BB0081;
     --claro: #BB0081;
     --oscuro: #BB0081;
-    --bg: #1c3ea9;
+    --bg: #BC267C;
 }
 * {
     margin: 0;
@@ -110,19 +110,25 @@ main {
 .nav{
     align-items: center;
 }
-.whatsapp {
-    position:fixed;
-    bottom:15px;
-    /* right:30px; */
+
+
+.whatsapp, .devolucion {
+    position:fixed;   
     left: 1px;
-    /* background-color:#25d366; */
     color:#FFF;
     text-align:center;
     z-index:100;
 }
-.whatsapp img{
-    width:65px;
-    height:65px;
+
+.devolucion{    
+    bottom:100px;
+}
+.whatsapp{
+    bottom:15px;
+}
+.whatsapp img, .devolucion img{
+    width:100px;
+    height:100px;
 }
 .social_links_footer ul {
     list-style: none;
@@ -202,7 +208,7 @@ footer a{
         margin-top: 20px;
     }  */
     .comprar-tickets a {
-        font-size: 1.5em;
+        font-size: 1.2em;
     }
     footer {
         padding: 20px 0 30px;
@@ -265,7 +271,7 @@ footer a{
 
 .clash-card {
 	background: white;
-	width: 350px;
+	width: 300px;
 	display: inline-block;
 	margin: auto;
 	border-radius: 19px;
@@ -278,7 +284,7 @@ footer a{
 .clash-card__image {
 	position: relative;
 	height: 540px;
-	margin-bottom: 100px;
+	margin-bottom: 30px;
 	border-top-left-radius: 14px;
 	border-top-right-radius: 14px;
 }
@@ -288,7 +294,7 @@ footer a{
 	background-size: cover;
 }
 .clash-card__image--barbarian img {
-	width: 350px;
+	width: 300px;
 	/* position: absolute;
 	top: 0px;
 	left: 0px; */

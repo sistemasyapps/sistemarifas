@@ -7,6 +7,10 @@
             tag="a" target="_blank">
                 Imprimir Listado
             </x-filament::button>
+            <x-filament::button color="success" href="{{config('app.url')}}"
+            tag="a" target="_blank">
+                Link de Compra
+            </x-filament::button>
             
         </div>
         @endif

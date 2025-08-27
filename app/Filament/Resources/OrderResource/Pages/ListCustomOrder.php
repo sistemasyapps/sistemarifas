@@ -22,18 +22,14 @@ class ListCustomOrder extends Page
     {
         $this->allRaffles = RaffleHelper::getLastTen();
 
-        
         $estatus = $_GET["estatus"] ?? 0;
         $raffleId = $_GET["rifa_select"] ?? $this->allRaffles[0]->id;
 
         $this->records = Order::with("client","raffle")
+        ->selectRaw('orders.*, (SELECT COUNT(*) FROM orders as o2 WHERE o2.ref_banco = orders.ref_banco AND o2.raffle_id = orders.raffle_id) as ref_repetido')
         ->where("estatus",$estatus)
         ->where("raffle_id",$raffleId)
         ->get();
-        
-        
-        
-        
         
     }
 }

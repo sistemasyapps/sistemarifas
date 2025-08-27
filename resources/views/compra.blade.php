@@ -6,7 +6,17 @@
     <title>{{config('app.name')}} - Comprar Boleto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="{{asset('assets/css/compra.css')}}?ver=<?php echo mktime(time()); ?>" rel="stylesheet">
+    <link href="{{asset('assets/css/compra.css')}}?ver=3" rel="stylesheet">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-56EB9E6237"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-56EB9E6237');
+    </script>
   </head>
   <body>
     <div class="wpb-content--blank">
@@ -44,12 +54,12 @@
                           </div>
                         </div>
                         
-                        <div class="wpb_raw_code wpb_content_element wpb_raw_html compra_manual d-none">
+                        <!-- <div class="wpb_raw_code wpb_content_element wpb_raw_html compra_manual d-none">
                           <div class="wpb_wrapper">
                           <h3 class="h3_responsive" style="text-align: center; color: white">Escriba los números a comprar</h3>
                           </div>
-                        </div>
-                        <div class="vc_row wpb_row vc_inner vc_row-fluid flex flex_row compra_manual d-none">
+                        </div> -->
+                        <!-- <div class="vc_row wpb_row vc_inner vc_row-fluid flex flex_row compra_manual d-none">
                           <div class="wpb_column container-fluid vc_col-sm-3">
                             <div class="vc_column-inner">
                               <div class="wpb_wrapper">
@@ -59,8 +69,8 @@
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="vc_row wpb_row vc_inner vc_row-fluid flex flex_row compra_auto mt-3">
+                        </div> -->
+                        <!-- <div class="vc_row wpb_row vc_inner vc_row-fluid flex flex_row compra_auto mt-3">
                           <div class="wpb_column container-fluid vc_col-sm-3">
                             <div class="vc_column-inner">
                               <div class="wpb_wrapper">
@@ -74,7 +84,7 @@
                                 <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
                                   <div class="wpb_wrapper">
                                     <div class="flex center flex-center">
-                                      <input type="text" onblur="validar_cant(this.value)" onkeyup="put_cant(this.value)" id="cant_boletos" name="cant_boletos" value="2" class="form-control">
+                                      <input type="text" onblur="validar_cant(this.value)" onkeyup="put_cant(this.value)" id="cant_boletos" name="cant_boletos" value="{{$cantidad_minima}}" class="form-control">
                                     </div>
                                   </div>
                                 </div>
@@ -88,50 +98,30 @@
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
+                        </div> -->
+                       <!--  <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
                           <div class="wpb_wrapper">
-                            <h3 class="h4_responsive ptop_0" style="text-align: center; color: white">Cantidad mínima permitida: <span class="yellow_color">2</span></h3>
+                            <h3 class="h4_responsive ptop_0" style="text-align: center; color: white">Cantidad mínima permitida: <span class="yellow_color">{{$cantidad_minima}}</span></h3>
                           </div>
-                        </div>
+                        </div> -->
                         <div class="custom-container">
                           <h4>Métodos de Pago</h4>
                           <div class="info_boletos" style="margin-bottom: 15px;">
-                            <div class="info">
-                              <h4 class="h3_responsive text-white" style="font-size: 20px!important">Banco</h4> 
-                              <h4 class="h3_responsive">Venezuela 0102</h4>
+                            <div class="d-flex" style="flex-direction: row;align-content: center; justify-content: center; align-items: center;flex-wrap: wrap;">
+                              @foreach($metodos as $i => $metodo)
+                              <div style="padding: 5px; cursor: pointer;" id="metodo_{{$metodo->id}}" onclick="showPaymentData(this,'{{$metodo}}')">
+                                <div style="padding: 5px; margin: 5px;">
+                                  <img src="{{Storage::url($metodo->logo)}}" style="width: 70px; height: 70px; border-radius: 100%; border: 2px solid white" class="img_payment">
+                                </div>
+                                <div style="text-align: center">
+                                  {!!$metodo['metodo']!!} <button class="btn btn-primary" onclick="copiarTexto('{!!$metodos[0]['descripcion']!!}')" type="button">Copiar Datos</button>
+                                </div>
+                              </div>
+                              @endforeach
                             </div>
-                            <div class="info">
-                              <h4 class="h3_responsive text-white" style="font-size: 20px!important">Teléfono</h4> 
-                              <h4 class="h3_responsive">04124426368</h4>
+                            <div id="payment_data" style="text-align: center; font-size: 26px!important; background: yellow; padding: 2px; color: black!important; font-weight: bold;">
+                              {!!$metodos[0]['descripcion']!!}
                             </div>
-                            <div class="info">
-                              <h4 class="h3_responsive text-white" style="font-size: 20px!important">Cédula</h4> 
-                              <h4 class="h3_responsive">21136601</h4>
-                            </div>
-                            <div class="d-grid gap-2 col-12 mx-auto">
-                              <button type="button" class="btn btn-secondary" onclick="copiarAlPortapapeles('Venezuela 0102 04124426368 21136601')">
-                                Copiar Pago Movil <i class="fa fas fa-copy"></i>
-                              </button>
-                            </div>
-                            <!-- <div class="info">
-                              <h4 class="h3_responsive text-white" style="font-size: 20px!important">Zelle: </h4>
-                              <h4 class="h3_responsive">zamarripanancy@hotmail.com</h4>
-                            </div>
-                            <div class="d-grid gap-2 col-12 mx-auto">
-                              <button type="button" class="btn btn-secondary" onclick="copiarAlPortapapeles('zamarripanancy@hotmail.com')">
-                                Copiar Zelle <i class="fa fas fa-copy"></i>
-                              </button>
-                            </div>
-                            <div class="info">
-                              <h4 class="h3_responsive text-white" style="font-size: 20px!important">Binance </h4>
-                              <h4 class="h3_responsive">nailethlopez09@gmail.com</h4>
-                            </div>
-                            <div class="d-grid gap-2 col-12 mx-auto">
-                              <button type="button" class="btn btn-secondary" onclick="copiarAlPortapapeles('nailethlopez09@gmail.com')">
-                                Copiar Binance <i class="fa fas fa-copy"></i>
-                              </button>
-                            </div> -->
                           </div>
                         </div>
                       </div>
@@ -151,7 +141,12 @@
                           <div class="wpb_wrapper">
                             <div class="info_boletos">
                               <div class="info">
-                                <h3 class="h3_responsive text-white" style="font-size: 20px!important">Monto Bs </h3> <h3 class="h3_responsive" id="final_bs"></h3>
+                                <h3 class="h3_responsive text-white" style="font-size: 20px!important">Tickets a Comprar</h3> 
+                                <h3 class="h3_responsive"><?=$_GET["q"]?></h3>
+                              </div>
+                              <div class="info">
+                                <h3 class="h3_responsive text-white" style="font-size: 20px!important">Monto Bs </h3> 
+                                <h3 class="h3_responsive" id="final_bs"></h3>
                               </div>
                             </div>
                           </div>
@@ -161,34 +156,38 @@
                         <div>
                           <div class="container-fluid">
                             <div class="roW d-flex" style="gap: 10px">
-                              <div class="col-6">
+                              <div class="col-12">
                                 <label>Cédula</label>
-                                <input type="number" id="cedula" onkeypress="return this.value.length <= 8" name="cedula" class="form-control" maxlength="9" placeholder="12345678">
-                              </div>
-                              <div class="col-6">
-                                <label>Nombre completo</label>
-                                <input type="text" onkeyup="put_persona(this.id,this.value)" id="nombre_completo" name="nombre_completo" class="form-control" maxlength="100">
+                                <input type="number" id="cedula" onkeypress="return this.value.length <= 8" name="cedula" class="form-control" maxlength="9" placeholder="Escriba su cédula">
                               </div>
                             </div>
                             <div class="roW d-flex" style="gap: 10px">
-                              <div class="col-6">
-                                <label>Correo</label>
-                                <input type="text" onblur="validateEmail(this.value)" onkeyup="put_persona(this.id,this.value)" id="email" name="email" class="form-control" maxlength="100">
+                              <div class="col-12">
+                                <label>Nombre completo</label>
+                                <input type="text" onkeyup="put_persona(this.id,this.value)" id="nombre_completo" name="nombre_completo" class="form-control" maxlength="100" placeholder="Escriba su nombre completo">
                               </div>
-                              <div class="col-6">
-                                <label>Teléfono</label>
-                                <input type="text" onkeyup="put_persona(this.id,this.value)" id="telefono" name="telefono" class="form-control" maxlength="20">
+                            </div>
+                            <div class="roW d-flex" style="gap: 10px">
+                              <div class="col-12">
+                                <label>Correo</label>
+                                <input type="text" onblur="validateEmail(this.value)" onkeyup="put_persona(this.id,this.value)" id="email" name="email" class="form-control" maxlength="100" placeholder="Escriba su correo de uso diario">
+                              </div>
+                            </div>
+                            <div class="roW d-flex" style="gap: 10px">
+                              <div class="col-12">
+                                <label>Teléfono/Whatsapp</label>
+                                <input type="text" onkeyup="put_persona(this.id,this.value)" id="telefono" name="telefono" class="form-control" maxlength="20" placeholder="Escriba su nro de Whatsapp">
                               </div>
                             </div>
                             
                             <div class="flex flex-column">
                               <div style="margin-bottom: 15px">
                                 <label>Capture Bancario</label>
-                                <input type="file" accept="image/*" id="archivo_pago" name="archivo_pago" onblur="put_pago(this.id,this.value)" class="form-control" style="font-weight: bold;">
+                                <input type="file" accept="image/jpeg,image/png,image/svg+xml" id="archivo_pago" name="archivo_pago" onblur="put_pago(this.id,this.value)" class="form-control" style="font-weight: bold;">
                               </div>
                               <div class="col-12">
                                 <label>Referencia Bancaria (Últimos 6 Dígitos)</label>
-                                <input type="text" onkeyup="put_pago(this.id,this.value)" id="ref" name="ref" class="form-control" maxlength="6">
+                                <input type="text" onkeyup="put_pago(this.id,this.value)" id="ref" name="ref" class="form-control" maxlength="6" placeholder="úlitmos 6 dígitos de la referencia">
                               </div>
                             </div>
                           </div>
@@ -202,7 +201,7 @@
               </div>
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="vc_row wpb_row vc_inner vc_row-fluid row">
-                  
+                  @if($queda < 9999 || $logged)
                   <div class="col-md-6 col-xs-6 col-sm-6" id="boton_comprar">
                     <div class="vc_column-inner">
                       <div class="wpb_wrapper">
@@ -210,7 +209,7 @@
                       </div>
                     </div>
                   </div>
-                  
+                  @endif
                   <div class="col-md-6 col-xs-6 col-sm-6">
                     <div class="vc_column-inner">
                       <div class="wpb_wrapper">
@@ -263,7 +262,7 @@
       <div class="vc_row-full-width vc_clearfix"></div>
       <div class="container-fluid _footer">
         <div class="py-1 d-flex justify-center justify-content-center">
-          <img src="{{asset('assets/images/logos/logo.png')}}" class="img" />
+          <img src="{{ Storage::url($logo)}}" class="img" />
         </div>
       </div>
       <div class="vc_row-full-width vc_clearfix"></div>
@@ -287,42 +286,49 @@
       let email = document.getElementById("email");
       let paso = 1;
       let quedan = 10000 - {{$queda}};
+      let cantidad_minima = {{$cantidad_minima}};
 
-      function consultarAPI() {
-        return new Promise((resolve, reject) => {
-          fetch('{{config("app.url")}}/api/getBarra/{{ $rifa->id }}')
-            .then(response => response.json())
-            .then(data => {
-              const {barra, queda} = data;
-              quedan = queda;
-              document.getElementById("barraRealTime").innerHTML = `QUEDAN ${barra} %`;
-              document.getElementById("barraRealTime").style.width = `${barra}%`;
+      // function consultarAPI() {
+      //   return new Promise((resolve, reject) => {
+      //     fetch('{{config("app.url")}}/api/getBarra/{{ $rifa->id }}')
+      //       .then(response => response.json())
+      //       .then(data => {
+      //         const {barra, queda} = data;
+      //         quedan = queda;
+      //         document.getElementById("barraRealTime").innerHTML = `QUEDAN ${barra} %`;
+      //         document.getElementById("barraRealTime").style.width = `${barra}%`;
               
-              if(queda <= 1){
-                document.getElementById("boton_comprar").style.visibility = "hidden";
-              }
+      //         if(queda <= 1){
+      //           document.getElementById("boton_comprar").style.visibility = "hidden";
+      //         }
 
-              resolve(data);
-            })
-            .catch(error => {
-              console.error('Error al consultar la API:', error);
-              reject(error);
-            });
-        });
+      //         resolve(data);
+      //       })
+      //       .catch(error => {
+      //         console.error('Error al consultar la API:', error);
+      //         reject(error);
+      //       });
+      //   });
+      // }
+
+      // setInterval(() => {
+      //   consultarAPI()
+      //     .then(data => {
+      //       console.log('Datos actualizados:', data);
+      //     })
+      //     .catch(error => {
+      //       console.error('Error en la actualización:', error);
+      //     });
+      // }, 2000); 
+
+      function copiarTexto(text){
+        navigator.clipboard.writeText(text)
+        .then(() => console.log("copiado"))
+        .catch(err => console.error("Error:", err));
       }
 
-      setInterval(() => {
-        consultarAPI()
-          .then(data => {
-            console.log('Datos actualizados:', data);
-          })
-          .catch(error => {
-            console.error('Error en la actualización:', error);
-          });
-      }, 1000); 
-
       const datos = {
-        cant_boletos: 2,
+        cant_boletos: <?= $_GET["q"] ?>,
         precio: {{ $rifa->precio }},
         // bcv: {{ $BCV }},
         persona: {
@@ -341,7 +347,7 @@
       calcular_total();
 
       function volver_comprar(){
-        cant_boletos.value = 2;
+        cant_boletos.value = cantidad_minima;
         document.getElementById("ref").value = "";
         // document.getElementById("fecha").value = "";
         document.getElementById("archivo_pago").value = "";
@@ -354,36 +360,14 @@
         paso = 1;
       }
 
-
-      function updateCountdown() {
-        const deadline = new Date('2024-05-31T13:59:59-04:00');
-        const now = new Date();
-        const nowUtc = now.getTime() + (now.getTimezoneOffset() * 60000);
-        const nowCaracas = new Date(nowUtc + (3600000 * -4));
-
-        const distance = deadline.getTime() - nowCaracas.getTime();
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById('countdown').innerHTML = "Quedan: " + days + "d:" + hours + "h:"+ minutes + "m:" + seconds + "s";
-
-        if (distance  < 0)
-        {
-          document.getElementById('boton_comprar_uno').remove();
-        }
-      }
-
-      function minus_cant(){
-        if(cant_boletos.value > 2){
-          cant_boletos.value--; 
-          datos.cant_boletos = parseInt(cant_boletos.value);
-          calcular_total();
-        }
+      // function minus_cant(){
+      //   if(cant_boletos.value > cantidad_minima){
+      //     cant_boletos.value--; 
+      //     datos.cant_boletos = parseInt(cant_boletos.value);
+      //     calcular_total();
+      //   }
         
-      }
+      // }
 
       function validateMin(_this,length) {
         const isValid = _this.value.length == length;
@@ -395,21 +379,21 @@
         }
       }
 
-      function sum_cant(){
+      // function sum_cant(){
 
-        if(cant_boletos.value > 199){
-          Swal.fire("la compra máxima es de 200 boletos");
-          return;
-        }
+      //   if(cant_boletos.value > 199){
+      //     Swal.fire("la compra máxima es de 200 boletos");
+      //     return;
+      //   }
 
-        if(cant_boletos.value > quedan){
-          Swal.fire("no hay boletos suficientes");
-          return;
-        }
-        cant_boletos.value++; 
-        datos.cant_boletos = parseInt(cant_boletos.value);
-        calcular_total();
-      }
+      //   if(cant_boletos.value > quedan){
+      //     Swal.fire("no hay boletos suficientes");
+      //     return;
+      //   }
+      //   cant_boletos.value++; 
+      //   datos.cant_boletos = parseInt(cant_boletos.value);
+      //   calcular_total();
+      // }
 
       function put_cant(value) {
         datos.cant_boletos = parseInt(value);
@@ -425,45 +409,31 @@
 
       function validar_cant(value){
         valueInt = parseInt(value);
-        if(valueInt < 2 || value == "" || value == null || value == "undefined"){
-          Swal.fire("La compra mínima es de 2 boletos");
-          cant_boletos.value = 2;
-          put_cant(2);
+        if(valueInt < cantidad_minima || value == "" || value == null || value == "undefined"){
+          Swal.fire(`La compra mínima es de ${cantidad_minima} boletos`);
+          cant_boletos.value = cantidad_minima;
+          put_cant(cantidad_minima);
         }
 
         if(valueInt > 200){
           Swal.fire("La compra máxima es de 200 boletos");
-          cant_boletos.value = 2;
-          put_cant(2);
+          cant_boletos.value = cantidad_minima;
+          put_cant(cantidad_minima);
         }
 
         if(valueInt > quedan){
           Swal.fire("no hay boletos suficientes");
-          cant_boletos.value = 2;
-          put_cant(2);
+          cant_boletos.value = cantidad_minima;
+          put_cant(cantidad_minima);
         }
 
         calcular_total();
       }
 
-      function comprar_ticket(){
-        const total = datos.precio * datos.cant_boletos;
-        const total_usd = datos.precio * datos.cant_boletos;
-
-        // jQuery("#span_boletos").html(`${datos.cant_boletos}`)
-        // jQuery("#precio_boletos").html(`$${datos.precio} USD`)
-        // jQuery("#bcv").html(`${datos.bcv}`)
-        // jQuery("#total_boletos").html(`${total.toFixed(2)} Bs.`)
-        jQuery("#final_bs").html(`${total.toFixed(2)} Bs.`)
-        // jQuery("#final_usd").html(`$${total_usd} USD`)
-        
-        // paso_adelante();
-      }
-
       function calcular_total() {
         // validar_numeros_manual();
         const total = datos.precio * datos.cant_boletos;
-        const total_usd = datos.precio * datos.cant_boletos;
+        // const total_usd = datos.precio * datos.cant_boletos;
         jQuery("#final_bs").html(`${total.toFixed(2)} Bs.`);
       }
 
@@ -565,6 +535,7 @@
         // formData.append("ref_fecha", jQuery("#fecha").val());
 
         const linkGuardar = "{{config('app.url')}}/api/orderCliente";
+        let UUID_COMPRA;
 
         _this.disabled = true;
         _this.innerHTML = "Realizando Compra....";
@@ -578,28 +549,21 @@
         .then( res => {
           console.log(res)
           if(res.success == true){
+            UUID_COMPRA = res.compra.uuid;
             let timerInterval;
-              Swal.fire({
-                title: "Realizando Compra...",
-                timer: 1500,
-                timerProgressBar: true,
-                didOpen: () => {
-                  Swal.showLoading();
-                  const timer = Swal.getPopup().querySelector("b");
-                  timerInterval = setInterval(() => {
-                    timer.textContent = `${Swal.getTimerLeft()}`;
-                  }, 100);
-                },
-                willClose: () => {
-                  clearInterval(timerInterval);
-                }
-              }).then((result) => {
-                /* Read more about handling dismissals below */
-                if (result.dismiss === Swal.DismissReason.timer) {
-                  console.log("se cerró la ventana y se hizo la compra");
-                  show_hide("adelante");
-                }
-              });
+            Swal.fire({
+              title: "Realizando Compra...",
+              timer: 1500,
+              timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading();
+              }
+            }).then((result) => {
+              if (result.dismiss === Swal.DismissReason.timer) {
+                show_hide("adelante");
+                showTickets(UUID_COMPRA);
+              }
+            });
           }else {
             Swal.fire({
               icon: "error",
@@ -610,6 +574,30 @@
             _this.disabled = false;
             _this.innerHTML = "Comprar";
           }
+        });
+      }
+
+      function showTickets(uuid) {
+        let timeLeft = 10;
+        const checkInterval = 18000;
+        let verificationInterval;
+
+        Swal.fire({
+          title: 'Generando Tickets...',
+          html: `Por favor espere <b>${timeLeft}</b> segundos.`,
+          timer: timeLeft * 1000,
+          timerProgressBar: true,
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            const timer = Swal.getHtmlContainer().querySelector('b');
+            const timerInterval = setInterval(() => {
+              timeLeft--;
+              timer.textContent = timeLeft;
+            }, 1000);
+          },
+        }).then((result) => {
+          window.location.href = `{{config('app.url')}}/orden/${uuid}`;
         });
       }
 

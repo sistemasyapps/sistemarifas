@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Country;
 use App\Models\Region;
 use App\Models\City;
+use App\Jobs\CreateTickets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
@@ -119,21 +120,20 @@ class OrderController extends Controller
         if($disponibles >= 9999) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tickets agotados, por favor escriba a soporte para la devolucion de su dinero'
+                'message' => 'Tickets agotados, por favor escriba a soporte'
             ], 422);
         }
 
         try{
-            // $data['IP'] = $request->ipinfo->ip;
             $data['IP'] = $request->ip();
         } catch(Exception $e) {
-            $data['IP'] = "181.208.247.65";
+            $data['IP'] = "::1";
         }
 
         try{
             Log::info('Obteniendo datos de la IP -> Pais');
-            // $country_id = $this->getOrCreateCountry($request->ipinfo->country_name);
-            $country_id = 1;
+            $country_id = $this->getOrCreateCountry($request->ipquery['location']['country']);
+            // $country_id = 1;
         } catch(Exception $e) {
             $country_id = 1;
             Log::error("Obtener pais error");
@@ -141,8 +141,8 @@ class OrderController extends Controller
 
         try{
             Log::info('Obteniendo datos de la IP -> Region');
-            // $region_id = $this->getOrCreateRegion($request->ipinfo->region,$country_id);
-            $region_id = 1;
+            $region_id = $this->getOrCreateRegion($request->ipquery['location']['state'],$country_id);
+            // $region_id = 1;
         }catch(Exception $e) {
             $region_id = 1;
             Log::error("Obtener region error");
@@ -150,8 +150,8 @@ class OrderController extends Controller
 
         try{
             Log::info('Obteniendo datos de la IP -> City');
-            // $city_id = $this->getOrCreateCity($request->ipinfo->city,$region_id);
-            $city_id = 1;
+            $city_id = $this->getOrCreateCity($request->ipquery['location']['city'],$region_id);
+            // $city_id = 1;
         }catch(Exception $e) {
             $city_id = 1;
             Log::error("Obtener ciudad error");
@@ -172,12 +172,23 @@ class OrderController extends Controller
             ], 422);
         }
 
+        // if(strtolower($cliente->correo) != "soporte@gmail.com" ) {
+        //     try{
+        //         $options = Option::All()->pluck('valor', 'clave');
+        //         $logo = $options->get('logo');
+        //         Log::info('Intenta enviar el correo encolado');
+        //         Mail::to($cliente->correo,$cliente->nombre_completo)->send(new OrderCreated($order, $logo));
+        //     } catch(Exception $e) {
+        //         Log::info('Error al enviar el correo');
+        //         Log::error("Error al enviar el correo ".$e->getMessage());
+        //     }
+        // }
+
+        Log::info('Creando numeros');
         try{
-            Log::info('Intenta enviar el correo encolado');
-            Mail::to($cliente->correo)->send(new OrderCreated($order));
+            CreateTickets::dispatch($order);
         } catch(Exception $e) {
-            Log::info('Error al enviar el correo');
-            Log::error("Error al enviar el correo ".$e->getMessage());
+            Log::error("Error al crear numeros en la orden ".$e->getMessage());
         }
 
         Log::info('Termina la creacion de datos');
@@ -190,10 +201,26 @@ class OrderController extends Controller
         ], 201);
     }
 
-    public function cancel(Request $request, Order $order)
+   public function cancel(Request $request, Order $order)
     {
+        if ($order->estatus === '1') {
+            return response()->json([
+                'success' => false, 
+                'message' => 'La orden ya ha sido aprobada con anterioridad.'
+            ]);
+        }
+
+        if ($order->estatus === '2') {
+            $order->numbers()->delete();
+            return response()->json([
+                'success' => false, 
+                'message' => 'La orden ya ha sido cancelada con anterioridad.'
+            ]);
+        }
+
         $order->estatus = '2';
         $order->save();
+        $order->numbers()->delete();
 
         return response()->json([
             'success' => true,
@@ -216,28 +243,33 @@ class OrderController extends Controller
         if ($order->estatus === '1') {
             return response()->json([
                 'success' => false, 
-                'message' => 'La orden ya ha sido aprobada.'
+                'message' => 'La orden ya ha sido aprobada con anterioridad.'
             ]);
         }
+
+        if ($order->estatus === '2') {
+            return response()->json([
+                'success' => false, 
+                'message' => 'La orden ya ha sido cancelada con anterioridad.'
+            ]);
+        }
+
+        $this->checkOrder($order->id);
 
         $startTime = microtime(true);
         $order->estatus = '1';
         $order->save();
-
-        $numbers = $this->generateUniqueNumber($order->raffle_id, $order->cantidad, $order->raffle->cantidad_max);
-
-        foreach ($numbers as $number) {
-            $order->numbers()->create([
-                'numero_generado' => $number,
-                'raffle_id'=> $order->raffle_id
-            ]);
-        }
         
-        try{
-            Mail::to($order->client->correo)->send(new PurchaseApproved($order, $numbers));
-            Log::info('Correo enviado...');
-        } catch(Exception $e) {
-            Log::error("Error al enviar Correos".$e->getMessage(),$dataWhatsapp);
+        if(strtolower($order->client->correo) != "soporte@gmail.com" ) {
+            try{
+                $numbers = $order->numbers;
+                $options = Option::All()->pluck('valor', 'clave');
+                $logo = $options->get('logo');
+                Mail::to($order->client->correo, $order->client->nombre_completo)->send(new PurchaseApproved($order, $numbers, $logo));
+                Log::info('Correo enviado...');
+            } catch(Exception $e) {
+                Log::error("Error al enviar Correo ".$e->getMessage());
+            }
         }
 
         try{
@@ -247,7 +279,7 @@ class OrderController extends Controller
                 "to" => $this->normalizarTelefono($order->client->telefono),
                 "message" => $messageWhatsapp,
             ];
-            $this->sendWhatsapp($dataWhatsapp);
+            // $this->sendWhatsapp($dataWhatsapp);
         } catch(Exception $e) {
             Log::error("Error al enviar Whatsapp {to} {message} -> ".$e->getMessage(),$dataWhatsapp);
         }
@@ -259,6 +291,117 @@ class OrderController extends Controller
             'success' => true,
             'msg' => 'Compra aprobada', 
             'execution_time' => $executionTime
+        ]);
+    }
+
+    public function checkOrder($orderId)
+    {
+        //verificar la cantidad de tickets actuales con los comprados 
+        $order = Order::withCount('numbers')->findOrFail($orderId);
+        Log::info("cantidad actual: -> ".$order->cantidad);
+        Log::info("cantidad en order_numbers: -> ".$order->numbers_count);
+
+        if ($order->cantidad != $order->numbers_count) {
+
+            $request = new Request([
+                'cantidad' => $order->cantidad,
+                'clave' => 'Modificar$123$'
+            ]);
+
+            $this->modifyOrder($request, $order);
+        }
+        
+    }
+
+    public function modifyOrder(Request $request, Order $order)
+    {
+        if ($order->estatus === '1') {
+            return response()->json([
+                'success' => false, 
+                'message' => 'La orden ya ha sido aprobada.'
+            ]);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'cantidad' => 'required',
+            'clave' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errores = json_encode($validator->errors());
+            $postData = json_encode($_POST);
+            Log::error("Fallo de validacion: ".$errores." postData:".$postData);
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $clave = $request->clave;
+
+        if($clave === "Modificar$123$"){
+            //verificamos si la nueva cantidad alcanza
+            $cantidadAnterior = $order->cantidad;
+            Log::info("cantidad anterior: $cantidadAnterior");
+            $cantidadNueva = abs($request->cantidad);
+            Log::info("cantidad nueva: $cantidadNueva");
+
+            if($cantidadAnterior == $cantidadNueva){
+                $order->numbers()->delete();
+                CreateTickets::dispatch($order);
+            }
+            
+            if($cantidadAnterior > $cantidadNueva){
+                Log::info("entro por la cantidad nueva menor");
+                //la cantidad nueva es menor es decir coloco 10 y eran 2, no necesito verificar si hay disponibles al contrario se liberan tickets
+                $order->cantidad = $cantidadNueva;
+                $order->save();
+
+                //borrar los numeros que ya tiene asignado
+                $order->numbers()->delete();
+
+                CreateTickets::dispatch($order);
+            }
+
+            if($cantidadAnterior < $cantidadNueva){
+                Log::info("entro por la cantidad nueva mayor");
+                //la cantidad nueva es mayor es decir coloco 2 y eran 10, debo verificar si hay disponibilidad
+                $disponibles = $this->getDisponibles($order->raffle_id);
+                $total = $disponibles + $cantidadNueva - $cantidadAnterior;
+                Log::info("hay $disponibles y en total seran $total");
+                if($total > 9999){
+                    return response()->json([
+                        'success' => false, 
+                        'message' => 'No hay numeros disponibles, hay: '.$disponibles.' vendidos'
+                    ]);
+                }else{
+                    //guardo la nueva cantidad
+                    $order->cantidad = $cantidadNueva;
+                    $order->save();
+
+                    //borrar los numeros que ya tiene asignado
+                    $order->numbers()->delete();
+
+                    //vuelvo a crear los tickets 
+                    Log::info('Creando numeros');
+                    try{
+                        CreateTickets::dispatch($order);
+                    } catch(Exception $e) {
+                        Log::error("Error al crear numeros en la orden ".$e->getMessage());
+                    }
+                }
+            }
+
+        }else{
+            return response()->json([
+                'success' => false, 
+                'message' => 'Clave Incorrecta'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true, 
+            'message' => 'Orden modificada con exito'
         ]);
     }
 
@@ -365,19 +508,31 @@ class OrderController extends Controller
         // }
         // return (DB::select("SELECT valor as barra from options where clave='progress-bar'"))[0];
         $datos = (DB::select("SELECT
-            raffle_id,
+            
             IFNULL(
                 ROUND(100 - (sum(orders.cantidad) * 100 / raffles.cantidad_max), 2),
                 100
             ) AS barra
         FROM orders
         INNER JOIN raffles ON raffles.id = orders.raffle_id
-        WHERE orders.estatus <> 2
-        GROUP BY raffle_id;"))[0];
+        WHERE orders.estatus <> 2 and raffles.id = $raffle->id
+        GROUP BY raffle_id"))[0];
         $quedan = $currentRaffle->cantidad_max - $this->getDisponibles($currentRaffle->id);
         return response()->json([
             'barra' => $datos->barra,
             'queda' => $quedan
         ], 206);
+    }
+
+    public function returnOrder(Request $request, Order $order)
+    {
+        $order->estatus = '9';
+        $order->save();
+        // OrderNumber::where("order_id","=",$order->id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'msg' => 'Order devuelta exitosamente.'
+        ]);
     }
 }

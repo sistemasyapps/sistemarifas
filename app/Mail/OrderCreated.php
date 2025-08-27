@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Queue\SerializesModels;
 
 class OrderCreated extends Mailable
@@ -15,12 +16,14 @@ class OrderCreated extends Mailable
     use Queueable, SerializesModels;
 
     public Order $order;
+    private $logo;
     /**
      * Create a new message instance.
      */
-    public function __construct(Order $order)
+    public function __construct(Order $order, $logo)
     {
         $this->order = $order;
+        $this->logo = $logo;
     }
 
     /**
@@ -29,7 +32,11 @@ class OrderCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '[Ganaconandreaaular.com] Compra recibida',
+            from: new Address(
+                env('MAIL_FROM_ADDRESS', 'hello@rifasvinotinto.com'), 
+                env('MAIL_FROM_NAME', 'RifasVinotinto')
+            ),
+            subject: '[RifasVinotinto.com] Compra recibida',
         );
     }
 

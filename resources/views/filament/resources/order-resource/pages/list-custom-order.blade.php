@@ -25,6 +25,7 @@
                 <button onclick="filtroEstatus(0)" class="boton_filtro" type="button">Pendientes</button>
                 <button onclick="filtroEstatus(1)" class="boton_filtro" type="button">Aprobadas</button>
                 <button onclick="filtroEstatus(2)" class="boton_filtro" type="button">Canceladas</button>
+                <button onclick="filtroEstatus(9)" class="boton_filtro" type="button">Archivadas</button>
             </div>
             <table class="w-full text-sm text-left dark:text-gray-400" id="orderTable">
                 <thead class="bg-gray-50">
@@ -50,7 +51,12 @@
                             <td class="px-6 py-4 ">{{ $record->created_at->format('d-m-Y H:i') }}</td>
                             <td class="px-6 py-4 ">{{$record->client->cedula}} - {{ $record->client->nombre_completo }} - {{ $record->client->correo }} - {{ $record->client->telefono }}</td>
                             <td class="px-6 py-4 ">{{ $record->cantidad }}</td>
-                            <td class="px-6 py-4 ">{{ $record->ref_banco }}</td>
+                            <td class="px-6 py-4 ">
+                                {{ $record->ref_banco }}
+                                @if ($record->ref_repetido > 1)
+                                <b style="color: red">REPETIDO</b>
+                                @endif
+                            </td>
                             
                             <td class="px-6 py-4">
                                 <a href="{{ Storage::url($record->ref_imagen) }}" data-lightbox="ref-imagen-{{ $record->id }}">
@@ -58,14 +64,15 @@
                                 </a>
                             </td>
                             <td class="px-6 py-4 ">
-                                @if($record->estatus == '0')
-                                    <button type="button" onclick="approveOrder({{ $record->id }})" id="button-order-{{ $record->id }}" class="font-bold py-2 px-4 rounded">Aprobar</button>
-                                    <button type="button" onclick="cancelOrder({{ $record->id }})" class="py-2 px-4 rounded">Cancelar</button>
+                                @if($record->estatus == '0' || $record->estatus == '9')
+                                    <button type="button" onclick="approveOrder(this,{{ $record->id }})" id="button-order-{{ $record->id }}" class="font-bold py-2 px-4 rounded">Aprobar</button>
+                                    <button type="button" onclick="cancelOrder(this,{{ $record->id }})" class="py-2 px-4 rounded">Cancelar</button>
                                 @endif
                                 @if($record->estatus == '1')
                                     <a href="/ticket/{{$record->uuid}}" target="_blank">Ver Tickets</a>
-                                    <button type="button" onclick="deleteOrder({{ $record->id }})" class="font-bold py-2 px-4 rounded">Eliminar</button>
+                                    <button type="button" onclick="deleteOrder(this,{{ $record->id }})" class="font-bold py-2 px-4 rounded">Eliminar</button>
                                 @endif
+                                <button type="button" onclick="returnOrder(this,{{ $record->id }})" class="py-2 px-4 rounded" style="background: red; margin-top: 5px; color: white!important;">Archivar</button>
                             </td>
                             
                         </tr>
@@ -77,7 +84,7 @@
 </x-filament-panels::page>
 
 @push('styles')
-    <link href="{{ asset('node_modules/lightbox2/dist/css/lightbox.min.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.5/dist/css/lightbox.min.css" rel="stylesheet">
     <link href="//cdn.datatables.net/2.1.0/css/dataTables.dataTables.min.css" rel="stylesheet">
     
     <style>
@@ -99,42 +106,92 @@
 @endpush
 
 @push('scripts')
-	<script src="{{ asset('/node_modules/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('node_modules/lightbox2/dist/js/lightbox.min.js') }}"></script>
-    <script src="{{ asset('build/assets/app-33584bf2.js') }}"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.5/dist/js/lightbox.min.js"></script>
+    @vite(['resources/js/app.js'])
     <script src="//cdn.datatables.net/2.1.0/js/dataTables.min.js"></script>
     
     <script>
 
-        let table = new DataTable('#orderTable');
+        let table = new DataTable('#orderTable',{
+            stateSave: true
+        });
 
-        function approveOrder(orderId) {
+        function changeQuantity(orderId,nombre) {
+            Swal.fire({
+                title: `Escriba la nueva cantidad de la orden ${orderId} para ${nombre}`,
+                html: `
+                    <input id="swal-input1" class="swal2-input min="0" step="1" form-control" type="number" placeholder="cantidad">
+                    <input id="swal-input2" class="swal2-input form-control" type="text" placeholder="clave">
+                `,
+                showCancelButton: true,
+                confirmButtonText: "Cambiar",
+                showLoaderOnConfirm: true,
+                preConfirm: async () => {
+                    const cantidad = document.getElementById("swal-input1").value;
+                    const clave = document.getElementById("swal-input2").value;
+                    const data = new FormData();
+                    data.append("cantidad", cantidad);
+                    data.append("clave", clave);
+                    try {
+                      const modifyUrl = `{{ config('app.url') }}/api/orderAdmin/${orderId}/modifyOrder`;
+                      const response = await fetch(modifyUrl,{
+                        method: "POST",
+                        body: data
+                      });
+                      // if (!response.ok) {
+                      //   return Swal.showValidationMessage(`
+                      //     ${JSON.stringify(await response.json())}
+                      //   `);
+                      // }
+                      return response.json();
+                    } catch (error) {
+                      // Swal.showValidationMessage(`
+                      //   Request failed: ${error}
+                      // `);
+                    }
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                Swal.fire({
+                    title: "{{config('app.name')}}",
+                    text: result.value.message,
+                });
+                if(result.value.success){
+                    location.reload();
+                }
+            });
+        }
+
+        function approveOrder(_this,orderId) {
             const button = document.getElementById(`button-order-${orderId}`);
             button.disabled = true;
             axios.post('/api/orderAdmin/' + orderId + '/approve')
             .then(response => {
                 if (response.data.success) {
-                    // alert('Order aprobada');
-                    location.reload();
+                    alert('Order aprobada');
+                    // location.reload();
                 } else {
                     alert('Error al aprobar la orden.');
                 }
+                jQuery(_this).closest('tr').remove();
             })
             .catch(error => {
                 alert('Error al aprobar la orden.');
             });
         }
-        function cancelOrder(orderId) {
+        function cancelOrder(_this,orderId) {
             if(confirm("Desea cancelar esta orden?"))
             {
                 axios.post('/api/orderAdmin/' + orderId + '/cancel')
                 .then(response => {
                     if (response.data.success) {
                         alert('Order cancelada exitosamente.');
-                        location.reload();
+                        // location.reload();
                     } else {
                         alert('Error al cancelar la orden.');
                     }
+                    jQuery(_this).closest('tr').remove();
                 })
                 .catch(error => {
                     alert('Error al cancelar la orden.');
@@ -142,7 +199,26 @@
             }
         }
 
-        function deleteOrder(orderId) {
+        function returnOrder(_this,orderId) {
+            if(confirm("Esta seguro de devolver esta orden?"))
+            {
+                axios.post('/api/orderAdmin/' + orderId + '/returnOrder')
+                .then(response => {
+                    if (response.data.success) {
+                        alert('Order devuelta exitosamente.');
+                        // location.reload();
+                    } else {
+                        alert('Error al devolver la orden.');
+                    }
+                    jQuery(_this).closest('tr').remove();
+                })
+                .catch(error => {
+                    alert('Error al devolver la orden.');
+                });
+            }
+        }
+
+        function deleteOrder(_this,orderId) {
             if(confirm("Desea eliminar esta orden?, se eliminaran los números asignados"))
             {
                 const clave = prompt('Ingrese la clave para eliminar');
@@ -151,10 +227,11 @@
                     .then(response => {
                         if (response.data.success) {
                             alert('Order eliminada exitosamente.');
-                            location.reload();
+                            // location.reload();
                         } else {
                             alert('Error al eliminar la orden.');
                         }
+                        jQuery(_this).closest('tr').remove();
                     })
                     .catch(error => {
                         alert('Error al eliminar la orden.');

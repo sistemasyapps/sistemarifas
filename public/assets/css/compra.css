@@ -474,7 +474,6 @@ body.swal2-shown > [aria-hidden='true'] {
     filter: blur(3px);
 }
 
-.custom-container p{
-    color: var(--fondo)!important;
-    font-size: 20px;
+#payment_data p, .custom-container p{
+    color: black!important;
 }
