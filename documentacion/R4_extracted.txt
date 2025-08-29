@@ -1,0 +1,1739 @@
+
+
+=== PAGE 1 ===
+
+  
+  
+  FECHA DE EMISIÓN  PRÓXIMA REVISIÓN  
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 1 enviar este mensaje, tiene prohibido div ulgarlo 
+a cualquier persona, así como reproducirlo o copiarlo. Si reci be este mensaje por error, le solicitamos que lo notifique al remitente de inmediato y lo elimin e de su 
+sistema.    Gerencia de Innovación Tecnológica  
+octubre 2024  diciembre 2024  
+Guía de Integración R4 Conecta  VERSIÓN  
+2.0  CÓDIGO D-PYM -001  
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+DOCUMENTO DE INTEGRACIÓN  
+  
+R4CONECTA  
+- 
+  
+V. 
+3.0 
+  
+PRODUCCIÓN  
+  
+  
+
+=== PAGE 2 ===
+
+  
+  
+ 
+  Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+Contenido  
+Uso Del API  ................................ ................................ ................................ ................................ ....... 4 
+Requisitos  ................................ ................................ ................................ ................................ ......4 
+Punto de Entrada de API  ................................ ................................ ................................ ............... 4 
+Métodos del API  ................................ ................................ ................................ ............................ 5 
+Mensajes de Petición y Respuesta  ................................ ................................ ................................ 6 
+Consulta tasa BCV  ................................ ................................ ................................ ............................. 6 
+JSON Modelo (R4bcv):  Request  ................................ ................................ ................................ ...6 
+Pago móvil conciliado  ................................ ................................ ................................ ....................... 7 
+Consulta  Clientes  ................................ ................................ ................................ .............................. 7 
+Proceso de implementación:  ................................ ................................ ................................ ........ 7 
+JSON Modelo (R4consulta):  ................................ ................................ ................................ .......... 8 
+Notificación Pago Móviles entrantes  ................................ ................................ ................................ 8 
+JSON Modelo (R4notifica):  ................................ ................................ ................................ .......... 10 
+Listado de Códigos de Red Interbancaria (Codigored)  ................................ ................................ ...11 
+Gestión de Pagos  ................................ ................................ ................................ ............................ 12 
+JSON  Modelo  (R4pagos): Request  ................................ ................................ ............................... 12 
+R4 Vuelto  ................................ ................................ ................................ ................................ ........ 14 
+JSON Modelo (R4vuelto):  ................................ ................................ ................................ ............ 14 
+Proceso Débito Inmediato  ................................ ................................ ................................ .............. 16 
+Gene rar OTP  ................................ ................................ ................................ ................................ ...16 
+JSON Modelo (GenerarOtp):  ................................ ................................ ................................ ....... 16 
+Débito Inmediato  ................................ ................................ ................................ ............................ 17 
+JSON Modelo (DebitoInmediato):  ................................ ................................ ............................... 17 
+Consultar Operaciones  ................................ ................................ ................................ ................... 18 
+JSON Modelo (ConsultaOperaciones):  ................................ ................................ ........................ 18 
+Domiciliación de cuentas 20 dígitos  ................................ ................................ ............................... 19 
+JSON Modelo (DomiciliacionCNTA):  ................................ ................................ ............................ 19 
+Domiciliación por teléfono  ................................ ................................ ................................ ............. 20 
+JSON Modelo (DomiciliacionCELE):  ................................ ................................ ............................. 20 
+Crédito Inmediato  ................................ ................................ ................................ ........................... 21 
+JSON Modelo (CreditoInmediato):  ................................ ................................ .............................. 21 
+
+=== PAGE 3 ===
+
+  
+  
+  
+ 
+  Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+Crédito Inmediato cuentas 20 dígitos  ................................ ................................ ............................. 22 
+JSON Modelo (CreditoInmediato):  ................................ ................................ ................................ .22 
+Modelos de respuestas para Débito, Crédito Inmediato y Domiciliación  ................................ ......23 
+Cobro C2P  ................................ ................................ ................................ ................................ ....... 30 
+JSON Modelo (R4c2p ): ................................ ................................ ................................ ................ 30 
+Anulación C2P  ................................ ................................ ................................ ................................ .32 
+JSON Modelo (R4anulacionC2P):  ................................ ................................ ................................ 32 
+ 
+  
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 4 ===
+
+  
+  
+  
+4 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+Uso Del API   
+  
+Requisitos  
+Requisitos para acceder a los servicios de API:  
+ Dominio propio : La empresa debe poseer un dominio registrado a su nombre. Este 
+dominio será utilizado para la autenticación y autorización en las solicitudes API.  
+ Certificado TLS : Se requiere un certificado TLS 1.2 como mínimo, válido para establecer 
+una conexión segur a entre la empresa y la plataforma API. El certificado debe estar 
+emitido por una autoridad de certificación de confianza.  
+ Integración API RESTful bajo HTTPS : La integración con la pasarela API debe realizarse a 
+través de su API basada en métodos RESTful utilizando el protocolo HTTPS. Esto asegura 
+la comunicación confidencial y la integridad de los datos intercambiados.   
+ 
+Para el proceso de consulta, aceptación y notificación es necesario agregar nuestras IP a una lista 
+blanca,  (45.175.213.98, 200.74.203.9 1, 204.199.249. 3, 204.199.249.3 ) “solo permitir 
+request de estas IP ”  
+ 
+Punto de Entrada de API   
+Las interacciones con la API se realizan de forma exclusiva a través del URL base, el cual sirve 
+como punto de entrada para todas las solicitudes y respuestas:  
+ 
+https://r4conecta.mibanco.com.ve/  
+ 
+Este punt o de entrada centralizado funciona como puerta de acceso para todas las solicitudes y  
+respuestas, garantizando un entorno seguro y confiable para las comunicaciones.  
+  
+Para realizar interacciones exitosas con la API, se requieren los siguientes parámetros :  
+  
+Credenciales :  
+  
+ Commerce : Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ Método de solicitud : HTTPS (POST) para enviar datos a la API.  
+ Tipo de codificación : Content -Type application/json  para especificar el formato de los 
+datos intercambiados.  
+ 200 OK respuesta estándar  para las request HTTP .  
+ 
+ 
+
+=== PAGE 5 ===
+
+  
+  
+  
+5 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+  
+Headers:   
+   
+ KEY:  Authorization  
+ VALUE:  Cifrado Hmac256 Output Text Format Hex  para asegurar la integridad y 
+confidencialidad de los datos.  
+ KEY:  Commerce  
+ VALUE:  Valor único  por comercio, proporcionado por el banco.  
+ 
+Métodos del API   
+La API R4 Conecta  ofrece una amplia gama de métodos para realizar diversas operaciones, cada 
+uno de ellos son descriptos en detalle en sus respectivas secciones  del presente documento.  
+  
+Referencia  Método  
+Vuelto  R4vuelto  
+Cobro C2P  R4c2p  
+Anulación C2P  R4anulacionc2p  
+Consulta tasa BCV  R4bcv  
+Consulta y aceptación  R4consulta  
+Notificación de pago  R4notifica  
+Generar OTP  GenerarOtp  
+Debito Inmediato  DebitoInmediato  
+Crédito Inmediato  CreditoInmediato  
+Domiciliación por Cuenta  DomiciliacionCNTA  
+Crédito Inmediato cuenta 20 dígitos  CICuentas  
+Domiciliación por número telefónico  DomiciliacionCELE  
+Consulta Operaciones  ConsultarOperaciones  
+ 
+ 
+
+=== PAGE 6 ===
+
+  
+  
+  
+6 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+Mensajes de Petición y Respuesta  
+Para cada funcionalidad de la API, se define un par de mensajes: uno que identifica la petición y 
+otro que representa la respuesta. El identificador único de cada mensaje se encuentra en el 
+elemento raíz del JSON correspondiente.  
+Consulta tasa BCV  
+  
+https://r4conecta.mibanco.com.ve /MBbcv 
+ 
+El método de consulta tasa oficial BCV.  
+ 
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 Output Text Format Hex  de "fechavalor  + 
+moneda" usando como llave del cifrado el token Commerce.   
+--header Content -Type:  application/json   
+--header Authorization:  {{TOKEN AUTHORIZATION}}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usua rio.  
+  
+JSON Modelo (R4bcv):  Request  
+{  
+    "Moneda": "USD", // Código ISO moneda - String  
+    "Fechavalor": "2024 -07-23" // Fecha consulta de la tasa bcv (yyyy -mm-dd) - String  
+}  
+  
+El modelo para la respuesta (tasa BCV) Response  
+{  
+   "code": "00",  / / string  
+   "fechavalor": "2024 -07-23", // string  
+   "tipocambio": 36.5314 // double  
+}  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 7 ===
+
+  
+  
+  
+7 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+ 
+ 
+Pago móvil conciliado  
+ 
+Este servicio se desarrolla en dos fases: primero, se consulta al cliente para obtener su aprobación 
+o rechazo del pago móvil. Luego, una vez que los fondos han sido acreditados en la cuenta, se 
+notifica la recepción del pago, asegurando una comunicación clara y efectiva en todo el proceso.  
+ 
+Consulta Clientes  
+ 
+https://dominio.cliente/R4consulta  
+ 
+Para recibir notificaciones de transacciones entrantes de pago móvil P2P/P2C, el cliente debe 
+implementar una API que funcione como punto inicial de validación de sus usuarios registrados.  
+ 
+1. Solicitud de notificación:  El banco envía una solicitud de consul ta del id de identificación 
+del cliente y el monto (opcional), incluyendo la información de la transacción y el 
+identificador del usuario registrado.  
+2. Validación del usuario:  La API del cliente recibe la solicitud y valida la identidad del 
+usuario registra do.  
+3. Respuesta de validación:  La API del cliente envía una respuesta al banco indicando si la 
+validación del usuario ha sido exitosa o no. Si la respuesta es "status true", el banco 
+procede a notificar la transacción al cliente. En caso contrario, si la re spuesta es "status 
+false", el pago es reversado.   
+ 
+ Proceso de implementación:  
+1. Desarrollo de la API:  El cliente debe desarrollar una API que cumpla con las 
+especificaciones técnicas proporcionadas por el banco. La API debe ser capaz de recibir y 
+procesar notificaciones de transacciones en formato JSON.  
+2. Configuración de la API:  El cliente debe configurar  su API para que pueda aceptar 
+solicitudes HTTPS provenientes del banco. La configuración debe incluir la dirección URL 
+de la API, el certificado TLS y las credenciales de autenticación.  
+3. Pruebas y validación:  Una vez desarrollada y configurada la API, el cliente debe realizar 
+pruebas exhaustivas para garantizar el funcionamiento correcto y  cumpla con los 
+requisitos del banco.  
+ 
+-------  Headers -------   
+
+=== PAGE 8 ===
+
+  
+  
+  
+8 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+--header Content -Type:  application/json   
+--header Authorization:  {{TOKEN AUTHORIZATION}} creado por el c omercio, en formato UUID   
+Ejemplo:  f8423bb2 -10c9 -4d0f -8300 -aaf8fea18c72  
+ 
+JSON Modelo (R4consulta):   
+Request  
+ 
+{  
+    "IdCliente":"13536734", // Identificacion del cliente (requerido) - String - 8 numérico  
+    "Monto":"135.36", // Monto de la operación - String - máximo 8 números y 2 decimales  
+    "TelefonoComercio":"04129196699" // Teléfono del comercio - String  - 11 numérico  
+}  
+  
+El modelo para la respuesta (cliente aceptado: status “true”):  Response  
+ 
+{  
+   "status": true  
+}  
+ 
+El modelo para la respuesta (cliente rechazado: status “false ”):  Response  
+{  
+   "status": false  
+}  
+JSON Modelo (MBconsulta):  
+VÍA SIMF:  
+ 
+Request  
+ 
+El modelo para la respuesta (cliente aceptado: abono “true”): Response  
+ 
+ 
+ { 
+"IdComercio":"13536734","TelefonoComercio":"04129196677","TelefonoEmisor":"V13536733","Concepto":"PAGO 
+MOVIL.","BancoEmisor":"134","Monto":"100.00","FechaHora":"2025 -02-
+10T16:05:58.073Z","Referencia":"079682844","CodigoRed":"00"  
+} 
+{ 
+“abono": true  
+} 
+
+=== PAGE 9 ===
+
+  
+  
+  
+9 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+Notificación Pago Móviles entrantes  
+ 
+https://dominio.cliente/R4notifica  
+ 
+Para recibir notificaciones de transacciones entrantes de pago móvil P2P/P2C a través de su 
+propia API, el cliente debe cumplir con los siguientes requisitos técnicos:  
+ Dominio propio: El cliente debe poseer un dominio registrado a su nombre. Este dominio 
+será utilizado para la autenticación y autorización en las solicitudes de notificación.   
+ Certificado TLS:  Se requiere un certificado TLS 1.2 como mínimo válido para establecer 
+una conexión segura entre el banco y la API del cliente. El certificado debe est ar emitido 
+por una autoridad de certificación de confianza.  
+ 
+Proceso de implementación:  
+ 
+ Desarrollo de la API: El cliente debe desarrollar una API que cumpla con las 
+especificaciones técnicas proporcionadas por el banco. La API debe ser capaz de recibir y 
+procesar notificaciones de transacciones en formato JSON.   
+ Configuración de la API: El cliente debe configurar su API para que pueda aceptar 
+solicitudes HTTPS provenientes del banco. La configuración debe incluir la dirección URL 
+de la API, el certificad o TLS y las credenciales de autenticación.   
+ Pruebas y validación: Una vez desarrollada y configurada la API, el cliente debe realizar 
+pruebas exhaustivas para garantizar el funcionamiento correcto y que cumpla los 
+requisitos del banco.   
+ 
+El cliente debe va lidar dentro de su desarrollo los datos notificados, para ello es necesario que 
+realice un proceso de verificación de referencia, banco y monto antes de abonar al cliente final.  
+ 
+------  Headers -------   
+--header Content -Type:  application/json   
+--header A uthorization:  {{TOKEN AUTHORIZATION}} creado por el comercio, en formato UUID  
+Ejemplo:  f8423bb2 -10c9 -4d0f -8300 -aaf8fea18c72   
+  
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 10 ===
+
+  
+  
+  
+10 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+JSON Modelo (R4notifica):   
+Request  
+ 
+{  
+    "IdComercio": "13536734", // Cédula o RIF del Comercio (requerido) - String  - 8 numérico  
+    "TelefonoComercio": "0412 5555555 ", // Telefóno del comercio (requerido)  - String - 11 numérico  
+    "TelefonoEmisor": "0414 5555555 ", //Telefóno de origen del pago (requerido)  - String - 11 numérico  
+    "Concepto": "PRUEBA", // Motivo del pago - (opcional) String - 30 alfanumérico  
+    "BancoEmisor": "134", // Codigo del banco del pago (requerido) - String - 3 numérico  
+    "Monto": "123.13", // Monto con Decimales separados por punto '.' - (requerido)  String  
+    "FechaHora": "2024 -12-05T16:50:48.421Z", // (requerido) - String  
+    "Referencia": "83736278", // Referecia interbancaria (requerido)  - String  
+    "CodigoRed": "00" // Codigo de respuesta de la red interbancaria (requerido)  - String  
+}  
+  
+El modelo para la respuesta ( Notif icación  aceptada: abono “true”):  Response  
+{  
+   "abono": true  
+}  
+  
+El modelo para la respuesta (Notificación rechazada: abono “false ”):  Response  
+{  
+   "abono": false  
+ }  
+  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 11 ===
+
+  
+  
+  
+11 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+Listado  de Códigos  de Red Interbancaria  (Codigored)  
+  
+00  APROBADO  
+01 REFERIRSE AL CLIENTE  
+12 TRANSACCION INVALIDA  
+13 MONTO INVALIDO  
+14 NUMERO TELEFONO RECEPTOR ERRADO  
+05 TIEMPO DE RESPUESTA EXCEDIDO  
+14 NUMERO TELEFONO RECEPTOR ERRADO  
+30 ERROR DE FORMATO  
+41 SERVICIO NO ACTIVO  
+43 SERVICIO NO ACTIVO  
+55 TOKEN INVALIDO  
+56 CELULAR NO COINCIDE  
+57 NEGADA POR EL RECEPTOR  
+62 CUENTA RESTRINGIDA  
+68 RESPUESTA TARDIA, PROCEDE REVERSO  
+80 CEDULA O PASAPORTE ERRADO  
+87 TIME OUT  
+90 CIERRE BANCARIO EN PROCESO  
+91 INSTITUCION NO DISPONIBLE  
+92 BANCO RECEPTOR NO AFILIADO  
+99 ERROR EN NOTIIFCACION  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 12 ===
+
+  
+  
+  
+12 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+Gestión de Pagos  
+ 
+https://r4conecta.mibanco.com.ve/ R4pagos  
+ 
+El Método  de Procesamiento  de dispersión  en la red interbancaria,  permite  realizar pagos  a 
+terceros , teniendo una transacción de pago móvil recibido.  
+ 
+-------  Headers  ------ - 
+--header  'Content -Type:  application/json'  \ 
+--header  'Authorization:  {{ TOKEN  AUTHORIZATION  }}' \ 
+--header  'Commerce:  {{ API TOKEN  DEL COMERCIO  }}'\ 
+TOKEN  AUTHORIZATION:  Cifrado  HMAC -SHA256  Output  Text Format  Hex de "monto + fecha 
+(MM/DD/AAAA)" usando como llave del cifrado el commerce  
+ 
+JSON  Modelo  (R4pagos ): Request  
+ 
+ 
+ { 
+"monto":  "10.00",  // Monto  total  para  la dispersión  - string  - máximo  8 números  y 2 decimales 
+"fecha": "07/08/2024", // Fecha del pago --- Formato MM/DD/YYYY - string - 10 alfanumérico 
+"Referencia": "1293912", //  string - 8 numérico  
+"personas":  [ //Array  de personas  a las que se le va a realizar  el pago  por la dispersión  
+{ 
+"nombres":  "Victor  Maceros",  // Nombre  y apellido  del beneficiario  
+"documento":  "V05503673",  // Documento  de identidad  del inviduo,  'Tipo  de documento(V,E,J,P)  + 
+Documento' "destino": "01020488760100026670", // Número de cuenta a abonar  
+"montoPart":  "4.00"  // monto  parcial  a repartir  al beneficiario  
+} 
+, 
+{ 
+"nombres":  "Jorge  Perez",  // Nombre  y apellido  del beneficiario  
+"documento":  "J696886684",  // Documento  de identidad  del inviduo,  'Tipo  de documento(V,E,J,P)  + 
+Documento' "destino": "01341032660321048077", // Número  de cuenta a abonar  
+"montoPart":  "6.00"  // monto  parcial  a repartir  al beneficiario  
+} 
+] 
+} 
+
+=== PAGE 13 ===
+
+  
+  
+  
+13 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+Modelo  para  la respuesta  (Dispersión  exitosa  success  true): Response:  
+ 
+ 
+ 
+El modelo  para  la respuesta  (Dispersión  Rechazado  success  false):  
+ 
+ 
+ 
+El modelo  para  la respuesta  (Dispersión  Rechazado  success  false):  
+ 
+ 
+El modelo  para  la respuesta  (Dispersión  Rechazado  success  false):  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ { 
+"success":  true,  
+"message":  "Dispersión  exitosa"  
+} 
+ 
+ 
+ 
+ 
+ 
+{ 
+"error":  "ERROR  SECRETO  NO VALIDO",  
+"success":  false,  
+"message": "No  se pudo  completar  la dispersión"  
+} { 
+"error":  "TRANSACCION  NO EXISTE",  
+"success":  false,  
+"message": "No  se pudo  completar  la dispersión"  
+} { 
+"success":  false,  
+"message": "No  se pudo  completar  la dispersión"  
+} 
+
+=== PAGE 14 ===
+
+  
+  
+  
+14 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+R4 Vuelto  
+https://r4conecta.mibanco.com.ve/ MBvuelto  
+ 
+El Método de Procesamiento de vuelto en la red interbancaria permite obtener la referencia y 
+estado de la transacción.  
+ -------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 Output Text Format Hex de "Telefono_destino 
++ Monto + Banco + Cedula" usando como llave del cifrado el token Commerce.  
+--header Content -Type:  application/json  
+--header Authorization:  {{ TOKEN AUTHORIZATION  }}  
+--header Commerce:  Prop orcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo ( R4vuelto):   
+Request  
+ 
+{  
+    "TelefonoDestino": "0414 5555555 ", // Telefono del beneficiario - String - 11 numérico  
+    "Cedula": "V1 2345678 ", //Tipo de Documento(V, E) + Documento de identidad del beneficiario - String - 9 caracteres 
+alfanuméricos  
+    "Banco": "0102", // Codigo del banco del beneficiario - String - 4 numérico  
+    "Monto": "1000.00", // Monto con decimales separados por punto '.' - Strin g - máximo 8 números y 2 decimales  
+    "Concepto": "PRUEBA", // `OPCIONAL` Motivo del pago - String - 30 caracteres alfanuméricos  
+    "Ip": "0.0.0.0" // `OPCIONAL` Ip de la maquina desde donde se esta haciendo el vuelto - String - 8 numérico  
+}  
+  
+Modelo para la respuesta (Vuelto Aprobado estatus “00”):   
+ 
+{  
+    "code": "00",  
+    "message": "TRANSACCION EXITOSA",  
+    "reference": "15558293"  
+}  
+  
+Response:   
+El modelo para la respuesta (Vuelto Rechazado estatus “08”):   
+{  
+    "code": "08",  
+    "message": "Token Inválido"  
+
+=== PAGE 15 ===
+
+  
+  
+  
+15 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+}  
+El modelo para la respuesta (Vuelto Rechazado estatus “14”):   
+{  
+    "code": "14",  
+    "message": "combo celular cedula no registrado verifique datos del receptor"  
+}  
+El modelo para la respuesta (Vuelto Rechazado estatus “51”):  
+{  
+    "code": "51",  
+    "message": "NO TIENE FONDOS DISPONIBLES"  
+}  
+El modelo para la respuesta (Vuelto Rechazado estatus “55”):  
+{  
+    "code": "55",  
+    "message": "TELEFONO ORIGEN NO EXIS TE"  
+}  
+El modelo para la respuesta (Vuelto Rechazado estatus “56”):  
+{  
+    "code": "56",  
+    "message": "no coincide número  del celular con el afiliado a la cedula"  
+}  
+El modelo para la respuesta (Vuelto Rechazado estatus “80”):  
+{  
+    "code": "80",  
+    "message": "Cédula del rec eptor invalida verifique datos"  
+}  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 16 ===
+
+  
+  
+  
+16 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+Proceso Débito Inmediato  
+ 
+La ejecución de una transacción de Débito Inmediato consta de los siguientes  pasos : 
+ 
+ Se genera una OTP interactuando con el endpoint GenerarOtp.  
+ El OTP  obtenido , se utiliza como entrada para el endpoint DebitoInmediato.  
+ 
+NOTA:  Una transacción exitosa se confirma con el código “ACCP ” respuesta (Aceptada). En caso 
+de obtener una respuesta con el código “AC00 ” (Operación en espera de respuesta del receptor) , 
+se debe utilizar el "id" obtenido en el endpoint DebitoInmediato y realizar la consulta en el 
+endpoint ConsultarOperaciones  para verificar el resultado final de la transacción.  
+ 
+Generar OTP  
+https://r4conecta.mibanco.com.ve/ GenerarOtp  
+El Método inicia el proceso de generación del OTP interbancario, al llamar a este método se envía 
+la instrucción al banco pagador para que genere el OTP y lo envié a su cliente.   
+ 
+----- Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de "Banco + Monto + Teléfono + Cedula" usando 
+como llave del cifrado el token Commerce.  
+--header Content -Type:  application/json  
+--header Authorization:  {{TOKEN AUTHORIZATION}}  
+--header Commerce:  Proporcionado por el banco para garan tizar la autenticación y autorización 
+del usuario.   
+ 
+JSON Modelo (GenerarOtp):   
+Request  
+ 
+{  
+    "Banco": "0192", // string - 4 numérico  
+    "Monto": "50.00", // Monto con decimales separados por punto '.' - String - máximo 8 números y 2 decimales  
+    "Telefono": "0414 5555555 ", // string 11 numérico  
+     "Cedula": "V 12345678 " // string - 9 alfanumérico  
+}  
+  
+ 
+ 
+
+=== PAGE 17 ===
+
+  
+  
+  
+17 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+Modelo para la respuesta (code “202”):   
+{  
+    "code": "202",  
+    "message": "Se ha recibido el mensaje de forma satisfactoria",   
+   "success": true  
+}  
+   
+Débito Inmediato  
+  
+https://r4conecta.mibanco.com.ve/ DebitoInmediato  
+  
+Este método permite completar la operación de débito inmediato interbancario, se debe iniciar 
+primero el generador de OTP y completar en la request  el OTP generado por el banco pagador.  
+ 
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de "Banco + Cedula + Telefono + Monto + OTP" 
+usando como llave del cifrado el token Commerce.   
+--header Content -Type:  application/json   
+--header Au thorization:  {{ TOKEN AUTHORIZATION }}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo (DebitoInmediato):   
+Request  
+{  
+    "Banco": "0191", // string - 4 numérico  
+    "Monto": "50.00", // Monto con decimales separados por punto '.' - String - máximo 8 números y 2 decimales  
+    "Telefono": "0414 5555555 ", // string - 11 numérico  
+    "Cedula": "V 12345678 ", // string - 9 alfanumérico  
+    "Nombre": " Maria Perez ", // / / string - 20 alfa  
+    "OTP": "19807849", // // string - 8 numérico  
+    "Concepto": "pago Condominio1" // string - 30 alfanumérico  
+}  
+  
+ 
+
+=== PAGE 18 ===
+
+  
+  
+  
+18 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+ 
+El modelo para la respuesta (code AC00 Rechazado):  
+Response  
+{  
+   "code": "AC00",  
+   "message": "Operación en Espera de Respuesta del Receptor" ,  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+ 
+El modelo para la respuesta (code ACCP Aprobado):  Response  
+{  
+   "code": "ACCP",  
+   "message": "Operación Aceptada",  
+   "reference": "16142940",  
+    "id": "6785d 97e-2092 -49f0 -9f7d -3d5921f0b13f"  
+}  
+ 
+ Consultar Operaciones  
+ 
+https://r4conecta.mibanco.com.ve/ ConsultarOperaciones  
+ 
+Este método permite consultar operaciones realizadas, se envía el UUID y se obtiene el estatus, 
+debe usarse si la respuesta de los métodos crédito y débito inmediato responde diferente que 
+ACCP .  
+ 
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de “Id" usando como llave del cifrado el token 
+Commerce.   
+--header Content -Type:  application/json   
+--header Authorization:  {{TOKEN AUTHORIZATION}}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo (ConsultaOperaciones):   
+Request  
+{  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094" - string - 36 alfanumericos  
+}  
+
+=== PAGE 19 ===
+
+  
+  
+  
+19 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+  
+El modelo para la respuesta:  Response  
+{  
+    "code": "ACCP",  
+    "reference": "16413121",  
+    "success": true  
+}  
+ 
+Domiciliación de cuentas 20 dígitos  
+  
+https://r4conecta.mibanco.com.ve/ TransferenciaOnline/DomiciliacionCNTA  
+ 
+Este método permite completar la operación de domiciliación de cuentas bancarias, utilizando el 
+número de cuenta de 20 dígitos.  
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de "cuenta" usando como llave del cifrado el 
+token Commerce.   
+--header Content -Type:  application/json   
+--header Authorization:  {{TOKEN AUTHORIZATION}}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo ( DomiciliacionCNTA ):   
+Request  
+{ 
+    "docId": "V1 2345678 ", 
+    "nombre": "Raul Rojas",  
+    "cuenta": "01344578987450000015",  
+    "monto": "1.33",  
+    "concepto": "Pago"  
+} 
+ 
+El modelo para la respuesta (code exitoso):   
+Response  
+ 
+{ 
+    "codigo": "202",  
+    "mensaje": "Se ha recibido el mensaje de forma satisfactoria",  
+    "uuid": "04c8a596 -f1c5 -4c68 -a984 -2216ff984317"  
+} 
+
+=== PAGE 20 ===
+
+  
+  
+  
+20 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+   
+El modelo para la respuesta (code Rechazado):  
+Response  
+{ 
+    "codigo": "07",  
+    "mensaje": "Request Inválida, error en el campo: DocId",  
+    "uuid": ""  
+} 
+ 
+{ 
+ "codigo":    "11",  
+ "mensaje": "Error de respuesta"  
+} 
+ 
+Domiciliación por teléfono  
+  
+https://r4conecta.mibanco.com.ve/ TransferenciaOnline/DomiciliacionCELE  
+ 
+Este método permite completar la operación de domiciliación de cuentas bancarias.  
+NOTA:  El primer envío es para que el usuario realice la afiliación en su banco y no genera el cobro.  
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de "telefono" usando como llave del cifrado el 
+token Commerce.   
+--header Content -Type:  applic ation/json   
+--header Authorization:  {{ TOKEN AUTHORIZATION }}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo ( Domiciliacion CELE ):   
+Request  
+ 
+{ 
+    "docId": "V1 2345678 ", 
+    "telefono": "0414 5555555 ", 
+    "nombre": "Raul Lopez",  
+    "banco": "0134",  
+    "monto": "1.20",  
+    "concepto": "Pago"  
+} 
+
+=== PAGE 21 ===
+
+  
+  
+  
+21 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+El modelo para la respuesta (code Rechazado):  
+Response  
+ 
+{ 
+    "codigo": "07",  
+    "mensaje": "Request Inválida, error en el campo: DocId",  
+    "uuid": ""  
+} 
+ 
+{ 
+ "codigo":    "11",  
+ "mensaje": "Error de respuesta"  
+} 
+ 
+Crédito Inmediato  
+  
+https://r4conecta.mibanco.com.ve/ CreditoInmediato  
+Este método permite completar la operación de crédito inmediato interbancario utilizando como 
+dato de  destino el número de teléfono del beneficiario.  
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de "Banco + Cedula + Telefono + Monto ” 
+usando como llave del cifrado el token Commerce.   
+--header Content -Type:  application/json   
+--header  Authorization:  {{ TOKEN AUTHORIZATION }}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo (CreditoInmediato):   
+Request  
+{  
+   "Banco": "0163", // string - 4 numérico  
+    "Cedula": "V1 2345678 ", // string - 9 alfanumericos  
+    "Telefono": "0414 5555555 ", // string - 11 numerico  
+    "Monto": "1.00",    // Monto con decimales separados por punto '.' - String - máximo 8 números y 2 decimales     
+    "Concepto":    "Prueba 854" // string - 30 alfanumérico  
+}  
+  
+ 
+
+=== PAGE 22 ===
+
+  
+  
+  
+22 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+El modelo para la respuesta (code ACCP Aprobado):   
+Response  
+ 
+{  
+   "code": "ACCP",  
+   "message": "Operación Aceptada",  
+   "reference": "87882878",  
+    "id": "ce85d97e -2092 -49f0 -9f7d -3d5921f0b13c"  
+}  
+    
+Crédito Inmediato cuentas 20 dígitos  
+  
+https://r4conecta.mibanco.com.ve/ CICuentas  
+Este método permite completar la operación de crédito inmediato interbancario utilizando el 
+número de cuenta de 20 dígitos.  
+-------  Headers -------   
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 de "Cedula + Cuenta + Monto" usando como 
+llave del cifrado el token Commerce.   
+--header Content -Type:  application/json   
+--header Authorization:  {{TOKEN AUTHORIZATION}}   
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo (CreditoInmediato):   
+ 
+Request  
+{  
+    "Cedula": "V1 2345678 ",  
+    "Cuenta": "01690547895468745212",  
+    "Monto": "1.00",      
+    "Concepto": "Prueba 854"  
+}  
+  
+ 
+ 
+ 
+ 
+
+=== PAGE 23 ===
+
+  
+  
+  
+23 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+ 
+El modelo para la respuesta (code ACCP Aprobado):   
+Response  
+ 
+{  
+   "code": "ACCP",  
+   "message": "Operación Aceptada",  
+   "reference": "87882878"  
+}  
+ 
+Modelos de respuestas para Dé bito, Crédito Inmediato y Domiciliación  
+  
+El modelo para las respuestas (code AB01 Rechazado):  
+Response  
+ 
+{  
+   "code": "AB01",  
+   "message": "Tiempo de espera agotado",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AB07 Rechazado):  
+Response  
+ 
+{  
+   "code": "AB07",  
+   "message": "Agente fuera de línea",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AC01 Rechazado):  
+Response  
+  
+{  
+   "code": "AC01",  
+   "message ": "Número de cuenta incorrecto ",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+ 
+ 
+ 
+ 
+
+=== PAGE 24 ===
+
+  
+  
+  
+24 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (code AC04 Rechazado):  
+Response  
+ 
+{  
+   "code": "AC04",  
+   "message": "Cuenta cancelada",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AC06 Rechazado):  
+Response  
+ 
+{  
+   "code": "AC06",  
+   "message": "Cuenta bloqueada",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AC09 Rechazado):  
+Response  
+ 
+{  
+   "code": "AC09",  
+   "message": "Moneda no válida",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AG01 Rechazado):  
+Response  
+ 
+{ 
+   "code": "AG01",  
+   "message ": "Transacción Restringida",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AG09 Rechazado):  
+Response  
+ 
+{ 
+   "code": "AG09",  
+   "message": "Pago no recibido",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+ 
+
+=== PAGE 25 ===
+
+  
+  
+  
+25 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (code AG10 Rechazado):  
+Response   
+{  
+   "code": "AG10",  
+   "message": "Agente suspendido o excluido",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AM02 Rechazado):  
+Response   
+{  
+   "code": "AM02",  
+   "message": "Monto de la transacción no permitido",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AM04 Rechazado):  
+Response   
+{  
+   "code": "AM04",  
+   "message": "Saldo insuficiente",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code AM05 Rechazado):  
+Response   
+{  
+   "code": "AM05",  
+   "message": "Operación duplicada",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+   
+El modelo para la respuesta (code BE01 Rechazado):  
+Response  
+ 
+{  
+   "code": "BE01 ",  
+   "message": "Datos del cliente no corresponden a la cuenta",  
+     "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+ 
+
+=== PAGE 26 ===
+
+  
+  
+  
+26 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (code BE20 Rechazado):  
+Response  
+ 
+{  
+   "code": "BE20",  
+   "message": "Longitud del nombre invalida",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code CH20 Rechazado):  
+Response  
+ 
+{  
+   "code": "CH20",  
+   "message": "Número de decimales incorrecto",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+ 
+El modelo para la respuesta (code CUST Rechazado):  
+Response  
+ 
+{  
+   "code": "CUST",  
+   "message": "Cancelación solicitada por el deudor",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code DS02 Rechazado):  
+Response  
+ 
+{  
+   "code": "DS02",  
+   "message": "Operación Cancelada",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code DT03 Rechazado):  
+Response  
+ 
+{  
+   "code ": "DT03",  
+   "message": "Fecha de procesamiento no bancaria no válida",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+ 
+
+=== PAGE 27 ===
+
+  
+  
+  
+27 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (code DT03 Rechazado):  
+Response  
+ 
+{  
+   "code": "DU01",  
+   "message ": "Identificación de mensaje duplicado",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+   
+El modelo para la respuesta (code ED05 Rechazado):  
+Response  
+ 
+{  
+   "code": "ED05",  
+   "message": "Liquidación Fallida",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code FF05 Rechazado):  
+Response  
+  
+{  
+   "code": "FF05",  
+   "message": "Código del producto incorrecto",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code FF07 Rechazado):  
+Response  
+  
+{  
+   "code": "FF07",  
+   "message": "Código del sub producto incorrecto",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code MD01 Rechazado):  
+Response   
+{  
+   "code": "MD01",  
+   "message": "No posee afiliación",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+ 
+
+=== PAGE 28 ===
+
+  
+  
+  
+28 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (code MD09 Rechazado):  
+Response  
+{  
+   "code": "MD09",  
+   "message": "Afiliación inactiva",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code MD15 Rechazado):  
+Response  
+{  
+   "code": "MD15",  
+   "message": "Monto incorrecto",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code MD21 Rechazado):  
+Response  
+{  
+   "code": "MD15",  
+   "message": "Cobro no permitido",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code MD22 Rechazado):  
+Response  
+ 
+{  
+   "code": "MD22",  
+   "message": "Afiliación suspendida",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code RC08 Rechazado):  
+Response  
+ 
+{  
+   "code": "RC08",  
+   "message": "Código del Banco no existe en el sistema de compensación /Liquidación",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+ 
+
+=== PAGE 29 ===
+
+  
+  
+  
+29 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (code RJCT Rechazado):  
+Response  
+ 
+{  
+   "code": "RJCT",  
+   "message": "Operación Rechazada",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code TKCM Rechazado):  
+Response    
+{  
+   "code": "TKCM",  
+   "message": "Código único de operación de débito incorrecto",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code VE01 Rechazado):  
+Response  
+ 
+{  
+   "code": "VE01",  
+   "message": "Fuera del horario permitido",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+El modelo para la respuesta (code TKCM Rechazado):  
+Response  
+ 
+{  
+   "code": "TM01",  
+   "message": "Rechazo técnico",  
+    "Id": "e63a7892 -f00f-46a4 -b7d1 -a6e8ac7ab094"  
+}  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+
+=== PAGE 30 ===
+
+  
+  
+  
+30 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+Cobro C2P  
+https://r4conecta.mibanco.com.ve/ MBc2p 
+El método de validación del pago móvil entrante C2P permite obtener la referencia y estado de 
+la transacción.  
+ 
+-------  Headers -------  
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA256 Output Text Format Hex  de " TelefonoDestino + 
+Monto + Banco + Cedula" usando como llave del cifrado el token Commerce.   
+--header Cont ent-Type:  application/json  
+--header Authorization: {{TOKEN AUTHORIZATION}}  
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y autorización 
+del usuario.  
+ 
+JSON Modelo ( R4c2p):  
+Request  
+El modelo para la respuesta (C2P Aprobado estatus “00”):  
+Response  
+ 
+{ 
+    "message": "TRANSACCION EXITOSA",  
+    "code": "00",  
+    "reference": "59707278"  
+} 
+ 
+El modelo para la respuesta (C2P Rechazado estatus “08”):  
+{ 
+    "code": "08",  
+    "message": "TOKEN inválido"  
+} 
+ { 
+    "TelefonoDestino": "0414 5555555 ", 
+    "Cedula": "V1 2345678 ", 
+    "Concepto": "PRUEBA",  
+    "Banco": "0105",  
+    "Ip": "192.168.1.20",  
+    "Monto": "1.15",  
+    "Otp": "13309525"  
+} 
+ 
+
+=== PAGE 31 ===
+
+  
+  
+  
+31 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+El modelo para la respuesta (C2P Rechazado estatus “15”):  
+{ 
+   "code": "15",  
+   "message": "Llave Erronea"  
+} 
+ 
+El modelo para la respuesta (C2P Rechazado estatus “30”):  
+{ 
+    "code": "30",  
+    "message": "Error en formato:30"  
+} 
+ 
+El modelo para la respuesta (C2P Rechazado estatus “41”):  
+ 
+{ 
+    "code": "41",  
+    "message": "Transaccipon no permitida Banco fuera de servicio"  
+} 
+ 
+El modelo para la respuesta (C2P Rechazado estatus “51”):  
+ 
+{ 
+    "code": "51",  
+    "message": "Insuficiencia de Fondos"  
+} 
+ 
+El modelo para la respuesta (C2P Rechazado estatus “ 80”): 
+ 
+{ 
+    "code": "80",  
+    "message": "Documento de identificación errado"  
+} 
+ 
+El modelo para la respuesta (C2P Rechazado estatus “56”):  
+ 
+{ 
+   "code": "56",  
+   "message": "Numero de celular no coincide"  
+} 
+ 
+
+=== PAGE 32 ===
+
+  
+  
+  
+32 
+ 
+Este documento contiene información legal confidencial y privilegiada. Si usted no es el destinatario al que se desea 3 enviar este mensaje, tiene prohibido divulgarlo  
+a cualquier persona, así como reproducirlo o copiarlo. Si recibe este mensaje por error, le solicitamos que lo notifique al r emite nte de inmediato y lo elimine de su 
+sistema.   Gerencia de Innovación Tecnológica  F. Elaboración  
+Octubre 2024  F. Modificación  
+Mayo 2025  
+Guía de Integración R4 Conecta  Versión  
+3.0 CÓDIGO D-PYM -001 
+Anulación C2P  
+ 
+https://r4conecta.mibanco.com.ve/ MBanulacionC2P  
+El método de validación del pago móvil entrante C2P permite anular una  transacción.  
+-------  Headers -------  
+TOKEN AUTHORIZATION:  Cifrado HMAC -SHA25 6 Output Text Format Hex  de "Banco" usando 
+como llave del cifrado el token Commerce.   
+--header Content -Type:  application/json  
+--header Authorization: {{TOKEN  AUTHORIZATION} }  
+--header Commerce:  Proporcionado por el banco para garantizar la autenticación y  autorización 
+del usuario.  
+ 
+JSON Modelo ( R4anulacionC2P ):  
+Request  
+El modelo para la respuesta (C2P anulacion Aprobado estatus “00”):  
+Response  
+ 
+{ 
+    "message": "TRANSACCION EXITOSA",  
+    "code": "00",  
+    "reference": "59707278"  
+} 
+ 
+El modelo para la respuesta (C2P anulacion rechazado  estatus “ 41”):  
+Response  
+ 
+{ 
+    "code": "41",  
+    "message": "Servicio no activo o negada por el banco"  
+} 
+ 
+FINAL DOCUMENTO   
+ { 
+    "Cedula": "V 12345678 ",  
+    "Banco": "0105",  
+    "Referencia": "58945790"  
+} 

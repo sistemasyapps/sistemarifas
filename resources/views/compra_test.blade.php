@@ -186,9 +186,42 @@
                                 <label>Capture Bancario</label>
                                 <input type="file" accept="image/*" id="archivo_pago" name="archivo_pago" onblur="put_pago(this.id,this.value)" class="form-control" style="font-weight: bold;">
                               </div>
+                              <div class="col-12" style="margin-bottom: 15px">
+                                <label>Banco Emisor</label>
+                                <select id="bank_code" name="bank_code" class="form-control">
+                                  <option value="">Seleccione banco</option>
+                                  <option value="0102">0102 - Banco de Venezuela S.A.C.A. Banco Universal</option>
+                                  <option value="0104">0104 - Venezolano de Crédito, S.A. Banco Universal</option>
+                                  <option value="0105">0105 - Mercantil Banco, C.A. Banco Universal</option>
+                                  <option value="0108">0108 - BBVA Provincial, S.A. Banco Universal</option>
+                                  <option value="0114">0114 - Bancaribe C.A. Banco Universal</option>
+                                  <option value="0115">0115 - Banco Exterior C.A. Banco Universal</option>
+                                  <option value="0128">0128 - Banco Caroní C.A. Banco Universal</option>
+                                  <option value="0134">0134 - Banesco, Banco Universal S.A.C.A.</option>
+                                  <option value="0137">0137 - Banco Sofitasa, Banco Universal</option>
+                                  <option value="0138">0138 - Banco Plaza, Banco Universal</option>
+                                  <option value="0146">0146 - Bangente C.A</option>
+                                  <option value="0151">0151 - BFC Banco Fondo Común C.A. Banco Universal</option>
+                                  <option value="0156">0156 - 100% Banco, Banco Universal C.A.</option>
+                                  <option value="0157">0157 - DelSur Banco Universal C.A.</option>
+                                  <option value="0163">0163 - Banco del Tesoro, C.A. Banco Universal</option>
+                                  <option value="0166">0166 - Banco Agrícola de Venezuela, C.A. Banco Universal</option>
+                                  <option value="0168">0168 - Bancrecer, S.A. Banco Microfinanciero</option>
+                                  <option value="0169">0169 - R4, Banco Microfinanciero C.A.</option>
+                                  <option value="0171">0171 - Banco Activo, Banco Universal</option>
+                                  <option value="0172">0172 - Bancamiga, Banco Universal C.A.</option>
+                                  <option value="0173">0173 - Banco Internacional de Desarrollo, C.A. Banco Universal</option>
+                                  <option value="0174">0174 - Banplus Banco Universal, C.A</option>
+                                  <option value="0175">0175 - Banco Digital de Los Trabajadores</option>
+                                  <option value="0177">0177 - Banco de la Fuerza Armada Nacional Bolivariana, B.U.</option>
+                                  <option value="0178">0178 - N58 Banco Digital, S.A. J503581107</option>
+                                  <option value="0191">0191 - Banco Nacional de Crédito, C.A. Banco Universal</option>
+                                  <option value="0601">0601 - Instituto Municipal de Crédito Popular</option>
+                                </select>
+                              </div>
                               <div class="col-12">
-                                <label>Referencia Bancaria (Últimos 6 Dígitos)</label>
-                                <input type="text" onkeyup="put_pago(this.id,this.value)" id="ref" name="ref" class="form-control" maxlength="6">
+                                <label>Referencia Bancaria (8 Dígitos)</label>
+                                <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control" maxlength="8">
                               </div>
                             </div>
                           </div>
@@ -504,6 +537,10 @@
           Swal.fire("Debes colocar la referencia");
           return;
         }
+        if(jQuery("#bank_code").val() == "") {
+          Swal.fire("Debes seleccionar el banco emisor");
+          return;
+        }
 
         // if(jQuery("#fecha").val() == "") {
         //   Swal.fire("Debes colocar la fecha del pago");
@@ -528,6 +565,7 @@
         formData.append("cantidad", datos.cant_boletos);
         formData.append("cedula", jQuery("#cedula").val());
         formData.append("ref_banco", jQuery("#ref").val());
+        formData.append("bank_code", jQuery("#bank_code").val());
         formData.append("ref_imagen", archivo_pago.files[0]);
         // formData.append("ref_fecha", jQuery("#fecha").val());
 

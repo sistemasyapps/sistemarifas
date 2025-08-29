@@ -46,7 +46,8 @@ class OrderController extends Controller
             'correo' => 'required',
             'tlf' => 'required',
             'cantidad' => 'required',
-            // 'ref_banco' => 'required',
+            'ref_banco' => 'required|digits:8',
+            'bank_code' => 'required|digits:4',
             'ref_imagen' => 'required',
             // 'ref_fecha' => 'required',
         ]);
@@ -105,9 +106,10 @@ class OrderController extends Controller
 
 
         $repetido = Order::where('client_id','=',$cliente->id)
-        ->where('ref_banco','=',$data['ref_banco'])
-        ->where('raffle_id','=',$data['raffle_id'])
-        ->exists();
+            ->where('ref_banco','=',$data['ref_banco'])
+            ->where('bank_code','=',$request->bank_code)
+            ->where('raffle_id','=',$data['raffle_id'])
+            ->exists();
         if($repetido) {
             return response()->json([
                 'success' => false,
@@ -158,6 +160,7 @@ class OrderController extends Controller
         }
 
         $data['city_id'] = $city_id;
+        $data['bank_code'] = $request->bank_code;
         Log::info('Terminar de crear datos personalizados para la orden');
         
 

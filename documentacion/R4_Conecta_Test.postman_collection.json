@@ -1,0 +1,114 @@
+{
+  "info": {
+    "name": "R4 Conecta - Laravel Integration",
+    "_postman_id": "c7f1b4e9-2a1b-4f44-9af8-6c6a2b7d1a23",
+    "description": "Colección para probar el flujo R4 (consulta/notifica) y el alta de órdenes del cliente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Orders (Cliente)",
+      "item": [
+        {
+          "name": "Reportar Pago (Cliente) - /api/orderCliente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "raffle_id", "value": "{{raffle_id}}", "type": "text" },
+                { "key": "nombre_completo", "value": "{{test_nombre}}", "type": "text" },
+                { "key": "correo", "value": "{{test_correo}}", "type": "text" },
+                { "key": "tlf", "value": "{{test_tlf}}", "type": "text" },
+                { "key": "cantidad", "value": "{{test_cantidad}}", "type": "text" },
+                { "key": "cedula", "value": "{{test_cedula}}", "type": "text" },
+                { "key": "ref_banco", "value": "{{test_referencia}}", "type": "text" },
+                { "key": "bank_code", "value": "{{test_bank_code}}", "type": "text" },
+                { "key": "ref_imagen", "type": "file", "src": "" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orderCliente",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "orderCliente" ]
+            },
+            "description": "Adjunta un archivo en ref_imagen (capture bancario). Debes completar bank_code (4 dígitos) y ref_banco (8 dígitos)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "R4 (Banco)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const commerce = pm.collectionVariables.get('R4_COMMERCE');",
+              "if (commerce) {",
+              "  const sig = CryptoJS.HmacSHA256('Banco', commerce);",
+              "  const hex = CryptoJS.enc.Hex.stringify(sig);",
+              "  pm.request.headers.upsert({ key: 'Commerce', value: commerce });",
+              "  pm.request.headers.upsert({ key: 'Authorization', value: hex });",
+              "  pm.request.headers.upsert({ key: 'Content-Type', value: 'application/json' });",
+              "}"
+            ]
+          }
+        }
+      ],
+      "item": [
+        {
+          "name": "R4consulta - /api/R4consulta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Cedula\": \"{{test_cedula}}\",\n  \"Banco\": \"{{test_bank_code}}\",\n  \"Monto\": {{test_monto}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/R4consulta",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "R4consulta" ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "R4notifica (aprobada code=00) - /api/R4notifica",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"Cedula\": \"{{test_cedula}}\",\n  \"Banco\": \"{{test_bank_code}}\",\n  \"Referencia\": \"{{test_referencia}}\",\n  \"Monto\": {{test_monto}},\n  \"code\": \"00\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/R4notifica",
+              "host": [ "{{base_url}}" ],
+              "path": [ "api", "R4notifica" ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "https://TU_DOMINIO" },
+    { "key": "R4_COMMERCE", "value": "" },
+    { "key": "raffle_id", "value": "1" },
+    { "key": "test_cedula", "value": "V12345678" },
+    { "key": "test_bank_code", "value": "0105" },
+    { "key": "test_referencia", "value": "58945790" },
+    { "key": "test_monto", "value": "150.00" },
+    { "key": "test_nombre", "value": "Cliente Demo" },
+    { "key": "test_correo", "value": "demo@example.com" },
+    { "key": "test_tlf", "value": "+584121234567" },
+    { "key": "test_cantidad", "value": "2" }
+  ]
+}
+

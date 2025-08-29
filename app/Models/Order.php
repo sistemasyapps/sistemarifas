@@ -11,7 +11,20 @@ class Order extends Model
 {   
     use HasFactory;
 
-    protected $fillable = ["raffle_id","client_id","precio_dolar","cantidad","ref_imagen","IP","city_id","uuid","ref_banco"];
+    protected $fillable = [
+        "raffle_id",
+        "client_id",
+        "precio_dolar",
+        "cantidad",
+        "ref_imagen",
+        "IP",
+        "city_id",
+        "uuid",
+        "ref_banco",
+        "bank_code",
+        "monto_notificado_bs",
+        "fecha_pago_notificado",
+    ];
 
     public function raffle(): BelongsTo
     {

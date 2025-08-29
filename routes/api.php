@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\UploadController;
 use App\Http\Controllers\Api\FirebasePushController;
+use App\Http\Controllers\Api\R4WebhookController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -27,3 +28,7 @@ Route::post('/uploadLogo', [UploadController::class, 'uploadLogo']);
 
 Route::post('/toTopic/{token}', [FirebasePushController::class, 'toTopic']);
 Route::get('/pruebaNotificaction', [FirebasePushController::class, 'testSending']);
+
+// R4 Webhook endpoints (push flow)
+Route::post('/R4consulta', [R4WebhookController::class, 'consulta'])->middleware('r4.verify');
+Route::post('/R4notifica', [R4WebhookController::class, 'notifica'])->middleware('r4.verify');
