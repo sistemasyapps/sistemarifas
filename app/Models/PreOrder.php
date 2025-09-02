@@ -23,5 +23,13 @@ class PreOrder extends Model
         'monto',
         'IP',
     ];
-}
 
+    protected static function booted()
+    {
+        static::saving(function (PreOrder $pre) {
+            if (!empty($pre->bank_code)) {
+                $pre->bank_code_last3 = substr((string) $pre->bank_code, -3);
+            }
+        });
+    }
+}

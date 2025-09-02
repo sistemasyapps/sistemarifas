@@ -7,6 +7,128 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="{{asset('assets/css/compra.css')}}?ver=3" rel="stylesheet">
+    <style>
+      /* Modern UI Styles */
+      .modern-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .modern-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      /* Modern Input Group */
+      .modern-input-group {
+        margin-bottom: 1rem;
+      }
+
+      .modern-label {
+        display: block;
+        color: #94a3b8;
+        font-weight: 600;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+      }
+
+      .modern-label i {
+        color: #10b981;
+        opacity: 0.8;
+      }
+
+      .modern-form-control {
+        background: rgba(30, 41, 59, 0.5) !important;
+        border: 1px solid rgba(148, 163, 184, 0.2) !important;
+        border-radius: 12px !important;
+        color: white !important;
+        font-size: 1rem !important;
+        padding: 1rem !important;
+        transition: all 0.3s ease !important;
+        position: relative;
+      }
+
+      .modern-form-control::placeholder {
+        color: rgba(148, 163, 184, 0.5) !important;
+      }
+
+      .modern-form-control:focus {
+        background: rgba(30, 41, 59, 0.8) !important;
+        border-color: #10b981 !important;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15) !important;
+        transform: translateY(-1px) !important;
+        outline: none !important;
+      }
+
+      .modern-form-control:hover {
+        border-color: rgba(148, 163, 184, 0.4) !important;
+        background: rgba(30, 41, 59, 0.7) !important;
+      }
+
+      /* Focus effect on label when input is focused */
+      .modern-input-group .modern-form-control:focus + .modern-label,
+      .modern-input-group:focus-within .modern-label {
+        color: #10b981;
+      }
+
+      .modern-input-group .modern-form-control:focus ~ .modern-label,
+      .modern-input-group:focus-within .modern-label {
+        color: #10b981;
+      }
+
+      /* Button Styles */
+      .modern-btn-success:hover {
+        background: linear-gradient(135deg, #059669, #047857) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4) !important;
+      }
+
+      .modern-btn-success:active {
+        transform: translateY(0);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3) !important;
+      }
+
+      /* Select styling */
+      .modern-form-control option {
+        background: #1e293b !important;
+        color: white !important;
+      }
+
+      /* Loading button animation */
+      .modern-btn-success[disabled] {
+        background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+        cursor: not-allowed;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .modern-btn-success.loading {
+        animation: pulse 1.5s infinite;
+      }
+
+      /* Mobile responsiveness */
+      @media (max-width: 768px) {
+        .modern-card .card-body {
+          padding: 1.5rem !important;
+        }
+        
+        .modern-card h3 {
+          font-size: 1.5rem !important;
+        }
+
+        .modern-form-control {
+          padding: 0.875rem !important;
+          font-size: 0.95rem !important;
+        }
+        
+        .modern-label {
+          font-size: 0.85rem !important;
+        }
+      }
+    </style>
     
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-56EB9E6237"></script>
@@ -29,70 +151,112 @@
                   <div class="wpb_column container-fluid vc_col-sm-12">
                     <div class="vc_column-inner">
                       <div class="wpb_wrapper">
-                        <div class="card" style="background:#0b0b0b7a;border-radius:10px;border:1px solid #2c2c2c;">
-                          <div class="card-body">
-                            <h3 class="h3_responsive text-white" style="text-align:center;">Datos del Comprador</h3>
-                            <p class="text-white-50" style="text-align:center;">Completa tus datos para iniciar la compra. Luego verás los datos de pago.</p>
-                            <div class="text-center" style="margin-bottom:10px;">
-                              <span class="text-white" style="font-weight:600;">Total en Bs: </span>
-                              <span class="text-warning" id="pre_final_bs" style="font-weight:700;"></span>
+                        <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
+                          <div class="card-body" style="padding: 2.5rem;">
+                            <!-- Header Section -->
+                            <div class="text-center mb-4">
+                              <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
+                                <i class="fas fa-user-edit" style="font-size: 2rem; color: white;"></i>
+                              </div>
+                              <h3 class="h3_responsive text-white mb-2" style="font-weight: 700; font-size: 1.875rem; letter-spacing: -0.025em;">Datos del Comprador</h3>
+                              <p class="text-slate-300" style="font-size: 1.1rem; margin-bottom: 0;">Completa tus datos para iniciar la compra. Luego verás los datos de pago.</p>
                             </div>
-                            <div class="roW d-flex" style="gap: 10px">
-                              <div class="col-6">
-                                <label>Cédula</label>
-                                <input type="number" id="pre_cedula" class="form-control" inputmode="numeric" placeholder="12345678">
-                              </div>
-                              <div class="col-6">
-                                <label>Nombre completo</label>
-                                <input type="text" id="pre_nombre" class="form-control" maxlength="100" placeholder="Nombre y Apellido">
-                              </div>
-                            </div>
-                            <div class="roW d-flex" style="gap: 10px">
-                              <div class="col-6">
-                                <label>Correo</label>
-                                <input type="email" id="pre_correo" class="form-control" maxlength="100" placeholder="tucorreo@dominio.com">
-                              </div>
-                              <div class="col-6">
-                                <label>Teléfono</label>
-                                <input type="number" id="pre_telefono" class="form-control" maxlength="11" inputmode="numeric" placeholder="0412XXXXXXX">
+
+                            <!-- Total Amount -->
+                            <div class="text-center mb-4">
+                              <div class="d-inline-block px-4 py-3" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px;">
+                                <span class="text-slate-200" style="font-weight: 500; font-size: 1rem;">Total a pagar: </span>
+                                <span class="text-emerald-400" id="pre_final_bs" style="font-weight: 800; font-size: 1.25rem;"></span>
                               </div>
                             </div>
-                            <div class="col-12" style="margin-bottom: 15px">
-                              <label>Banco Emisor</label>
-                              <select id="pre_bank_code" class="form-control">
-                                <option value="">Seleccione banco</option>
-                                <option value="0102">0102 - Banco de Venezuela S.A.C.A. Banco Universal</option>
-                                <option value="0104">0104 - Venezolano de Crédito, S.A. Banco Universal</option>
-                                <option value="0105">0105 - Mercantil Banco, C.A. Banco Universal</option>
-                                <option value="0108">0108 - BBVA Provincial, S.A. Banco Universal</option>
-                                <option value="0114">0114 - Bancaribe C.A. Banco Universal</option>
-                                <option value="0115">0115 - Banco Exterior C.A. Banco Universal</option>
-                                <option value="0128">0128 - Banco Caroní C.A. Banco Universal</option>
-                                <option value="0134">0134 - Banesco, Banco Universal S.A.C.A.</option>
-                                <option value="0137">0137 - Banco Sofitasa, Banco Universal</option>
-                                <option value="0138">0138 - Banco Plaza, Banco Universal</option>
-                                <option value="0146">0146 - Bangente C.A</option>
-                                <option value="0151">0151 - BFC Banco Fondo Común C.A. Banco Universal</option>
-                                <option value="0156">0156 - 100% Banco, Banco Universal C.A.</option>
-                                <option value="0157">0157 - DelSur Banco Universal C.A.</option>
-                                <option value="0163">0163 - Banco del Tesoro, C.A. Banco Universal</option>
-                                <option value="0166">0166 - Banco Agrícola de Venezuela, C.A. Banco Universal</option>
-                                <option value="0168">0168 - Bancrecer, S.A. Banco Microfinanciero</option>
-                                <option value="0169">0169 - R4, Banco Microfinanciero C.A.</option>
-                                <option value="0171">0171 - Banco Activo, Banco Universal</option>
-                                <option value="0172">0172 - Bancamiga, Banco Universal C.A.</option>
-                                <option value="0173">0173 - Banco Internacional de Desarrollo, C.A. Banco Universal</option>
-                                <option value="0174">0174 - Banplus Banco Universal, C.A</option>
-                                <option value="0175">0175 - Banco Digital de Los Trabajadores</option>
-                                <option value="0177">0177 - Banco de la Fuerza Armada Nacional Bolivariana, B.U.</option>
-                                <option value="0178">0178 - N58 Banco Digital, S.A. J503581107</option>
-                                <option value="0191">0191 - Banco Nacional de Crédito, C.A. Banco Universal</option>
-                                <option value="0601">0601 - Instituto Municipal de Crédito Popular</option>
-                              </select>
-                            </div>
-                            <div class="d-grid" style="gap:10px">
-                              <button class="btn btn-success" id="btnPreOrder">Continuar</button>
-                            </div>
+
+                            <!-- Form Fields -->
+                            <form>
+                              <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                  <div class="modern-input-group">
+                                    <label for="pre_cedula" class="modern-label">
+                                      <i class="fas fa-id-card me-2"></i>Cédula <span style="color: #64748b; font-weight: 400;">(Del afiliado al banco)</span>
+                                    </label>
+                                    <input type="number" id="pre_cedula" class="form-control modern-form-control" inputmode="numeric" placeholder="12345678">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="modern-input-group">
+                                    <label for="pre_nombre" class="modern-label">
+                                      <i class="fas fa-user me-2"></i>Nombre completo
+                                    </label>
+                                    <input type="text" id="pre_nombre" class="form-control modern-form-control" maxlength="100" placeholder="Nombre y Apellido">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row g-4 mb-4">
+                                <div class="col-md-6">
+                                  <div class="modern-input-group">
+                                    <label for="pre_correo" class="modern-label">
+                                      <i class="fas fa-envelope me-2"></i>Correo electrónico
+                                    </label>
+                                    <input type="email" id="pre_correo" class="form-control modern-form-control" maxlength="100" placeholder="tucorreo@dominio.com">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="modern-input-group">
+                                    <label for="pre_telefono" class="modern-label">
+                                      <i class="fas fa-phone me-2"></i>Teléfono
+                                    </label>
+                                    <input type="number" id="pre_telefono" class="form-control modern-form-control" maxlength="11" inputmode="numeric" placeholder="0412XXXXXXX">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="mb-4">
+                                <div class="modern-input-group">
+                                  <label for="pre_bank_code" class="modern-label">
+                                    <i class="fas fa-university me-2"></i>Banco Emisor
+                                  </label>
+                                  <select id="pre_bank_code" class="form-select modern-form-control">
+                                    <option value="" style="background: #1e293b;">Seleccione banco</option>
+                                    <option value="0102" style="background: #1e293b;">0102 - Banco de Venezuela S.A.C.A. Banco Universal</option>
+                                    <option value="0104" style="background: #1e293b;">0104 - Venezolano de Crédito, S.A. Banco Universal</option>
+                                    <option value="0105" style="background: #1e293b;">0105 - Mercantil Banco, C.A. Banco Universal</option>
+                                    <option value="0108" style="background: #1e293b;">0108 - BBVA Provincial, S.A. Banco Universal</option>
+                                    <option value="0114" style="background: #1e293b;">0114 - Bancaribe C.A. Banco Universal</option>
+                                    <option value="0115" style="background: #1e293b;">0115 - Banco Exterior C.A. Banco Universal</option>
+                                    <option value="0128" style="background: #1e293b;">0128 - Banco Caroní C.A. Banco Universal</option>
+                                    <option value="0134" style="background: #1e293b;">0134 - Banesco, Banco Universal S.A.C.A.</option>
+                                    <option value="0137" style="background: #1e293b;">0137 - Banco Sofitasa, Banco Universal</option>
+                                    <option value="0138" style="background: #1e293b;">0138 - Banco Plaza, Banco Universal</option>
+                                    <option value="0146" style="background: #1e293b;">0146 - Bangente C.A</option>
+                                    <option value="0151" style="background: #1e293b;">0151 - BFC Banco Fondo Común C.A. Banco Universal</option>
+                                    <option value="0156" style="background: #1e293b;">0156 - 100% Banco, Banco Universal C.A.</option>
+                                    <option value="0157" style="background: #1e293b;">0157 - DelSur Banco Universal C.A.</option>
+                                    <option value="0163" style="background: #1e293b;">0163 - Banco del Tesoro, C.A. Banco Universal</option>
+                                    <option value="0166" style="background: #1e293b;">0166 - Banco Agrícola de Venezuela, C.A. Banco Universal</option>
+                                    <option value="0168" style="background: #1e293b;">0168 - Bancrecer, S.A. Banco Microfinanciero</option>
+                                    <option value="0169" style="background: #1e293b;">0169 - R4, Banco Microfinanciero C.A.</option>
+                                    <option value="0171" style="background: #1e293b;">0171 - Banco Activo, Banco Universal</option>
+                                    <option value="0172" style="background: #1e293b;">0172 - Bancamiga, Banco Universal C.A.</option>
+                                    <option value="0173" style="background: #1e293b;">0173 - Banco Internacional de Desarrollo, C.A. Banco Universal</option>
+                                    <option value="0174" style="background: #1e293b;">0174 - Banplus Banco Universal, C.A</option>
+                                    <option value="0175" style="background: #1e293b;">0175 - Banco Digital de Los Trabajadores</option>
+                                    <option value="0177" style="background: #1e293b;">0177 - Banco de la Fuerza Armada Nacional Bolivariana, B.U.</option>
+                                    <option value="0178" style="background: #1e293b;">0178 - N58 Banco Digital, S.A. J503581107</option>
+                                    <option value="0191" style="background: #1e293b;">0191 - Banco Nacional de Crédito, C.A. Banco Universal</option>
+                                    <option value="0601" style="background: #1e293b;">0601 - Instituto Municipal de Crédito Popular</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div class="d-grid mt-4">
+                                <button type="button" class="btn modern-btn-success" id="btnPreOrder" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; font-size: 1.1rem; color: white; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
+                                  <span class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-right me-2"></i>
+                                    Continuar
+                                  </span>
+                                </button>
+                              </div>
+                            </form>
                           </div>
                         </div>
                       </div>
