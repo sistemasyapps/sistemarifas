@@ -208,24 +208,11 @@ class OrderController extends Controller
             Log::error("Error al crear numeros en la orden ".$e->getMessage());
         }
 
-        // Auto-aprobar si la pre_orden ya fue notificada por el banco
-        if ($preOrder && $preOrder->notificado) {
-            $order->estatus = '1';
-            if ($preOrder->monto_notificado) {
-                $order->monto_notificado_bs = $preOrder->monto_notificado;
-            } else {
-                // como fallback, usar monto esperado
-                $order->monto_notificado_bs = $preOrder->monto;
-            }
-            if ($preOrder->notificado_at) {
-                $order->fecha_pago_notificado = $preOrder->notificado_at;
-            }
-            // si la referencia llegó en notifica, úsala
-            if ($preOrder->ref_banco) {
-                $order->ref_banco = $preOrder->ref_banco;
-            }
-            // bank_code ya lo envía el form y debe coincidir con pre_orden
-            $order->save();
+        // Programar aprobación post-asignación de tickets (maneja ambos casos: R4notifica antes o después)
+        try {
+            \App\Jobs\ApproveOrderJob::dispatch($order->id)->delay(now()->addSeconds(5));
+        } catch (\Throwable $e) {
+            // best-effort; no romper el flujo al usuario
         }
 
         Log::info('Termina la creacion de datos');

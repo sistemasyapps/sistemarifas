@@ -203,7 +203,7 @@
                                 <div class="col-md-6">
                                   <div class="modern-input-group">
                                     <label for="pre_telefono" class="modern-label">
-                                      <i class="fas fa-phone me-2"></i>Teléfono
+                                      <i class="fas fa-phone me-2"></i>Teléfono <span style="color: #64748b; font-weight: 400;">(Del afiliado al banco)</span>
                                     </label>
                                     <input type="number" id="pre_telefono" class="form-control modern-form-control" maxlength="11" inputmode="numeric" placeholder="0412XXXXXXX">
                                   </div>
@@ -417,7 +417,7 @@
                             </div>
                             <div class="roW d-flex" style="gap: 10px">
                               <div class="col-12">
-                                <label>Teléfono</label>
+                                <label>Teléfono (Del afiliado al banco)</label>
                                 <input type="text" onkeyup="put_persona(this.id,this.value)" id="telefono" name="telefono" class="form-control" maxlength="20" placeholder="Escriba su nro de Whatsapp" readonly>
                               </div>
                             </div>

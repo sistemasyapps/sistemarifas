@@ -98,6 +98,7 @@ class R4WebhookController extends Controller
 
         $ref8 = substr(preg_replace('/[^0-9]/', '', $ref), -8);
         $telCom = preg_replace('/[^0-9]/', '', $telefonoComercio);
+        $telEmi = preg_replace('/[^0-9]/', '', $telefonoEmisor);
         // Validar teléfono de comercio si está configurado
         $expectedTel = preg_replace('/[^0-9]/', '', (string) env('R4_TELEFONO_COMERCIO', ''));
         if ($expectedTel !== '' && $expectedTel !== $telCom) {
@@ -111,12 +112,14 @@ class R4WebhookController extends Controller
             $pre = null;
             if ($ref8 !== '') {
                 $pre = PreOrder::where('ref_banco', $ref8)
+                    ->where('telefono', $telEmi)
                     ->whereNull('estatus_preorden')
                     ->latest('id')->first();
             }
             if (!$pre) {
                 $pre = PreOrder::query()
                     ->whereNull('estatus_preorden')
+                    ->where('telefono', $telEmi)
                     ->where('monto', is_numeric($monto) ? round((float)$monto, 2) : -1)
                     ->where('bank_code_last3', $banco3)
                     ->where('created_at', '>=', now()->subDay())
@@ -157,6 +160,7 @@ class R4WebhookController extends Controller
         $pre = PreOrder::query()
             ->where('created_at', '>=', now()->subDay())
             ->whereNull('estatus_preorden')
+            ->where('telefono', $telEmi)
             ->where('monto', is_numeric($monto) ? round((float)$monto, 2) : -1)
             ->where('bank_code_last3', $banco3)
             ->latest('id')
@@ -187,14 +191,18 @@ class R4WebhookController extends Controller
             $pre->banco_emisor = substr($banco ?? '', 0, 3) ?: $pre->banco_emisor;
 
             // Si hay una Order no aprobada con esta referencia, marcamos preorden como aprobada, si no, queda pendiente_por_orden
-            $ordenExiste = \App\Models\Order::where('ref_banco', $ref8)
+            $order = \App\Models\Order::where('ref_banco', $ref8)
                 ->whereRaw('RIGHT(bank_code,3) = ?', [$banco3])
+                ->whereHas('client', function($q) use ($telEmi) { $q->where('telefono', $telEmi); })
                 ->where('estatus', '<>', '1')
-                ->exists();
-            if ($ordenExiste) {
+                ->latest('id')
+                ->first();
+            if ($order) {
                 $pre->estatus_preorden = 'aprobada';
                 $pre->notificado = true;
                 $pre->notificado_at = now();
+                // Programar aprobación post-asignación de tickets
+                try { \App\Jobs\ApproveOrderJob::dispatch($order->id)->delay(now()->addSeconds(5)); } catch (\Throwable $e) {}
             } else {
                 $pre->estatus_preorden = 'pendiente_por_orden';
             }
