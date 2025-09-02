@@ -221,7 +221,7 @@
                               </div>
                               <div class="col-12">
                                 <label>Referencia Bancaria (8 Dígitos)</label>
-                                <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control" maxlength="8">
+                                <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control" maxlength="8" placeholder="Ultimos 8 digitos">
                               </div>
                             </div>
                           </div>
@@ -324,7 +324,6 @@
       const datos = {
         cant_boletos: 2,
         precio: {{ $rifa->precio }},
-        bcv: {{ $BCV }},
         persona: {
           nombre_completo: "",
           cedula: "",
@@ -447,7 +446,7 @@
       }
 
       function comprar_ticket(){
-        const total = datos.bcv * datos.precio * datos.cant_boletos;
+        const total = datos.precio * datos.cant_boletos;
         const total_usd = datos.precio * datos.cant_boletos;
 
         // jQuery("#span_boletos").html(`${datos.cant_boletos}`)
@@ -462,7 +461,7 @@
 
       function calcular_total() {
         // validar_numeros_manual();
-        const total = datos.bcv * datos.precio * datos.cant_boletos;
+        const total = datos.precio * datos.cant_boletos;
         const total_usd = datos.precio * datos.cant_boletos;
         jQuery("#final_bs").html(`${total.toFixed(2)} Bs.`);
       }

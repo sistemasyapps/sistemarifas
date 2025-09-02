@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class WebsiteController extends Controller
 {
@@ -65,15 +66,25 @@ class WebsiteController extends Controller
         });
 
          $staticData = Cache::remember('home_static_data', 1440, function() {
-            $options = Option::All()->pluck('valor', 'clave');
+            $options = Option::all()->pluck('valor', 'clave');
             $whatsapp = $options->get('Whatsapp');
             $logo = $options->get('logo');
+
+            $patrocinadores = collect();
+            if (Schema::hasTable('sponsors')) {
+                $patrocinadores = Sponsor::query()->select('id','nombre','imagen')->get();
+            }
+
+            $rrss = collect();
+            if (Schema::hasTable('rrsses') && Schema::hasColumn('rrsses','estatus')) {
+                $rrss = Rrss::where('estatus',1)->get(['id','tipo','link']);
+            }
 
             return [
                 'whatsapp' => $whatsapp,
                 'logo' => $logo,
-                'patrocinadores' => Sponsor::all(['id', 'nombre', 'imagen']),
-                'rrss' => Rrss::where("estatus",1)->get(['id', 'tipo', 'link'])
+                'patrocinadores' => $patrocinadores,
+                'rrss' => $rrss,
             ];
         });
 

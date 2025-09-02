@@ -13,6 +13,7 @@ use App\Models\Order;
 use App\Models\Country;
 use App\Models\Region;
 use App\Models\City;
+use App\Models\PreOrder;
 use App\Jobs\CreateTickets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -83,9 +84,11 @@ class OrderController extends Controller
         } catch(Exception $e) {
             Log::info('Entro por el error de crear cliente');
             Log::error("Crear cliente error -> {cedula}, {nombre_completo}, {correo}, {telefono} -> ".$e->getMessage(),$datosCliente);
-            return response()->json([
-                'success' => false
-            ], 422);
+            $payload = ['success' => false];
+            if (app()->environment('testing')) {
+                $payload['message'] = $e->getMessage();
+            }
+            return response()->json($payload, 422);
         }
 
         Log::info('Empieza a crear datos personalizados para la orden');
@@ -96,6 +99,15 @@ class OrderController extends Controller
         $data['estatus'] = '0';
         $data['precio_dolar'] = (Option::where("clave","BCV")->pluck("valor")->toArray())[0];
         $data['ref_imagen'] = $request->file('ref_imagen')->store('images', 'public');
+        
+        // Link to pre_order if provided
+        $preOrder = null;
+        if ($request->filled('pre_order_uuid')) {
+            $preOrder = PreOrder::where('uuid', $request->input('pre_order_uuid'))->first();
+            if ($preOrder) {
+                $data['pre_order_id'] = $preOrder->id;
+            }
+        }
 
         if(in_array($data["cedula"], ["12345678","1234","351846","3255855","3265329","84332669","123456789","12345679","53255555","56532642","123456790"])){
             return response()->json([
@@ -170,9 +182,11 @@ class OrderController extends Controller
         } catch(Exception $e) {
             Log::info('Entro por el error de crear la orden');
             Log::error("Crear orden error -> cliente {id} -> ".$e->getMessage(),["id"=>$cliente->id]);
-            return response()->json([
-                'success' => false
-            ], 422);
+            $payload = ['success' => false];
+            if (app()->environment('testing')) {
+                $payload['message'] = $e->getMessage();
+            }
+            return response()->json($payload, 422);
         }
 
         // if(strtolower($cliente->correo) != "soporte@gmail.com" ) {
@@ -192,6 +206,26 @@ class OrderController extends Controller
             CreateTickets::dispatch($order);
         } catch(Exception $e) {
             Log::error("Error al crear numeros en la orden ".$e->getMessage());
+        }
+
+        // Auto-aprobar si la pre_orden ya fue notificada por el banco
+        if ($preOrder && $preOrder->notificado) {
+            $order->estatus = '1';
+            if ($preOrder->monto_notificado) {
+                $order->monto_notificado_bs = $preOrder->monto_notificado;
+            } else {
+                // como fallback, usar monto esperado
+                $order->monto_notificado_bs = $preOrder->monto;
+            }
+            if ($preOrder->notificado_at) {
+                $order->fecha_pago_notificado = $preOrder->notificado_at;
+            }
+            // si la referencia llegó en notifica, úsala
+            if ($preOrder->ref_banco) {
+                $order->ref_banco = $preOrder->ref_banco;
+            }
+            // bank_code ya lo envía el form y debe coincidir con pre_orden
+            $order->save();
         }
 
         Log::info('Termina la creacion de datos');

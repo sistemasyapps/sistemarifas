@@ -14,9 +14,11 @@ class Order extends Model
     protected $fillable = [
         "raffle_id",
         "client_id",
+        "pre_order_id",
         "precio_dolar",
         "cantidad",
         "ref_imagen",
+        "ref_fecha",
         "IP",
         "city_id",
         "uuid",

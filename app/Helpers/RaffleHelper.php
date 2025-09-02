@@ -21,9 +21,13 @@ class RaffleHelper
     public static function getActiveRaffles() : object | null
     {
         $raffle = Cache::rememberForever('active_raffle', function () {
-            $ordernar = Option::where("clave","ordenar")->pluck("valor");
-            $orden = ($ordernar[0] == "si") ? "asc" : "desc";
-            return Raffle::with('orders')->where('estatus', 1)->orderBy("id",$orden)->get() ?: null;
+            $ordenar = Option::where('clave', 'ordenar')->value('valor');
+            $orden = (is_string($ordenar) && strtolower(trim($ordenar)) === 'si') ? 'asc' : 'desc';
+            $query = Raffle::with('orders');
+            if (\Illuminate\Support\Facades\Schema::hasColumn('raffles', 'estatus')) {
+                $query->where('estatus', 1);
+            }
+            return $query->orderBy('id', $orden)->get() ?: null;
         });
 
         return $raffle;

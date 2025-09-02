@@ -124,12 +124,15 @@
 
   <script type="text/javascript">
     let cant_boletos = document.getElementById("cant_boletos");
-    let quedan = {{$raffle->queda}};
+    let quedan = {{ isset($raffle) && isset($raffle->queda) ? (int)$raffle->queda : 0 }};
     let minimo = 1;
 
-    document.getElementById("btnComprar").addEventListener("click",function(){
-      window.location.href="{{config('app.url')}}/compra?q="+cant_boletos.value;
-    });
+    const btnComprar = document.getElementById("btnComprar");
+    if (btnComprar && cant_boletos) {
+      btnComprar.addEventListener("click",function(){
+        window.location.href="{{config('app.url')}}/compra?q="+cant_boletos.value;
+      });
+    }
 
     function validar_cant(value){
       valueInt = parseInt(value);

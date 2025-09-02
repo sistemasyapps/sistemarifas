@@ -23,6 +23,84 @@
       <article id="post-25415" class="post-25415 page type-page status-private hentry">
         <div class="entry-content">
           <div class="container-fluid">
+            <div class="row paso0" id="paso0">
+              <div class="col-md-6 col-sm-12 col-xs-12 mx-auto">
+                <div class="vc_row wpb_row vc_row-fluid slide_pasos">
+                  <div class="wpb_column container-fluid vc_col-sm-12">
+                    <div class="vc_column-inner">
+                      <div class="wpb_wrapper">
+                        <div class="card" style="background:#0b0b0b7a;border-radius:10px;border:1px solid #2c2c2c;">
+                          <div class="card-body">
+                            <h3 class="h3_responsive text-white" style="text-align:center;">Datos del Comprador</h3>
+                            <p class="text-white-50" style="text-align:center;">Completa tus datos para iniciar la compra. Luego verás los datos de pago.</p>
+                            <div class="text-center" style="margin-bottom:10px;">
+                              <span class="text-white" style="font-weight:600;">Total en Bs: </span>
+                              <span class="text-warning" id="pre_final_bs" style="font-weight:700;"></span>
+                            </div>
+                            <div class="roW d-flex" style="gap: 10px">
+                              <div class="col-6">
+                                <label>Cédula</label>
+                                <input type="number" id="pre_cedula" class="form-control" inputmode="numeric" placeholder="12345678">
+                              </div>
+                              <div class="col-6">
+                                <label>Nombre completo</label>
+                                <input type="text" id="pre_nombre" class="form-control" maxlength="100" placeholder="Nombre y Apellido">
+                              </div>
+                            </div>
+                            <div class="roW d-flex" style="gap: 10px">
+                              <div class="col-6">
+                                <label>Correo</label>
+                                <input type="email" id="pre_correo" class="form-control" maxlength="100" placeholder="tucorreo@dominio.com">
+                              </div>
+                              <div class="col-6">
+                                <label>Teléfono</label>
+                                <input type="number" id="pre_telefono" class="form-control" maxlength="11" inputmode="numeric" placeholder="0412XXXXXXX">
+                              </div>
+                            </div>
+                            <div class="col-12" style="margin-bottom: 15px">
+                              <label>Banco Emisor</label>
+                              <select id="pre_bank_code" class="form-control">
+                                <option value="">Seleccione banco</option>
+                                <option value="0102">0102 - Banco de Venezuela S.A.C.A. Banco Universal</option>
+                                <option value="0104">0104 - Venezolano de Crédito, S.A. Banco Universal</option>
+                                <option value="0105">0105 - Mercantil Banco, C.A. Banco Universal</option>
+                                <option value="0108">0108 - BBVA Provincial, S.A. Banco Universal</option>
+                                <option value="0114">0114 - Bancaribe C.A. Banco Universal</option>
+                                <option value="0115">0115 - Banco Exterior C.A. Banco Universal</option>
+                                <option value="0128">0128 - Banco Caroní C.A. Banco Universal</option>
+                                <option value="0134">0134 - Banesco, Banco Universal S.A.C.A.</option>
+                                <option value="0137">0137 - Banco Sofitasa, Banco Universal</option>
+                                <option value="0138">0138 - Banco Plaza, Banco Universal</option>
+                                <option value="0146">0146 - Bangente C.A</option>
+                                <option value="0151">0151 - BFC Banco Fondo Común C.A. Banco Universal</option>
+                                <option value="0156">0156 - 100% Banco, Banco Universal C.A.</option>
+                                <option value="0157">0157 - DelSur Banco Universal C.A.</option>
+                                <option value="0163">0163 - Banco del Tesoro, C.A. Banco Universal</option>
+                                <option value="0166">0166 - Banco Agrícola de Venezuela, C.A. Banco Universal</option>
+                                <option value="0168">0168 - Bancrecer, S.A. Banco Microfinanciero</option>
+                                <option value="0169">0169 - R4, Banco Microfinanciero C.A.</option>
+                                <option value="0171">0171 - Banco Activo, Banco Universal</option>
+                                <option value="0172">0172 - Bancamiga, Banco Universal C.A.</option>
+                                <option value="0173">0173 - Banco Internacional de Desarrollo, C.A. Banco Universal</option>
+                                <option value="0174">0174 - Banplus Banco Universal, C.A</option>
+                                <option value="0175">0175 - Banco Digital de Los Trabajadores</option>
+                                <option value="0177">0177 - Banco de la Fuerza Armada Nacional Bolivariana, B.U.</option>
+                                <option value="0178">0178 - N58 Banco Digital, S.A. J503581107</option>
+                                <option value="0191">0191 - Banco Nacional de Crédito, C.A. Banco Universal</option>
+                                <option value="0601">0601 - Instituto Municipal de Crédito Popular</option>
+                              </select>
+                            </div>
+                            <div class="d-grid" style="gap:10px">
+                              <button class="btn btn-success" id="btnPreOrder">Continuar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <!-- <div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid row">
               <div class="wpb_column container-fluid vc_col-sm-12">
                 <div class="vc_column-inner">
@@ -37,7 +115,7 @@
               </div>
             </div> -->
             <!-- <div class="vc_row-full-width vc_clearfix"></div> -->
-            <div class="row paso1" id="paso1">
+            <div class="row paso1 hidden" id="paso1">
               <div class="col-md-6 col-sm-12 col-xs-12">
                 <div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid slide_pasos">
                   <div class="wpb_column container-fluid vc_col-sm-12">
@@ -170,13 +248,13 @@
                             <div class="roW d-flex" style="gap: 10px">
                               <div class="col-12">
                                 <label>Correo</label>
-                                <input type="text" onblur="validateEmail(this.value)" onkeyup="put_persona(this.id,this.value)" id="email" name="email" class="form-control" maxlength="100" placeholder="Escriba su correo de uso diario">
+                                <input type="text" onblur="validateEmail(this.value)" onkeyup="put_persona(this.id,this.value)" id="email" name="email" class="form-control" maxlength="100" placeholder="Escriba su correo de uso diario" readonly>
                               </div>
                             </div>
                             <div class="roW d-flex" style="gap: 10px">
                               <div class="col-12">
-                                <label>Teléfono/Whatsapp</label>
-                                <input type="text" onkeyup="put_persona(this.id,this.value)" id="telefono" name="telefono" class="form-control" maxlength="20" placeholder="Escriba su nro de Whatsapp">
+                                <label>Teléfono</label>
+                                <input type="text" onkeyup="put_persona(this.id,this.value)" id="telefono" name="telefono" class="form-control" maxlength="20" placeholder="Escriba su nro de Whatsapp" readonly>
                               </div>
                             </div>
                             
@@ -187,7 +265,7 @@
                               </div>
                               <div class="col-12" style="margin-bottom: 15px">
                                 <label>Banco Emisor</label>
-                                <select id="bank_code" name="bank_code" class="form-control">
+                                <select id="bank_code" name="bank_code" class="form-control" disabled>
                                   <option value="">Seleccione banco</option>
                                   <option value="0102">0102 - Banco de Venezuela S.A.C.A. Banco Universal</option>
                                   <option value="0104">0104 - Venezolano de Crédito, S.A. Banco Universal</option>
@@ -220,7 +298,7 @@
                               </div>
                               <div class="col-12">
                                 <label>Referencia Bancaria (8 Dígitos)</label>
-                                <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control" maxlength="8" placeholder="referencia completa de 8 dígitos">
+                                <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control" maxlength="8" placeholder="Ultimos 8 digitos">
                               </div>
                             </div>
                           </div>
@@ -306,6 +384,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+      let PRE_ORDER_UUID = null;
       document.getElementById('cedula').addEventListener('keyup', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
         put_persona(this.id,this.value);
@@ -363,7 +442,7 @@
       const datos = {
         cant_boletos: <?= $_GET["q"] ?>,
         precio: {{ $rifa->precio }},
-        // bcv: {{ $BCV }},
+        bcv: {{ $BCV }},
         persona: {
           nombre_completo: "",
           cedula: "",
@@ -378,6 +457,64 @@
       }
 
       calcular_total();
+
+      // Pre-Order flow
+      jQuery('#btnPreOrder').on('click', async function(){
+        const pre = {
+          cedula: jQuery('#pre_cedula').val().trim(),
+          nombre_completo: jQuery('#pre_nombre').val().trim(),
+          correo: jQuery('#pre_correo').val().trim(),
+          telefono: jQuery('#pre_telefono').val().trim(),
+          bank_code: jQuery('#pre_bank_code').val(),
+        };
+
+        if(!pre.cedula || !pre.nombre_completo || !pre.correo || !pre.telefono || !pre.bank_code){
+          Swal.fire('Completa todos los campos');
+          return;
+        }
+
+        // Copiar a los campos del paso siguiente y bloquearlos
+        jQuery('#cedula').val(pre.cedula).prop('readonly', true);
+        jQuery('#nombre_completo').val(pre.nombre_completo).prop('readonly', true);
+        jQuery('#email').val(pre.correo).prop('readonly', true);
+        jQuery('#telefono').val(pre.telefono).prop('readonly', true);
+        jQuery('#bank_code').val(pre.bank_code).prop('disabled', true);
+
+        try {
+          const resp = await fetch('{{config('app.url')}}/api/preOrder', {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: toFormData({
+              raffle_id: {{$rifa->id}},
+              cantidad: datos.cant_boletos,
+              // Enviamos solo números; el servidor guardará con prefijo "V"
+              cedula: pre.cedula,
+              nombre_completo: pre.nombre_completo,
+              correo: pre.correo,
+              telefono: pre.telefono,
+              bank_code: pre.bank_code,
+            })
+          });
+          const data = await resp.json();
+          if(!data.success){
+            Swal.fire('No se pudo crear la pre-orden');
+            return;
+          }
+          PRE_ORDER_UUID = data.pre_order.uuid;
+          jQuery('#paso0').addClass('hidden');
+          jQuery('#paso1').removeClass('hidden');
+        } catch (e) {
+          Swal.fire('Error de red creando pre-orden');
+        }
+      });
+
+      function toFormData(obj){
+        const fd = new FormData();
+        Object.keys(obj).forEach(k => fd.append(k, obj[k]));
+        return fd;
+      }
 
       function volver_comprar(){
         cant_boletos.value = cantidad_minima;
@@ -464,11 +601,24 @@
       }
 
       function calcular_total() {
-        // validar_numeros_manual();
+        // Total en Bs se calcula como precio (en Bs) por cantidad de boletos
         const total = datos.precio * datos.cant_boletos;
-        // const total_usd = datos.precio * datos.cant_boletos;
         jQuery("#final_bs").html(`${total.toFixed(2)} Bs.`);
+        jQuery("#pre_final_bs").html(`${total.toFixed(2)} Bs.`);
       }
+
+      // Forzar solo números en cédula del paso "Datos del Comprador"
+      (function enforceNumericCedula(){
+        const input = document.getElementById('pre_cedula');
+        if(!input) return;
+        const clamp = () => {
+          // eliminar cualquier caracter no numérico
+          input.value = (input.value || '').replace(/[^0-9]/g, '').slice(0, 12);
+        };
+        input.addEventListener('input', clamp);
+        input.addEventListener('keyup', clamp);
+        input.addEventListener('change', clamp);
+      })();
 
       function validar_datos() {
         let validados = true;
@@ -570,6 +720,9 @@
         formData.append("cedula", jQuery("#cedula").val());
         formData.append("ref_banco", jQuery("#ref").val());
         formData.append("bank_code", jQuery("#bank_code").val());
+        if(PRE_ORDER_UUID){
+          formData.append("pre_order_uuid", PRE_ORDER_UUID);
+        }
         formData.append("ref_imagen", archivo_pago.files[0]);
         // formData.append("ref_fecha", jQuery("#fecha").val());
 

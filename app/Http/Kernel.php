@@ -68,4 +68,14 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'r4.verify' => \App\Http\Middleware\R4Verify::class,
     ];
+
+    /**
+     * Backward-compatible route middleware aliases.
+     * Some environments may still read from $routeMiddleware when building the router.
+     *
+     * @var array<string, class-string|string>
+     */
+    protected $routeMiddleware = [
+        'r4.verify' => \App\Http\Middleware\R4Verify::class,
+    ];
 }
