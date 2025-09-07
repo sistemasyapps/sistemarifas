@@ -21,11 +21,8 @@
     "require-dev": {
         "doctrine/dbal": "^3.9",
         "nunomaduro/collision": "^8.6",
-        "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.21",
         "laravel/sail": "^1.41",
-        "mockery/mockery": "^1.6",
-        "phpunit/phpunit": "^11.5",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
@@ -35,11 +32,7 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Tests\\": "tests/"
-        }
-    },
+    "autoload-dev": {},
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -66,7 +59,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true,
             "php-http/discovery": true
         }
     },

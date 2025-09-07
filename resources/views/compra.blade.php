@@ -361,6 +361,20 @@
           margin-right: 0 !important;
         }
 
+        /* Mobile optimizations for forms */
+        .modern-card .card-body {
+          padding: 1.5rem !important;
+        }
+        
+        .modern-form-control {
+          padding: 0.75rem 1rem !important;
+          font-size: 0.95rem !important;
+        }
+        
+        .modern-card .row.g-4 {
+          row-gap: 0.75rem !important;
+        }
+
         /* Mobile optimizations for summary section */
         .modern-card .row.g-3 .col-md-4,
         .modern-card .row.g-3 .col-md-6 {
@@ -415,20 +429,29 @@
                       <div class="wpb_wrapper">
                         <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
                           <div class="card-body" style="padding: 2.5rem;">
-                            <!-- Header Section -->
-                            <div class="text-center mb-4">
-                              <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-user-edit" style="font-size: 2rem; color: white;"></i>
+                            <!-- Progress Indicator -->
+                            <div class="d-flex justify-content-center mb-3">
+                              <div class="d-flex align-items-center" style="background: rgba(30, 41, 59, 0.4); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
+                                <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.5rem;"></div>
+                                <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.75rem;"></div>
+                                <span class="text-slate-300" style="font-size: 0.8rem; font-weight: 500;">Paso 1 de 3</span>
                               </div>
-                              <h3 class="h3_responsive text-white mb-2" style="font-weight: 700; font-size: 1.875rem; letter-spacing: -0.025em;">Datos del Concursante</h3>
-                              <p class="text-slate-300" style="font-size: 1.1rem; margin-bottom: 0;">Completa los datos del concursante para continuar con la compra.</p>
                             </div>
 
-                            <!-- Total Amount -->
-                            <div class="text-center mb-4">
-                              <div class="d-inline-block px-4 py-3" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px;">
-                                <span class="text-slate-200" style="font-weight: 500; font-size: 1rem;">Total a pagar: </span>
-                                <span class="text-emerald-400" id="pre_final_bs" style="font-weight: 800; font-size: 1.25rem;"></span>
+                            <!-- Header Section -->
+                            <div class="text-center mb-3">
+                              <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
+                                <i class="fas fa-user-edit" style="font-size: 1.5rem; color: white;"></i>
+                              </div>
+                              <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Concursante</h3>
+                            </div>
+
+                            <!-- Compact Total Badge -->
+                            <div class="text-center mb-3">
+                              <div class="d-inline-block px-3 py-1" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 20px;">
+                                <span class="text-emerald-400" style="font-weight: 600; font-size: 0.9rem;">Total: </span>
+                                <span class="text-emerald-400" id="pre_final_bs" style="font-weight: 700; font-size: 1rem;"></span>
                               </div>
                             </div>
 
@@ -500,23 +523,32 @@
                       <div class="wpb_wrapper">
                         <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
                           <div class="card-body" style="padding: 2.5rem;">
-                            <!-- Header Section -->
-                            <div class="text-center mb-4">
-                              <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-mobile-alt" style="font-size: 2rem; color: white;"></i>
+                            <!-- Progress Indicator -->
+                            <div class="d-flex justify-content-center mb-3">
+                              <div class="d-flex align-items-center" style="background: rgba(30, 41, 59, 0.4); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
+                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
+                                <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.75rem;"></div>
+                                <span class="text-slate-300" style="font-size: 0.8rem; font-weight: 500;">Paso 2 de 3</span>
                               </div>
-                              <h3 class="h3_responsive text-white mb-2" style="font-weight: 700; font-size: 1.875rem; letter-spacing: -0.025em;">Datos del Pagador</h3>
-                              <p class="text-slate-300" style="font-size: 1.1rem; margin-bottom: 0.5rem;">Información del titular de la cuenta del pago móvil</p>
-                              <div class="d-inline-block px-3 py-2" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; font-size: 0.9rem; color: #10b981; font-weight: 600;">
+                            </div>
+
+                            <!-- Header Section -->
+                            <div class="text-center mb-3">
+                              <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
+                                <i class="fas fa-mobile-alt" style="font-size: 1.5rem; color: white;"></i>
+                              </div>
+                              <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Pagador</h3>
+                              <div class="d-inline-block px-3 py-1 mb-2" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; font-size: 0.85rem; color: #10b981; font-weight: 600;">
                                 <i class="fas fa-mobile-alt me-1"></i>Pago Móvil - Banco R4
                               </div>
                             </div>
 
-                            <!-- Total Amount -->
-                            <div class="text-center mb-4">
-                              <div class="d-inline-block px-4 py-3" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px;">
-                                <span class="text-slate-200" style="font-weight: 500; font-size: 1rem;">Total a pagar: </span>
-                                <span class="text-emerald-400" id="pre_final_bs_2" style="font-weight: 800; font-size: 1.25rem;"></span>
+                            <!-- Compact Total Badge -->
+                            <div class="text-center mb-3">
+                              <div class="d-inline-block px-3 py-1" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 20px;">
+                                <span class="text-emerald-400" style="font-weight: 600; font-size: 0.9rem;">Total: </span>
+                                <span class="text-emerald-400" id="pre_final_bs_2" style="font-weight: 700; font-size: 1rem;"></span>
                               </div>
                             </div>
 
@@ -1434,6 +1466,31 @@
           if(paso == 2 && tipo=="atras"){
             jQuery("#paso2").addClass("hidden");
             jQuery("#paso1").removeClass("hidden");
+            // Auto-focus first field in step 1 with smooth transition
+            setTimeout(() => {
+              const firstField = document.getElementById('pre_cedula');
+              if (firstField) {
+                firstField.focus();
+                firstField.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2)';
+                setTimeout(() => {
+                  firstField.style.boxShadow = '';
+                }, 1500);
+              }
+            }, 150);
+          }
+          
+          // Auto-focus when advancing to step 2
+          if(paso == 1 && tipo=="adelante" && jQuery("#paso2").length){
+            setTimeout(() => {
+              const firstField = document.getElementById('pre_emisor_cedula');
+              if (firstField) {
+                firstField.focus();
+                firstField.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2)';
+                setTimeout(() => {
+                  firstField.style.boxShadow = '';
+                }, 1500);
+              }
+            }, 150);
           }
       }
 
@@ -1714,6 +1771,69 @@
         document.execCommand("copy");
         document.body.removeChild(temp);
       }
+
+      // Auto-focus and interaction effects initialization
+      document.addEventListener('DOMContentLoaded', function() {
+        // Auto-focus first field on page load
+        setTimeout(() => {
+          const firstField = document.getElementById('pre_cedula');
+          if (firstField) firstField.focus();
+        }, 500);
+        
+        // Add validation visual feedback to all form inputs
+        const formInputs = document.querySelectorAll('.modern-form-control');
+        formInputs.forEach(input => {
+          // Visual feedback on focus
+          input.addEventListener('focus', function() {
+            this.style.borderColor = '#10b981';
+            this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+          });
+          
+          // Validation feedback on blur
+          input.addEventListener('blur', function() {
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+            
+            // Add checkmark for completed required fields
+            if (this.value.trim() !== '') {
+              if (!this.parentNode.querySelector('.field-valid-icon')) {
+                const checkIcon = document.createElement('div');
+                checkIcon.className = 'field-valid-icon';
+                checkIcon.innerHTML = '<i class="fas fa-check-circle text-success"></i>';
+                checkIcon.style.cssText = `
+                  position: absolute;
+                  right: 15px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  z-index: 10;
+                  pointer-events: none;
+                `;
+                
+                // Make parent relative if not already
+                if (getComputedStyle(this.parentNode).position === 'static') {
+                  this.parentNode.style.position = 'relative';
+                }
+                
+                this.parentNode.appendChild(checkIcon);
+              }
+            } else {
+              // Remove checkmark if field becomes empty
+              const existingIcon = this.parentNode.querySelector('.field-valid-icon');
+              if (existingIcon) {
+                existingIcon.remove();
+              }
+            }
+          });
+          
+          // Real-time validation for input events
+          input.addEventListener('input', function() {
+            const existingIcon = this.parentNode.querySelector('.field-valid-icon');
+            if (this.value.trim() === '' && existingIcon) {
+              existingIcon.remove();
+            }
+          });
+        });
+      });
     </script>
   </body>
 </html>
