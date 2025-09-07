@@ -193,7 +193,7 @@ class R4WebhookController extends Controller
             // Si hay una Order no aprobada con esta referencia, marcamos preorden como aprobada, si no, queda pendiente_por_orden
             $order = \App\Models\Order::where('ref_banco', $ref8)
                 ->whereRaw('RIGHT(bank_code,3) = ?', [$banco3])
-                ->whereHas('client', function($q) use ($telEmi) { $q->where('telefono', $telEmi); })
+                ->where('emisor_telefono', $telEmi)
                 ->where('estatus', '<>', '1')
                 ->latest('id')
                 ->first();

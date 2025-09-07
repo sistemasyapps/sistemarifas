@@ -26,6 +26,9 @@ class Order extends Model
         "bank_code",
         "monto_notificado_bs",
         "fecha_pago_notificado",
+        // Datos del emisor del pago (nullable por compatibilidad)
+        'emisor_cedula',
+        'emisor_telefono',
     ];
 
     public function raffle(): BelongsTo

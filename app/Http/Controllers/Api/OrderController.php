@@ -50,6 +50,9 @@ class OrderController extends Controller
             'ref_banco' => 'required|digits:8',
             'bank_code' => 'required|digits:4',
             'ref_imagen' => 'required',
+            // Datos del emisor (opcional para compatibilidad; si vienen, deben cumplir formato)
+            'emisor_cedula' => 'nullable|digits_between:6,12',
+            'emisor_telefono' => 'nullable|digits:11',
             // 'ref_fecha' => 'required',
         ]);
 
@@ -99,6 +102,15 @@ class OrderController extends Controller
         $data['estatus'] = '0';
         $data['precio_dolar'] = (Option::where("clave","BCV")->pluck("valor")->toArray())[0];
         $data['ref_imagen'] = $request->file('ref_imagen')->store('images', 'public');
+        // Normalizar y setear datos del emisor
+        $emisorCedula = preg_replace('/[^0-9]/','', (string) $request->input('emisor_cedula')) ?: null;
+        $emisorTelefono = preg_replace('/[^0-9]/','', (string) $request->input('emisor_telefono')) ?: null;
+        if (empty($emisorTelefono)) {
+            // Compatibilidad: si no viene emisor, usar teléfono del cliente normalizado
+            $emisorTelefono = preg_replace('/[^0-9]/','', (string) ($cliente->telefono ?? '')) ?: null;
+        }
+        $data['emisor_cedula'] = $emisorCedula;
+        $data['emisor_telefono'] = $emisorTelefono;
         
         // Link to pre_order if provided
         $preOrder = null;

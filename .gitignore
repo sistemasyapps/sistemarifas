@@ -7,3 +7,13 @@ package-lock.json
 documentacion/
 captures/
 .DS_Store
+**/.DS_Store
+CLAUDE.md
+AGENTS.md
+.claude/
+.env.testing
+E2E-TESTING-SETUP.md
+playwright.config.js
+tests
+package.json
+phpunit.xml

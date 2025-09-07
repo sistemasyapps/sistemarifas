@@ -63,7 +63,8 @@ class ApproveOrderJob implements ShouldQueue
             $bankOk = ($preBank3 !== '' && $ordBank3 === $preBank3);
             $phoneOk = ($prePhone !== '' && $ordPhone === $prePhone);
 
-            if ($refOk && $bankOk && $phoneOk) {
+            // A solicitud: no considerar el teléfono en el Job para aprobar
+            if ($refOk && $bankOk) {
                 // Optional monto check (best-effort): compare pre.monto vs order.cantidad * raffle.precio
                 try {
                     if ($order->raffle && is_numeric($pre->monto)) {
