@@ -54,6 +54,11 @@ class OrderController extends Controller
             'emisor_cedula' => 'nullable|digits_between:6,12',
             'emisor_telefono' => 'nullable|digits:11',
             // 'ref_fecha' => 'required',
+        ], [
+            'ref_banco.digits' => 'La referencia bancaria debe tener exactamente 8 dígitos',
+            'bank_code.digits' => 'El código del banco debe tener exactamente 4 dígitos',
+            'emisor_cedula.digits_between' => 'La cédula del emisor debe tener entre 6 y 12 dígitos',
+            'emisor_telefono.digits' => 'El teléfono del emisor debe tener exactamente 11 dígitos',
         ]);
 
         Log::info('Empieza el crear, despues de las validaciones');

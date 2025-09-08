@@ -33,7 +33,7 @@ class PreOrderController extends Controller
 
         $raffle = Raffle::findOrFail($request->raffle_id);
 
-        $monto = bcmul((string) $raffle->precio, (string) $request->cantidad, 2);
+        $monto = round($raffle->precio * $request->cantidad, 2);
 
         // Normalizar cédula a solo números para guardar en pre_orden
         $cedulaNumerica = preg_replace('/[^0-9]/', '', (string) $request->cedula);

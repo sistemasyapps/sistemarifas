@@ -1613,10 +1613,20 @@
               }
             });
           }else {
+            let errorMessage = res.message || 'Error en la validación';
+            
+            // Si hay errores de validación específicos, mostrar el primero
+            if (res.errors && typeof res.errors === 'object') {
+              const firstError = Object.values(res.errors)[0];
+              if (Array.isArray(firstError) && firstError.length > 0) {
+                errorMessage = firstError[0];
+              }
+            }
+            
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: res.message,
+              text: errorMessage,
             });
 
             _this.disabled = false;
