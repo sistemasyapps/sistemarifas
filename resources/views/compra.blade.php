@@ -540,7 +540,7 @@
                               </div>
                               <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Pagador</h3>
                               <div class="d-inline-block px-3 py-1 mb-2" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; font-size: 0.85rem; color: #10b981; font-weight: 600;">
-                                <i class="fas fa-mobile-alt me-1"></i>Pago Móvil - Banco R4
+                                <i class="fas fa-mobile-alt me-1"></i>Pago Móvil - Banco BNC
                               </div>
                             </div>
 
