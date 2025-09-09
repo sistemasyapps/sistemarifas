@@ -221,7 +221,7 @@
                               </div>
                               <div class="col-12">
                                 <label>Referencia Bancaria (8 Dígitos)</label>
-                                <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control" maxlength="8" placeholder="Ultimos 8 digitos">
+                                <input type="text" id="ref" name="ref" class="form-control" maxlength="8" placeholder="Ultimos 8 digitos" inputmode="numeric" autocomplete="off">
                               </div>
                             </div>
                           </div>
@@ -312,17 +312,30 @@
         put_persona(this.id,this.value);
       });
 
-      // Event listener para el campo de referencia bancaria - solo últimos 8 dígitos al pegar
-      document.getElementById('ref').addEventListener('paste', function(e) {
-        e.preventDefault();
-        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-        // Extraer solo números del texto pegado
-        const numbersOnly = pastedText.replace(/[^0-9]/g, '');
-        // Tomar solo los últimos 8 dígitos
-        const last8Digits = numbersOnly.slice(-8);
-        this.value = last8Digits;
-        put_pago(this.id, this.value);
-      });
+      // Campo Referencia Bancaria (test): pegar conserva últimos 8; digitación manual solo números y máximo 8
+      (function(){
+        const refInput = document.getElementById('ref');
+        if (!refInput) return;
+        const clampDigits = () => {
+          const digits = (refInput.value || '').replace(/\D/g, '').slice(0, 8);
+          if (refInput.value !== digits) {
+            refInput.value = digits;
+          }
+          try { put_pago('ref', refInput.value); } catch(e) {}
+        };
+        refInput.addEventListener('paste', function(e) {
+          e.preventDefault();
+          const pastedText = (e.clipboardData || window.clipboardData).getData('text') || '';
+          const numbersOnly = pastedText.replace(/[^0-9]/g, '');
+          const last8Digits = numbersOnly.slice(-8);
+          this.value = last8Digits;
+          try { put_pago('ref', last8Digits); } catch(e) {}
+          this.dispatchEvent(new Event('input'));
+        });
+        refInput.addEventListener('input', clampDigits);
+        refInput.addEventListener('keyup', clampDigits);
+        refInput.addEventListener('change', clampDigits);
+      })();
       const modalTerms = new bootstrap.Modal(document.getElementById('termsModal'), {
         keyboard: false
       });
@@ -396,15 +409,7 @@
         
       }
 
-      function validateMin(_this,length) {
-        const isValid = _this.value.length == length;
-
-        if(!isValid) {
-          Swal.fire(`La referencia debe ser de ${length} números`);
-          datos.pago.ref = "";
-          _this.value = "";
-        }
-      }
+      // Eliminado: validateMin para simplificar manejo del campo de referencia
 
       function sum_cant(){
 

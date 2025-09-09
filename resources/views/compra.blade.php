@@ -900,7 +900,7 @@
                                   <label for="ref" class="modern-label">
                                     <i class="fas fa-hashtag me-2"></i>Referencia Bancaria
                                   </label>
-                                  <input type="text" onkeyup="put_pago(this.id,this.value)" onblur="validateMin(this,8)" id="ref" name="ref" class="form-control modern-form-control" maxlength="8" placeholder="12345678" inputmode="numeric">
+                                  <input type="text" id="ref" name="ref" class="form-control modern-form-control" maxlength="8" placeholder="12345678" inputmode="numeric" autocomplete="off">
                                   <div class="info-text-small mt-1">
                                     <i class="fas fa-info-circle"></i>
                                     <span>Últimos 8 dígitos de la referencia</span>
@@ -1046,41 +1046,62 @@
       //     });
       // }, 2000); 
 
-      function copiarTexto(text){
-        navigator.clipboard.writeText(text)
-        .then(() => {
-          // Show modern success notification
-          const notification = document.createElement('div');
-          notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease-out;
-          `;
-          notification.innerHTML = '<i class="fas fa-check-circle me-2"></i>Datos copiados al portapapeles';
-          document.body.appendChild(notification);
-          
-          // Remove after 3 seconds
-          setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-in';
-            setTimeout(() => notification.remove(), 300);
-          }, 3000);
-        })
-        .catch(err => {
-          console.error("Error al copiar:", err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo copiar al portapapeles'
-          });
+      // Helper robusto para copiar al portapapeles con fallback en contextos no seguros
+      function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text);
+        }
+        return new Promise((resolve, reject) => {
+          try {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.top = '-1000px';
+            textarea.style.left = '-1000px';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textarea);
+            successful ? resolve() : reject(new Error('execCommand failed'));
+          } catch (err) {
+            reject(err);
+          }
         });
+      }
+
+      function copiarTexto(text){
+        const normalized = String(text)
+          .replace(/<[^>]+>/g, ' ')      // quitar etiquetas HTML si vienen
+          .replace(/[\s\u00A0]+/g, ' ') // normalizar espacios (incluye NBSP)
+          .trim();
+        copyToClipboard(normalized)
+          .then(() => {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: linear-gradient(135deg, #10b981, #059669);
+              color: white;
+              padding: 1rem 1.5rem;
+              border-radius: 12px;
+              font-weight: 600;
+              box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+              z-index: 10000;
+              animation: slideInRight 0.3s ease-out;
+            `;
+            notification.innerHTML = '<i class="fas fa-check-circle me-2"></i>Datos copiados al portapapeles';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              notification.style.animation = 'slideOutRight 0.3s ease-in';
+              setTimeout(() => notification.remove(), 300);
+            }, 3000);
+          })
+          .catch(err => {
+            console.error('Error al copiar:', err);
+            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo copiar al portapapeles' });
+          });
       }
 
       function showPaymentData(element, metodo) {
@@ -1119,42 +1140,40 @@
         
         // Build simple data string: bank data + amount
         const cleanAmount = totalAmount.replace(' Bs.', '').trim();
-        const completeData = `${bankData} ${cleanAmount}`;
+        const plainBankData = String(bankData)
+          .replace(/<[^>]+>/g, ' ')      // quitar etiquetas HTML
+          .replace(/[\s\u00A0]+/g, ' ') // normalizar espacios múltiples/NBSP
+          .trim();
+        const joined = cleanAmount ? `${plainBankData} ${cleanAmount}` : plainBankData;
+        const completeData = joined.replace(/[\s\u00A0]+/g, ' ').trim();
 
-        navigator.clipboard.writeText(completeData)
-        .then(() => {
-          // Show modern success notification
-          const notification = document.createElement('div');
-          notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease-out;
-          `;
-          notification.innerHTML = '<i class="fas fa-check-circle me-2"></i>Datos completos copiados al portapapeles';
-          document.body.appendChild(notification);
-          
-          // Remove after 4 seconds (longer for complete data)
-          setTimeout(() => {
-            notification.style.animation = 'slideOutRight 0.3s ease-in';
-            setTimeout(() => notification.remove(), 300);
-          }, 4000);
-        })
-        .catch(err => {
-          console.error("Error al copiar:", err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo copiar al portapapeles'
+        copyToClipboard(completeData)
+          .then(() => {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              background: linear-gradient(135deg, #10b981, #059669);
+              color: white;
+              padding: 1rem 1.5rem;
+              border-radius: 12px;
+              font-weight: 600;
+              box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+              z-index: 10000;
+              animation: slideInRight 0.3s ease-out;
+            `;
+            notification.innerHTML = '<i class="fas fa-check-circle me-2"></i>Datos completos copiados al portapapeles';
+            document.body.appendChild(notification);
+            setTimeout(() => {
+              notification.style.animation = 'slideOutRight 0.3s ease-in';
+              setTimeout(() => notification.remove(), 300);
+            }, 4000);
+          })
+          .catch(err => {
+            console.error('Error al copiar:', err);
+            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo copiar al portapapeles' });
           });
-        });
       }
 
       const datos = {
@@ -1314,15 +1333,7 @@
         
       // }
 
-      function validateMin(_this,length) {
-        const isValid = _this.value.length == length;
-
-        if(!isValid) {
-          Swal.fire(`La referencia debe ser de ${length} números`);
-          datos.pago.ref = "";
-          _this.value = "";
-        }
-      }
+      // Eliminado: validateMin para simplificar manejo del campo de referencia
 
       // function sum_cant(){
 
@@ -1790,20 +1801,31 @@
           if (firstField) firstField.focus();
         }, 500);
 
-        // Event listener para el campo de referencia bancaria - solo últimos 8 dígitos al pegar
-        const refInput = document.getElementById('pre_ref');
+        // Campo Referencia Bancaria: permitir pegar cualquier largo, conservar últimos 8 dígitos.
+        // En digitación manual, solo números y máximo 8.
+        const refInput = document.getElementById('ref');
         if (refInput) {
+          const clampDigits = () => {
+            const digits = (refInput.value || '').replace(/\D/g, '').slice(0, 8);
+            if (refInput.value !== digits) {
+              refInput.value = digits;
+            }
+            try { put_pago('ref', refInput.value); } catch(e) {}
+          };
+
           refInput.addEventListener('paste', function(e) {
             e.preventDefault();
-            const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-            // Extraer solo números del texto pegado
+            const pastedText = (e.clipboardData || window.clipboardData).getData('text') || '';
             const numbersOnly = pastedText.replace(/[^0-9]/g, '');
-            // Tomar solo los últimos 8 dígitos
             const last8Digits = numbersOnly.slice(-8);
             this.value = last8Digits;
-            // Disparar evento input para que otros listeners se ejecuten si es necesario
+            try { put_pago('ref', last8Digits); } catch(e) {}
             this.dispatchEvent(new Event('input'));
           });
+
+          refInput.addEventListener('input', clampDigits);
+          refInput.addEventListener('keyup', clampDigits);
+          refInput.addEventListener('change', clampDigits);
         }
         
         // Add validation visual feedback to all form inputs
