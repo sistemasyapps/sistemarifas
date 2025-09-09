@@ -311,6 +311,18 @@
         this.value = this.value.replace(/[^0-9]/g, '');
         put_persona(this.id,this.value);
       });
+
+      // Event listener para el campo de referencia bancaria - solo últimos 8 dígitos al pegar
+      document.getElementById('ref').addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        // Extraer solo números del texto pegado
+        const numbersOnly = pastedText.replace(/[^0-9]/g, '');
+        // Tomar solo los últimos 8 dígitos
+        const last8Digits = numbersOnly.slice(-8);
+        this.value = last8Digits;
+        put_pago(this.id, this.value);
+      });
       const modalTerms = new bootstrap.Modal(document.getElementById('termsModal'), {
         keyboard: false
       });

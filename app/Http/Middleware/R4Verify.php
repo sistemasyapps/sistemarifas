@@ -16,8 +16,8 @@ class R4Verify
             return response()->json(['message' => 'Unsupported Media Type'], 415);
         }
 
-        // IP allow list (opcional)
-        $allowList = array_filter(array_map('trim', explode(',', (string) env('R4_ALLOWED_IPS', ''))));
+        // IP allow list (opcional) - hardcoded empty to allow all IPs
+        $allowList = []; // Hardcoded empty array - no IP restrictions
         if (!empty($allowList)) {
             $ip = $request->ip();
             if (!in_array($ip, $allowList, true)) {
@@ -30,7 +30,7 @@ class R4Verify
         // Según PDF: para R4consulta y R4notifica solo se exige Authorization en formato UUID y Content-Type JSON.
         if ($request->is('api/R4consulta') || $request->is('api/R4notifica')) {
             $auth = (string) $request->header('Authorization');
-            $expected = env('R4_AUTH_TOKEN');
+            $expected = '8428e40f-51a9-4d29-a25d-296f5cf01325'; // Hardcoded R4_AUTH_TOKEN
 
             // Validar formato UUID y coincidencia exacta con R4_AUTH_TOKEN
             $uuidRegex = '/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/';

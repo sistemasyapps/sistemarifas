@@ -540,7 +540,7 @@
                               </div>
                               <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Pagador</h3>
                               <div class="d-inline-block px-3 py-1 mb-2" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; font-size: 0.85rem; color: #10b981; font-weight: 600;">
-                                <i class="fas fa-mobile-alt me-1"></i>Pago Móvil - Banco BNC
+                                <i class="fas fa-mobile-alt me-1"></i>Pago Móvil - Banco R4
                               </div>
                             </div>
 
@@ -1789,6 +1789,22 @@
           const firstField = document.getElementById('pre_cedula');
           if (firstField) firstField.focus();
         }, 500);
+
+        // Event listener para el campo de referencia bancaria - solo últimos 8 dígitos al pegar
+        const refInput = document.getElementById('pre_ref');
+        if (refInput) {
+          refInput.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+            // Extraer solo números del texto pegado
+            const numbersOnly = pastedText.replace(/[^0-9]/g, '');
+            // Tomar solo los últimos 8 dígitos
+            const last8Digits = numbersOnly.slice(-8);
+            this.value = last8Digits;
+            // Disparar evento input para que otros listeners se ejecuten si es necesario
+            this.dispatchEvent(new Event('input'));
+          });
+        }
         
         // Add validation visual feedback to all form inputs
         const formInputs = document.querySelectorAll('.modern-form-control');

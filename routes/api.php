@@ -33,6 +33,7 @@ Route::get('/pruebaNotificaction', [FirebasePushController::class, 'testSending'
 // Pre-orden: crea registro previo para validación R4consulta
 Route::post('/preOrder', [PreOrderController::class, 'create']);
 
+
 // R4 Webhook endpoints (push flow)
 Route::post('/R4consulta', [R4WebhookController::class, 'consulta'])->middleware(\App\Http\Middleware\R4Verify::class);
 Route::post('/R4notifica', [R4WebhookController::class, 'notifica'])->middleware(\App\Http\Middleware\R4Verify::class);
