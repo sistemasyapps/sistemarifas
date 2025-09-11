@@ -1116,7 +1116,9 @@
         // Update payment data display
         const paymentDataDiv = document.getElementById('payment_data');
         if (paymentDataDiv && metodo.descripcion) {
-          paymentDataDiv.innerHTML = metodo.descripcion;
+          // Guardamos el texto base del método para poder re-aplicar el reemplazo
+          paymentDataDiv.setAttribute('data-base', metodo.descripcion);
+          applyPayerCedulaToPaymentData();
         }
         
         // Smooth scroll to payment data
@@ -1131,6 +1133,44 @@
           paymentDataDiv.style.animation = 'pulseGlow 2s infinite';
         }, 100);
       }
+
+      // Reemplaza únicamente la cédula por la ingresada por el pagador en el bloque "Datos para el Pago".
+      function applyPayerCedulaToPaymentData(){
+        const paymentDataDiv = document.getElementById('payment_data');
+        if (!paymentDataDiv) return;
+
+        // Base sin modificar para el método seleccionado
+        let base = paymentDataDiv.getAttribute('data-base');
+        if (!base) {
+          // Si no existe aún, lo inicializamos con el contenido actual (una sola vez)
+          paymentDataDiv.setAttribute('data-base', paymentDataDiv.innerHTML);
+          base = paymentDataDiv.innerHTML;
+        }
+
+        // Cedula del pagador
+        const cedulaInput = document.getElementById('pre_emisor_cedula');
+        const digits = (cedulaInput && cedulaInput.value) ? String(cedulaInput.value).replace(/\D+/g,'') : '';
+
+        // Patrón: reemplaza la ocurrencia exacta de 24013171 como número independiente
+        // Soporta navegadores sin lookbehind: captura inicio o un no-dígito antes
+        const pattern = /(^|\D)24013171(?!\d)/g;
+
+        // Si no hay cédula válida, mostramos el texto base
+        const updated = digits ? base.replace(pattern, (_, p1) => `${p1}${digits}`) : base;
+        paymentDataDiv.innerHTML = updated;
+      }
+
+      // Listener para actualizar automáticamente al escribir la cédula del pagador
+      document.addEventListener('DOMContentLoaded', () => {
+        const paymentDataDiv = document.getElementById('payment_data');
+        if (paymentDataDiv && !paymentDataDiv.getAttribute('data-base')) {
+          paymentDataDiv.setAttribute('data-base', paymentDataDiv.innerHTML);
+        }
+        const cedulaInput = document.getElementById('pre_emisor_cedula');
+        if (cedulaInput) {
+          ['input','change','blur'].forEach(evt => cedulaInput.addEventListener(evt, applyPayerCedulaToPaymentData));
+        }
+      });
 
       function copiarDatosCompletos(bankData){
         // Get current total amount
