@@ -378,7 +378,7 @@
         /* Mobile optimizations for summary section */
         .modern-card .row.g-3 .col-md-4,
         .modern-card .row.g-3 .col-md-6 {
-          margin-bottom: 1rem;
+          margin-bottom: 0.75rem;
         }
 
         /* Optimize 3-column layout on mobile */
@@ -401,7 +401,18 @@
 
         /* Payment data section mobile optimization */
         .modern-card .row.g-3 .col-md-6 {
-          margin-bottom: 1rem;
+          margin-bottom: 0.75rem;
+        }
+        
+        /* Additional mobile compacting */
+        @media (max-width: 768px) {
+          .modern-card .text-center {
+            margin-bottom: 1rem !important;
+          }
+          
+          .modern-card .row {
+            margin-bottom: 0.75rem !important;
+          }
         }
       }
     </style>
@@ -428,9 +439,9 @@
                     <div class="vc_column-inner">
                       <div class="wpb_wrapper">
                         <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
-                          <div class="card-body" style="padding: 2.5rem;">
+                          <div class="card-body" style="padding: 1.5rem;">
                             <!-- Progress Indicator -->
-                            <div class="d-flex justify-content-center mb-3">
+                            <div class="d-flex justify-content-center mb-2">
                               <div class="d-flex align-items-center" style="background: rgba(30, 41, 59, 0.4); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2);">
                                 <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
                                 <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.5rem;"></div>
@@ -440,15 +451,15 @@
                             </div>
 
                             <!-- Header Section -->
-                            <div class="text-center mb-3">
+                            <div class="text-center mb-2">
                               <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
                                 <i class="fas fa-user-edit" style="font-size: 1.5rem; color: white;"></i>
                               </div>
                               <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Concursante</h3>
                             </div>
 
-                            <!-- Compact Total Badge -->
-                            <div class="text-center mb-3">
+                            <!-- Compact Total Badge - HIDDEN -->
+                            <div class="text-center mb-3" style="display: none;">
                               <div class="d-inline-block px-3 py-1" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 20px;">
                                 <span class="text-emerald-400" style="font-weight: 600; font-size: 0.9rem;">Total: </span>
                                 <span class="text-emerald-400" id="pre_final_bs" style="font-weight: 700; font-size: 1rem;"></span>
@@ -457,7 +468,7 @@
 
                             <!-- Form Fields -->
                             <form>
-                              <div class="row g-4 mb-4">
+                              <div class="row g-2 mb-2">
                                 <div class="col-md-6">
                                   <div class="modern-input-group">
                                     <label for="pre_cedula" class="modern-label">
@@ -476,7 +487,7 @@
                                 </div>
                               </div>
 
-                              <div class="row g-4 mb-4">
+                              <div class="row g-2 mb-2">
                                 <div class="col-md-6">
                                   <div class="modern-input-group">
                                     <label for="pre_correo" class="modern-label">
@@ -496,7 +507,7 @@
                               </div>
 
 
-                              <div class="d-grid mt-4">
+                              <div class="d-grid mt-2">
                                 <button type="button" class="btn modern-btn-success" id="btnPreOrder" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; font-size: 1.1rem; color: white; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
                                   <span class="d-flex align-items-center justify-content-center">
                                     <i class="fas fa-arrow-right me-2"></i>
@@ -539,22 +550,20 @@
                                 <i class="fas fa-mobile-alt" style="font-size: 1.5rem; color: white;"></i>
                               </div>
                               <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Pagador</h3>
-                              <div class="d-inline-block px-3 py-1 mb-2" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; font-size: 0.85rem; color: #10b981; font-weight: 600;">
-                                <i class="fas fa-mobile-alt me-1"></i>Pago Móvil - Banco R4
-                              </div>
+                              
                             </div>
 
-                            <!-- Compact Total Badge -->
+                            <!-- Indicador contextual superior -->
                             <div class="text-center mb-3">
-                              <div class="d-inline-block px-3 py-1" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 20px;">
-                                <span class="text-emerald-400" style="font-weight: 600; font-size: 0.9rem;">Total: </span>
-                                <span class="text-emerald-400" id="pre_final_bs_2" style="font-weight: 700; font-size: 1rem;"></span>
+                              <div class="d-inline-flex align-items-center justify-content-center px-3 py-1" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 20px;">
+                                <i class="fas fa-info-circle me-2" style="color: #10b981;"></i>
+                                <span class="text-emerald-400" style="font-weight: 700; font-size: 0.95rem; letter-spacing: 0.2px;">Datos de quien realiza el pago móvil</span>
                               </div>
                             </div>
 
                             <!-- Form Fields -->
                             <form>
-                              <div class="row g-4 mb-4">
+                              <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                   <div class="modern-input-group">
                                     <label for="pre_emisor_cedula" class="modern-label">
@@ -573,7 +582,7 @@
                                 </div>
                               </div>
 
-                              <div class="mb-4">
+                              <div class="mb-3">
                                 <div class="modern-input-group">
                                   <label for="pre_bank_code" class="modern-label">
                                     <i class="fas fa-university me-2"></i>Banco Emisor
@@ -654,8 +663,8 @@
                             <h3 class="h3_responsive fecha_sorteo" style="text-align: center;"></h3><span id="countdown"></span>
                           </div>
                         </div>
-                        <!-- Modern Progress Bar -->
-                        <div class="mb-4" style="background: rgba(15, 23, 42, 0.6); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(148, 163, 184, 0.1);">
+                        <!-- Modern Progress Bar - HIDDEN -->
+                        <div class="mb-4" style="display: none; background: rgba(15, 23, 42, 0.6); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(148, 163, 184, 0.1);">
                           <div class="d-flex align-items-center justify-content-between mb-3">
                             <div class="d-flex align-items-center">
                               <div class="d-inline-flex align-items-center justify-content-center me-3" style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
@@ -729,15 +738,15 @@
                         <!-- Modern Payment Methods Section -->
                         <div class="modern-card" style="background: rgba(15, 23, 42, 0.6); border-radius: 20px; padding: 2rem; border: 1px solid rgba(148, 163, 184, 0.1); margin-bottom: 1.5rem;">
                           <!-- Header -->
-                          <div class="text-center mb-4">
-                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 4rem; height: 4rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
+                          <div class="text-center mb-3">
+                            <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 4rem; height: 4rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
                               <i class="fas fa-credit-card" style="font-size: 2rem; color: white;"></i>
                             </div>
                             <h3 class="text-white mb-2" style="font-weight: 700; font-size: 1.875rem; letter-spacing: -0.025em;">Datos para el Pago</h3>
                           </div>
 
                           <!-- Payment Methods Grid -->
-                          <div class="row g-3 mb-4">
+                          <div class="row g-3 mb-3">
                             @foreach($metodos as $i => $metodo)
                             <div class="col-12">
                               <div class="payment-method-card" style="background: rgba(30, 41, 59, 0.4); border: 2px solid rgba(148, 163, 184, 0.2); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;" id="metodo_{{$metodo->id}}" onclick="showPaymentData(this,'{{$metodo}}')">
@@ -761,7 +770,15 @@
                             <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);">
                               <i class="fas fa-university" style="font-size: 1.5rem; color: white;"></i>
                             </div>
-                            <h4 class="text-emerald-400 mb-3" style="font-weight: 700; font-size: 1.25rem;">Datos para el Pago</h4>
+                            <h4 class="text-emerald-400 mb-2" style="font-weight: 700; font-size: 1.25rem;">Datos para el Pago</h4>
+                            <!-- Top summary: tickets y total -->
+                            <div class="d-flex justify-content-center mb-3">
+                              <div class="d-inline-flex align-items-center px-3 py-1" style="background: rgba(30, 41, 59, 0.2); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 9999px; gap: 0.75rem;">
+                                <span class="text-slate-200" style="font-weight: 600; font-size: 0.9rem;">Tickets: <span id="top_tickets_display"><?=$_GET["q"]?></span></span>
+                                <span style="opacity: .5;">•</span>
+                                <span class="text-emerald-400" style="font-weight: 700; font-size: 0.95rem;">Total: <span id="top_total_display"></span></span>
+                              </div>
+                            </div>
                             <div id="payment_data" style="color: #10b981; font-size: 1.5rem; font-weight: 700; font-family: 'Courier New', monospace; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); letter-spacing: 2px;">
                               {!!$metodos[0]['descripcion']!!}
                             </div>
@@ -773,37 +790,8 @@
                               </button>
                             </div>
                             
-                            <!-- Purchase Summary -->
-                            <div class="mt-4">
-                              <div class="row g-3">
-                                <div class="col-md-6">
-                                  <div class="d-flex align-items-center justify-content-center" style="background: rgba(30, 41, 59, 0.4); padding: 1rem; border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.2);">
-                                    <div class="d-inline-flex align-items-center justify-content-center me-3" style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);">
-                                      <i class="fas fa-ticket-alt" style="font-size: 1rem; color: white;"></i>
-                                    </div>
-                                    <div class="text-center">
-                                      <span class="text-slate-400" style="font-size: 0.85rem; font-weight: 500; display: block;">TICKETS</span>
-                                      <span class="text-white" style="font-weight: 700; font-size: 1.25rem;"><?=$_GET["q"]?></span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="d-flex align-items-center justify-content-center" style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 12px; border: 2px solid rgba(16, 185, 129, 0.3);">
-                                    <div class="d-inline-flex align-items-center justify-content-center me-3" style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);">
-                                      <i class="fas fa-dollar-sign" style="font-size: 1rem; color: white;"></i>
-                                    </div>
-                                    <div class="text-center">
-                                      <span class="text-emerald-400" style="font-size: 0.85rem; font-weight: 500; display: block;">TOTAL A PAGAR</span>
-                                      <span class="text-emerald-400" id="payment_total_display" style="font-weight: 700; font-size: 1.25rem;"></span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                            <!-- Purchase Summary oculto para evitar duplicación del total -->
                             
-                            <div class="mt-3 text-center">
-                              <span class="text-emerald-300" style="font-size: 0.9rem; font-weight: 500;">💡 Los datos se han copiado al portapapeles</span>
-                            </div>
                           </div>
 
                         </div>
@@ -855,22 +843,10 @@
                                 </div>
                               </div>
                               <div class="row g-3">
-                                <div class="col-md-4">
+                                <div class="col-md-12">
                                   <div class="d-flex flex-column" style="background: rgba(30, 41, 59, 0.3); padding: 0.75rem; border-radius: 8px;">
                                     <span class="text-slate-400" style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.25rem;">BANCO EMISOR</span>
                                     <span id="summary_bank" class="text-white" style="font-weight: 600;">-</span>
-                                  </div>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="d-flex flex-column" style="background: rgba(30, 41, 59, 0.3); padding: 0.75rem; border-radius: 8px;">
-                                    <span class="text-slate-400" style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.25rem;">TICKETS</span>
-                                    <span id="summary_tickets" class="text-white" style="font-weight: 600;"><?=$_GET["q"]?></span>
-                                  </div>
-                                </div>
-                                <div class="col-md-4">
-                                  <div class="d-flex flex-column" style="background: rgba(16, 185, 129, 0.1); padding: 0.75rem; border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.2); text-align: center;">
-                                    <span class="text-emerald-400" style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.25rem;">TOTAL A PAGAR</span>
-                                    <span id="summary_total" class="text-emerald-400" style="font-weight: 700; font-size: 1.25rem;">-</span>
                                   </div>
                                 </div>
                               </div>
@@ -1174,7 +1150,7 @@
 
       function copiarDatosCompletos(bankData){
         // Get current total amount
-        const totalElement = document.getElementById('payment_total_display') || document.getElementById('summary_total');
+        const totalElement = document.getElementById('top_total_display') || document.getElementById('payment_total_display') || document.getElementById('summary_total');
         const totalAmount = totalElement ? totalElement.textContent : '';
         const ticketCount = <?= $_GET["q"] ?>;
         
@@ -1260,10 +1236,27 @@
         
         // Mostrar total en el paso siguiente
         jQuery('#pre_final_bs_2').text(jQuery('#pre_final_bs').text());
+        jQuery('#pre_tickets_count_2').text(datos.cant_boletos);
         
         // Pasar al paso 0.5 (Datos del Pagador)
         jQuery('#paso0').addClass('hidden');
         jQuery('#paso0_5').removeClass('hidden');
+
+        // Al cambiar a Paso 2, subir scroll y enfocar el primer campo
+        setTimeout(() => {
+          try {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } catch (e) {
+            window.scrollTo(0, 0);
+          }
+          const firstField = document.getElementById('pre_emisor_cedula');
+          if (firstField) {
+            firstField.focus();
+            // resaltar sutilmente el foco
+            firstField.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2)';
+            setTimeout(() => { firstField.style.boxShadow = ''; }, 1500);
+          }
+        }, 150);
       });
 
       // Step 2: Datos del Pagador
@@ -1436,6 +1429,11 @@
         jQuery("#final_bs").html(totalFormatted);
         jQuery("#pre_final_bs").html(totalFormatted);
         jQuery("#payment_total_display").html(totalFormatted);
+        jQuery("#top_total_display").html(totalFormatted);
+        // Actualizar cantidad de tickets si existen los contenedores
+        jQuery("#payment_tickets_display").html(datos.cant_boletos);
+        jQuery("#pre_tickets_count_2").html(datos.cant_boletos);
+        jQuery("#top_tickets_display").html(datos.cant_boletos);
         
         // Mantener sincronizado el resumen
         try { updateSummary(); } catch (e) {}
@@ -1866,6 +1864,8 @@
           refInput.addEventListener('input', clampDigits);
           refInput.addEventListener('keyup', clampDigits);
           refInput.addEventListener('change', clampDigits);
+
+          // Botón de pegar eliminado: se vuelve al comportamiento original
         }
         
         // Add validation visual feedback to all form inputs
