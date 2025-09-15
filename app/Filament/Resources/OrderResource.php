@@ -34,6 +34,11 @@ class OrderResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
+                Forms\Components\Select::make('metodo_pago_id')
+                    ->relationship(name: 'metodoPago', titleAttribute: 'metodo')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
                 Forms\Components\TextInput::make('precio_dolar')
                     ->required()
                     ->numeric(),
@@ -63,6 +68,10 @@ class OrderResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ref_banco')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('metodoPago.metodo')
+                    ->label('Método de Pago')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ref_fecha')
                     ->date()

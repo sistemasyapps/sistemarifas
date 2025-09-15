@@ -143,7 +143,10 @@ class WebsiteController extends Controller
             "cantidad_minima" => $cantidad_minima,
             "logo" => $logo,
             "Barra" => $this->getBarra($currentRaffle)->barra,
-            "metodos" => MetodoPago::where("estatus",1)->get(),
+            "metodos" => MetodoPago::where("estatus",1)
+                ->orderBy('orden')
+                ->orderBy('id')
+                ->get(),
             "rifa" => $currentRaffle,
             "queda" => $currentRaffle->estatus_compra == 1 ? $disponibles : 0,
             "logged" => $isLogged

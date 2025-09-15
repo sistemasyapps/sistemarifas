@@ -24,6 +24,8 @@ class MetodoPagoResource extends Resource
 
     protected static ?string $modelLabel = 'Metodo de Pago';
 
+    protected static ?string $recordTitleAttribute = 'metodo';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -42,6 +44,11 @@ class MetodoPagoResource extends Resource
                         '1' => 'Bolivares',
                         '2' => 'Dolares',
                     ]),
+                Forms\Components\TextInput::make('orden')
+                    ->numeric()
+                    ->default(fn () => (MetodoPago::max('orden') ?? 0) + 1)
+                    ->helperText('Orden de visualización en la página de compra.')
+                    ->required(),
                 Forms\Components\FileUpload::make('logo')->required(),
                 TinyEditor::make('descripcion')
                 ->required()
@@ -56,7 +63,9 @@ class MetodoPagoResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('metodo')
                     ->searchable()
-                    ->sortable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('orden')
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -68,7 +77,8 @@ class MetodoPagoResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('orden');
     }
 
     public static function getRelations(): array
@@ -84,6 +94,7 @@ class MetodoPagoResource extends Resource
             'index' => Pages\ListMetodoPagos::route('/'),
             'create' => Pages\CreateMetodoPago::route('/create'),
             'edit' => Pages\EditMetodoPago::route('/{record}/edit'),
+            'reorder' => Pages\ReorderMetodoPagos::route('/reorder'),
         ];
     }
 }

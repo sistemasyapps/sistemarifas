@@ -222,6 +222,9 @@
       #payment_data {
         animation: pulseGlow 2s infinite;
       }
+      #payment_data, #payment_data * {
+        color: #10b981 !important;
+      }
 
       /* Notification Animations */
       @keyframes slideInRight {
@@ -749,7 +752,7 @@
                           <div class="row g-3 mb-3">
                             @foreach($metodos as $i => $metodo)
                             <div class="col-12">
-                              <div class="payment-method-card" style="background: rgba(30, 41, 59, 0.4); border: 2px solid rgba(148, 163, 184, 0.2); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;" id="metodo_{{$metodo->id}}" onclick="showPaymentData(this,'{{$metodo}}')">
+                              <div class="payment-method-card" style="background: rgba(30, 41, 59, 0.4); border: 2px solid rgba(148, 163, 184, 0.2); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;" id="metodo_{{$metodo->id}}" data-metodo='@json($metodo->only(["id","metodo","descripcion"]))' onclick="showPaymentData(this)">
                                 <div class="d-flex align-items-center">
                                   <div class="payment-logo me-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.1); border-radius: 50%; backdrop-filter: blur(10px);">
                                     <img src="{{Storage::url($metodo->logo)}}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" class="img_payment">
@@ -779,7 +782,7 @@
                                 <span class="text-emerald-400" style="font-weight: 700; font-size: 0.95rem;">Total: <span id="top_total_display"></span></span>
                               </div>
                             </div>
-                            <div id="payment_data" style="color: #10b981; font-size: 1.5rem; font-weight: 700; font-family: 'Courier New', monospace; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); letter-spacing: 2px;">
+                            <div id="payment_data" style="color: #10b981 !important; font-size: 1.5rem; font-weight: 700; font-family: 'Courier New', monospace; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); letter-spacing: 2px;">
                               {!!$metodos[0]['descripcion']!!}
                             </div>
                             
@@ -1080,6 +1083,29 @@
           });
       }
 
+      const metodoPagoEntityParser = document.createElement('textarea');
+      const defaultMetodoPagoId = @json(optional($metodos->first())->id);
+      let selectedMetodoPagoId = defaultMetodoPagoId;
+      window.selectedMetodoPagoId = selectedMetodoPagoId;
+
+      function parseMetodoPago(metodo) {
+        if (typeof metodo !== 'string') {
+          return metodo;
+        }
+
+        try {
+          return JSON.parse(metodo);
+        } catch (error) {
+          try {
+            metodoPagoEntityParser.innerHTML = metodo;
+            return JSON.parse(metodoPagoEntityParser.value);
+          } catch (decodedError) {
+            console.error('No se pudo interpretar el método de pago seleccionado.', decodedError);
+            return null;
+          }
+        }
+      }
+
       function showPaymentData(element, metodo) {
         // Remove active class from all payment methods
         document.querySelectorAll('.payment-method-card').forEach(card => {
@@ -1091,9 +1117,18 @@
         
         // Update payment data display
         const paymentDataDiv = document.getElementById('payment_data');
-        if (paymentDataDiv && metodo.descripcion) {
+        const rawMetodo = metodo ?? element?.dataset?.metodo ?? null;
+        metodo = parseMetodoPago(rawMetodo);
+
+        if (metodo && metodo.id) {
+          selectedMetodoPagoId = metodo.id;
+          window.selectedMetodoPagoId = selectedMetodoPagoId;
+        }
+
+        if (paymentDataDiv && metodo && metodo.descripcion) {
           // Guardamos el texto base del método para poder re-aplicar el reemplazo
           paymentDataDiv.setAttribute('data-base', metodo.descripcion);
+          paymentDataDiv.innerHTML = metodo.descripcion;
           applyPayerCedulaToPaymentData();
         }
         
@@ -1118,22 +1153,26 @@
         // Base sin modificar para el método seleccionado
         let base = paymentDataDiv.getAttribute('data-base');
         if (!base) {
-          // Si no existe aún, lo inicializamos con el contenido actual (una sola vez)
-          paymentDataDiv.setAttribute('data-base', paymentDataDiv.innerHTML);
           base = paymentDataDiv.innerHTML;
+          paymentDataDiv.setAttribute('data-base', base);
         }
 
         // Cedula del pagador
         const cedulaInput = document.getElementById('pre_emisor_cedula');
         const digits = (cedulaInput && cedulaInput.value) ? String(cedulaInput.value).replace(/\D+/g,'') : '';
+        const placeholder = '{' + '{' + 'CEDULA_PAGADOR' + '}' + '}';
 
-        // Patrón: reemplaza la ocurrencia exacta de 24013171 como número independiente
-        // Soporta navegadores sin lookbehind: captura inicio o un no-dígito antes
-        const pattern = /(^|\D)24013171(?!\d)/g;
+        if (!base.includes(placeholder)) {
+          paymentDataDiv.innerHTML = base;
+          return;
+        }
 
-        // Si no hay cédula válida, mostramos el texto base
-        const updated = digits ? base.replace(pattern, (_, p1) => `${p1}${digits}`) : base;
-        paymentDataDiv.innerHTML = updated;
+        const updated = digits
+          ? base.split(placeholder).join(digits)
+          : base.split(placeholder).join('');
+        // Quitar el <p> y aplicar estilo verde directamente
+        const cleanText = updated.replace(/<\/?p>/g, '');
+        paymentDataDiv.innerHTML = `<span style="color: #10b981 !important;">${cleanText}</span>`;
       }
 
       // Listener para actualizar automáticamente al escribir la cédula del pagador
@@ -1146,6 +1185,13 @@
         if (cedulaInput) {
           ['input','change','blur'].forEach(evt => cedulaInput.addEventListener(evt, applyPayerCedulaToPaymentData));
         }
+        if (defaultMetodoPagoId) {
+          const firstMethodCard = document.querySelector('.payment-method-card');
+          if (firstMethodCard) {
+            firstMethodCard.classList.add('active');
+          }
+        }
+        applyPayerCedulaToPaymentData();
       });
 
       function copiarDatosCompletos(bankData){
@@ -1261,11 +1307,17 @@
 
       // Step 2: Datos del Pagador
       jQuery('#btnPreOrder2').on('click', async function(){
+        const metodoPagoId = window.selectedMetodoPagoId;
         const emisor = {
           emisor_cedula: jQuery('#pre_emisor_cedula').val().trim(),
           emisor_telefono: jQuery('#pre_emisor_telefono').val().trim(),
           bank_code: jQuery('#pre_bank_code').val(),
         };
+
+        if(!metodoPagoId){
+          Swal.fire('Selecciona un método de pago');
+          return;
+        }
 
         if(!emisor.emisor_cedula || !emisor.emisor_telefono || !emisor.bank_code){
           Swal.fire('Completa todos los datos del pagador');
@@ -1302,6 +1354,7 @@
               emisor_cedula: emisor.emisor_cedula,
               emisor_telefono: emisor.emisor_telefono,
               bank_code: emisor.bank_code,
+              metodo_pago_id: metodoPagoId,
             })
           });
           const data = await resp.json();
@@ -1349,6 +1402,9 @@
         datos.pago.ref = "";
         // datos.pago.fecha = "";
         
+        selectedMetodoPagoId = defaultMetodoPagoId;
+        window.selectedMetodoPagoId = selectedMetodoPagoId;
+
         // Volver al primer paso
         jQuery("#paso_final").addClass("hidden");
         jQuery("#paso0_5").addClass("hidden");
@@ -1586,6 +1642,7 @@
 
         const ref = jQuery("#ref").val();
         const bank_code = emisor.bank_code;
+        const metodoPagoId = window.selectedMetodoPagoId;
 
         if(!ref) {
           Swal.fire("Debes colocar la referencia");
@@ -1601,6 +1658,11 @@
         }
         if(!validar_datos()) {
           Swal.fire("todos los campos son obligatorios");
+          return;
+        }
+
+        if(!metodoPagoId) {
+          Swal.fire('Selecciona un método de pago');
           return;
         }
 
@@ -1621,6 +1683,7 @@
         formData.append("cedula", cedula);
         formData.append("ref_banco", ref);
         formData.append("bank_code", bank_code);
+        formData.append("metodo_pago_id", metodoPagoId);
         if(emisor_cedula) formData.append("emisor_cedula", emisor_cedula);
         if(emisor_telefono) formData.append("emisor_telefono", emisor_telefono);
         if(PRE_ORDER_UUID){ formData.append("pre_order_uuid", PRE_ORDER_UUID); }
