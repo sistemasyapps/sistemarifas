@@ -22,6 +22,7 @@ class PreOrderController extends Controller
             'correo' => 'required|string',
             'telefono' => 'required|string',
             'bank_code' => 'required|digits:4',
+            'metodo_pago_id' => 'required|integer|exists:metodo_pagos,id',
         ]);
 
         if ($validator->fails()) {
@@ -47,6 +48,7 @@ class PreOrderController extends Controller
             'correo' => (string) $request->correo,
             'telefono' => (string) $request->telefono,
             'bank_code' => (string) $request->bank_code,
+            'metodo_pago_id' => (int) $request->metodo_pago_id,
             'monto' => $monto,
             'IP' => $request->ip(),
         ];

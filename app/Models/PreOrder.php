@@ -20,6 +20,7 @@ class PreOrder extends Model
         'correo',
         'telefono',
         'bank_code',
+        'metodo_pago_id',
         'monto',
         'IP',
     ];

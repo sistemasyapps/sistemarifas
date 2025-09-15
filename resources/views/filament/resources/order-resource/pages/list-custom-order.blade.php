@@ -30,13 +30,13 @@
             <table class="w-full text-sm text-left dark:text-gray-400" id="orderTable">
                 <thead class="bg-gray-50">
                     <tr>
-                        
                         <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase ">ID</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase ">Creado</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase ">Cliente</th>
                         
                         <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase ">Cantidad</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase ">Referencia</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase ">Método de Pago</th>
                         
                         <th scope="col" class="px-6 py-3 text-left text-xs text-gray-500 uppercase w-1">Imagen de Referencia</th>
                         
@@ -56,6 +56,9 @@
                                 @if ($record->ref_repetido > 1)
                                 <b style="color: red">REPETIDO</b>
                                 @endif
+                            </td>
+                            <td class="px-6 py-4 ">
+                                {{ $record->metodoPago ? strip_tags($record->metodoPago->metodo) : 'Sin registrar' }}
                             </td>
                             
                             <td class="px-6 py-4">

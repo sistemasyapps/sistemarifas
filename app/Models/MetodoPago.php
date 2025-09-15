@@ -10,7 +10,7 @@ class MetodoPago extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["metodo","logo","descripcion","estatus","tipo"];
+    protected $fillable = ["metodo","logo","descripcion","estatus","tipo","orden"];
 
     public function orders(): HasMany
     {

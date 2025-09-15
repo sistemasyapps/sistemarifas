@@ -14,6 +14,12 @@ class ListMetodoPagos extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+            Actions\Action::make('ordenar')
+                ->label('Ordenar Metodos')
+                ->icon('heroicon-m-arrows-up-down')
+                ->url(static::getResource()::getUrl('reorder'))
+                ->color('gray')
+                ->outlined(),
         ];
     }
 }

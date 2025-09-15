@@ -50,6 +50,7 @@ class OrderController extends Controller
             'ref_banco' => 'required|digits:8',
             'bank_code' => 'required|digits:4',
             'ref_imagen' => 'required',
+            'metodo_pago_id' => 'required|integer|exists:metodo_pagos,id',
             // Datos del emisor (opcional para compatibilidad; si vienen, deben cumplir formato)
             'emisor_cedula' => 'nullable|digits_between:6,12',
             'emisor_telefono' => 'nullable|digits:11',
@@ -190,6 +191,7 @@ class OrderController extends Controller
 
         $data['city_id'] = $city_id;
         $data['bank_code'] = $request->bank_code;
+        $data['metodo_pago_id'] = (int) $request->metodo_pago_id;
         Log::info('Terminar de crear datos personalizados para la orden');
         
 

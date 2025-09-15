@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\MetodoPago;
 
 class Order extends Model
 {   
@@ -24,6 +25,7 @@ class Order extends Model
         "uuid",
         "ref_banco",
         "bank_code",
+        "metodo_pago_id",
         "monto_notificado_bs",
         "fecha_pago_notificado",
         // Datos del emisor del pago (nullable por compatibilidad)
@@ -45,4 +47,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderNumber::class);
     }   
+
+    public function metodoPago(): BelongsTo
+    {
+        return $this->belongsTo(MetodoPago::class);
+    }
 }
