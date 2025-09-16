@@ -5,8 +5,31 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app.09b8ad82.js",
+    "file": "assets/app.d6eedc47.js",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "dynamicImports": [
+      "node_modules/firebase/app/dist/esm/index.esm.js",
+      "node_modules/firebase/messaging/dist/esm/index.esm.js"
+    ]
+  },
+  "node_modules/firebase/app/dist/esm/index.esm.js": {
+    "file": "assets/index.esm.369e8a89.js",
+    "src": "node_modules/firebase/app/dist/esm/index.esm.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_index.esm.9da7bf65.js"
+    ]
+  },
+  "_index.esm.9da7bf65.js": {
+    "file": "assets/index.esm.9da7bf65.js"
+  },
+  "node_modules/firebase/messaging/dist/esm/index.esm.js": {
+    "file": "assets/index.esm.81834d00.js",
+    "src": "node_modules/firebase/messaging/dist/esm/index.esm.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_index.esm.9da7bf65.js"
+    ]
   }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\DB;
 use App\Models\Raffle;
 use App\Models\Option;
 use Illuminate\Support\Facades\Cache;
@@ -23,7 +22,7 @@ class RaffleHelper
         $raffle = Cache::rememberForever('active_raffle', function () {
             $ordenar = Option::where('clave', 'ordenar')->value('valor');
             $orden = (is_string($ordenar) && strtolower(trim($ordenar)) === 'si') ? 'asc' : 'desc';
-            $query = Raffle::with('orders');
+            $query = Raffle::query();
             if (\Illuminate\Support\Facades\Schema::hasColumn('raffles', 'estatus')) {
                 $query->where('estatus', 1);
             }
