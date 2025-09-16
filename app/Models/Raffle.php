@@ -11,7 +11,7 @@ class Raffle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["cantidad_max","nombre","precio","fecha_inicial","fecha_final","descripcion","imagen_texto","imagen_premio","imagen_banner","estatus","estatus_compra"];
+    protected $fillable = ["cantidad_max","nombre","precio","fecha_inicial","fecha_final","mensaje_proximo_sorteo","descripcion","imagen_texto","imagen_premio","imagen_banner","estatus","estatus_compra"];
 
     public function orders(): HasMany
     {

@@ -27,7 +27,7 @@
                               <div class="flex radius-rounded bg-[var(--color-surface-secondary)] overflow-hidden">
                                 <div class="flex flex-row gap-2 items-center justify-center bg-[#00D3441F] px-2 py-1">
                                   <span class="label-large-medium text-color-brand">
-                                    Sorteo: {{$raffle->dia}} {{$raffle->mes}}
+                                    {{ $raffle->sorteo_label ?? ('Sorteo: ' . ($raffle->dia ?? '') . ' ' . ($raffle->mes ?? '')) }}
                                   </span>
                                 </div>
                               </div>

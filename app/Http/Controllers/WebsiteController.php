@@ -46,6 +46,8 @@ class WebsiteController extends Controller
             $raffle->queda = $rafflesData[$raffle->id] * 100;
             $raffle->barra = ($barra < 0.00) ? 0.00 : $barra;
             $raffle->mes = $meses[date("n", strtotime($raffle->fecha_final)) - 1];
+            $raffle->sorteo_label = $raffle->mensaje_proximo_sorteo
+                ?: ('Sorteo: ' . date('d', strtotime($raffle->fecha_final)) . ' ' . $raffle->mes);
         });
 
         return view('home', array_merge($staticData, [
@@ -95,6 +97,8 @@ class WebsiteController extends Controller
             $raffle->barra = ($barra < 0.00) ? 0.00 : $barra;
             $raffle->mes = $meses[date("n", strtotime($raffle->fecha_final)) - 1];
             $raffle->dia = date("d", strtotime($raffle->fecha_final));
+            $raffle->sorteo_label = $raffle->mensaje_proximo_sorteo
+                ?: ('Sorteo: ' . $raffle->dia . ' ' . $raffle->mes);
         });
 
         return view('nuevo.nuevo', array_merge($staticData, [
