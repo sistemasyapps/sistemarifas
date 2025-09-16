@@ -972,6 +972,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    @php($fechaInicialProximoSorteo = $rifa->fecha_inicial ? \Illuminate\Support\Carbon::parse($rifa->fecha_inicial)->format('d/m/Y') : null)
     <script>
       let PRE_ORDER_UUID = null;
       const modalTerms = new bootstrap.Modal(document.getElementById('termsModal'), {
@@ -1087,6 +1088,8 @@
       const defaultMetodoPagoId = @json(optional($metodos->first())->id);
       let selectedMetodoPagoId = defaultMetodoPagoId;
       window.selectedMetodoPagoId = selectedMetodoPagoId;
+      const proximoSorteoMensaje = @json($rifa->mensaje_proximo_sorteo);
+      const proximoSorteoFecha = @json($fechaInicialProximoSorteo);
 
       function parseMetodoPago(metodo) {
         if (typeof metodo !== 'string') {
@@ -1189,6 +1192,16 @@
           const firstMethodCard = document.querySelector('.payment-method-card');
           if (firstMethodCard) {
             firstMethodCard.classList.add('active');
+          }
+        }
+        const fechaSorteoElement = document.querySelector('.fecha_sorteo');
+        if (fechaSorteoElement) {
+          if (proximoSorteoMensaje) {
+            fechaSorteoElement.textContent = proximoSorteoMensaje;
+          } else if (proximoSorteoFecha) {
+            fechaSorteoElement.textContent = `Próximo sorteo: ${proximoSorteoFecha}`;
+          } else {
+            fechaSorteoElement.textContent = '';
           }
         }
         applyPayerCedulaToPaymentData();

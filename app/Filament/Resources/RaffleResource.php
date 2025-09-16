@@ -13,6 +13,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use AmidEsfahani\FilamentTinyEditor\TinyEditor;
+use Closure;
+use Illuminate\Support\Carbon;
 
 class RaffleResource extends Resource
 {
@@ -49,14 +51,63 @@ class RaffleResource extends Resource
                 Forms\Components\TextInput::make('precio')
                     ->required()
                     ->numeric(),
+                Forms\Components\Textarea::make('mensaje_proximo_sorteo')
+                    ->label('Mensaje próximo sorteo')
+                    ->helperText('Si se define, reemplaza la fecha inicial mostrada al comprar tickets.')
+                    ->rows(2)
+                    ->reactive(),
                 Forms\Components\DatePicker::make('fecha_inicial')
                     ->native(false)
                     ->displayFormat("d/m/Y")
-                    ->required(),
+                    ->nullable()
+                    ->required(fn (callable $get) => blank($get('mensaje_proximo_sorteo')))
+                    ->minDate(Carbon::today()->subDay())
+                    ->rule(fn (callable $get) => function (string $attribute, $value, Closure $fail) use ($get) {
+                        if (blank($value)) {
+                            return;
+                        }
+
+                        $final = $get('fecha_final');
+                        if (blank($final)) {
+                            return;
+                        }
+
+                        if (strtotime($value) > strtotime($final)) {
+                            $fail('La fecha inicial debe ser menor o igual a la fecha final.');
+                        }
+                    })
+                    ->validationMessages([
+                        'after_or_equal' => 'La fecha inicial debe ser igual o posterior a la fecha mínima permitida.',
+                        'before_or_equal' => 'La fecha inicial debe ser menor o igual a la fecha final.',
+                    ])
+                    ->helperText('Obligatoria cuando no se define un mensaje.'),
                 Forms\Components\DatePicker::make('fecha_final')
                     ->native(false)
                     ->displayFormat("d/m/Y")
-                    ->required(),
+                    ->nullable()
+                    ->required(fn (callable $get) => blank($get('mensaje_proximo_sorteo')))
+                    ->minDate(fn (callable $get) => $get('fecha_inicial')
+                        ? Carbon::parse($get('fecha_inicial'))
+                        : Carbon::today()->subDay())
+                    ->rule(fn (callable $get) => function (string $attribute, $value, Closure $fail) use ($get) {
+                        if (blank($value)) {
+                            return;
+                        }
+
+                        $initial = $get('fecha_inicial');
+                        if (blank($initial)) {
+                            return;
+                        }
+
+                        if (strtotime($value) < strtotime($initial)) {
+                            $fail('La fecha final debe ser mayor o igual a la fecha inicial.');
+                        }
+                    })
+                    ->validationMessages([
+                        'after_or_equal' => 'La fecha final debe ser mayor o igual a la fecha inicial.',
+                        'before_or_equal' => 'La fecha final debe ser mayor o igual a la fecha inicial.',
+                    ])
+                    ->helperText('Obligatoria cuando no se define un mensaje.'),
                 Forms\Components\FileUpload::make('imagen_premio'),
                 Forms\Components\FileUpload::make('imagen_banner'),
             ]);
