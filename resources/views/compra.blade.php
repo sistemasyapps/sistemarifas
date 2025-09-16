@@ -1697,9 +1697,7 @@
       });
 
       function showTickets(uuid) {
-        let timeLeft = 10;
-        const checkInterval = 18000;
-        let verificationInterval;
+        let timeLeft = 5;
 
         Swal.fire({
           title: 'Generando Tickets...',

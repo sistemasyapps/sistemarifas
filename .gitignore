@@ -17,3 +17,4 @@ playwright.config.js
 tests
 package.json
 phpunit.xml
+worker.log
