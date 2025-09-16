@@ -30,11 +30,14 @@ class ListCustomOrder extends Page
     {
         $this->allRaffles = RaffleHelper::getLastTen();
 
-        $this->estatus = request()->query('estatus', 0);
+        $this->estatus = (string) request()->query('estatus', '0');
 
         $defaultRaffleId = optional($this->allRaffles->first())->id;
 
-        $this->raffleId = request()->query('rifa_select', $defaultRaffleId);
+        $requestedRaffleId = request()->query('rifa_select');
+        $this->raffleId = $requestedRaffleId !== null && $requestedRaffleId !== ''
+            ? (int) $requestedRaffleId
+            : ($defaultRaffleId !== null ? (int) $defaultRaffleId : null);
 
         $requestedPerPage = (int) request()->query('per_page', 25);
         $this->perPage = in_array($requestedPerPage, self::PER_PAGE_OPTIONS, true)
