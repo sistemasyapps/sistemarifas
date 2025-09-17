@@ -236,6 +236,11 @@
                                             <div class="fi-ta-text-item-description text-sm text-gray-500 dark:text-gray-400 truncate">
                                                 {{ $record->client->correo }}
                                             </div>
+                                            @if ($record->client->telefono)
+                                                <div class="fi-ta-text-item-description text-sm text-gray-500 dark:text-gray-400 truncate">
+                                                    Tel: {{ $record->client->telefono }}
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </td>
