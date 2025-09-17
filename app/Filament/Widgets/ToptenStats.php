@@ -12,7 +12,11 @@ class ToptenStats extends Widget
 
     protected function getViewData(): array
     {
-        $currentRaffle = RaffleHelper::getActiveRaffles()[0];
+        $currentRaffle = RaffleHelper::getActiveRaffles()[0] ?? null;
+
+        if (! $currentRaffle) {
+            return ['data' => []];
+        }
 
         $top = DB::select("SELECT
             client_id, sum(cantidad) as tickets, UPPER(clients.nombre_completo) as nombre

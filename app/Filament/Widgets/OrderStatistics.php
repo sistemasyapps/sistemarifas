@@ -13,8 +13,19 @@ class OrderStatistics extends Widget
 
     protected function getViewData(): array
     {
-         $activeRaffles = RaffleHelper::getActiveRaffles()->pluck("id");
-        foreach($activeRaffles as $raffleId)
+        $activeRaffles = RaffleHelper::getActiveRaffles();
+
+        if (! $activeRaffles || $activeRaffles->isEmpty()) {
+            return [
+                'data' => [],
+                'total' => [],
+            ];
+        }
+
+        $data = [];
+        $total = [];
+
+        foreach ($activeRaffles->pluck('id') as $raffleId)
         {
              $tmp = DB::table('orders')
                 ->select(DB::raw("raffles.nombre"),DB::raw("raffles.id"),DB::raw('DATE(orders.created_at) as dia'), DB::raw('COUNT(orders.id) as ordenes'), DB::raw('SUM(cantidad) as total'))
