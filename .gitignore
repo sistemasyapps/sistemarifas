@@ -18,3 +18,4 @@ tests
 package.json
 phpunit.xml
 worker.log
+papelera/

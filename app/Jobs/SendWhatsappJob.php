@@ -34,6 +34,11 @@ class SendWhatsappJob implements ShouldQueue
      */
     public function handle(): void
     {
+        if (!config('notifications.whatsapp.enabled')) {
+            Log::info('SendWhatsappJob omitido: notificaciones WhatsApp deshabilitadas.');
+            return;
+        }
+
         try{
             $urlIndex = 0;
             if(Cache::has('whatsapp_url_index')){

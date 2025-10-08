@@ -303,7 +303,8 @@ class OrderController extends Controller
         $order->estatus = '1';
         $order->save();
         
-        if(strtolower($order->client->correo) != "soporte@gmail.com" ) {
+        $emailEnabled = (bool) config('notifications.email.enabled');
+        if($emailEnabled && strtolower($order->client->correo) != "soporte@gmail.com" ) {
             try{
                 $numbers = $order->numbers;
                 $options = Option::All()->pluck('valor', 'clave');
@@ -313,6 +314,8 @@ class OrderController extends Controller
             } catch(Exception $e) {
                 Log::error("Error al enviar Correo ".$e->getMessage());
             }
+        } elseif (! $emailEnabled) {
+            Log::info('Correo no enviado: notificaciones email deshabilitadas en configuración.');
         }
 
         try{
@@ -322,7 +325,11 @@ class OrderController extends Controller
                 "to" => $this->normalizarTelefono($order->client->telefono),
                 "message" => $messageWhatsapp,
             ];
-            // $this->sendWhatsapp($dataWhatsapp);
+            if (config('notifications.whatsapp.enabled')) {
+                $this->sendWhatsapp($dataWhatsapp);
+            } else {
+                Log::info('WhatsApp no enviado: notificaciones WhatsApp deshabilitadas en configuración.');
+            }
         } catch(Exception $e) {
             Log::error("Error al enviar Whatsapp {to} {message} -> ".$e->getMessage(),$dataWhatsapp);
         }
@@ -460,6 +467,11 @@ class OrderController extends Controller
 
     private function sendWhatsapp($datos)
     {
+        if (!config('notifications.whatsapp.enabled')) {
+            Log::info('Se omitió envío de WhatsApp: notificaciones WhatsApp deshabilitadas.');
+            return;
+        }
+
         try{
             $client = new GClient();
             $headers = [

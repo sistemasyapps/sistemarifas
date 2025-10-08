@@ -13,6 +13,13 @@ class FirebasePushController extends Controller
 {
 	public function toTopic(Request $request, string $token)
     {
+        if (! config('notifications.firebase.enabled')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Notificaciones push deshabilitadas.',
+            ]);
+        }
+
         $messagingFirebase = Firebase::messaging();
         $a = $messagingFirebase->subscribeToTopic('all_users',$token);
         return response()->json([
@@ -23,6 +30,13 @@ class FirebasePushController extends Controller
 
     public function testSending()
     {
+        if (! config('notifications.firebase.enabled')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Notificaciones push deshabilitadas.',
+            ]);
+        }
+
         $topic = 'all_users';
         $messagingFirebase = Firebase::messaging();
         $title = getenv('APP_NAME');
@@ -42,5 +56,10 @@ class FirebasePushController extends Controller
             ->toTopic($topic);
 
         $messagingFirebase->send($message);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notificación de prueba enviada.'
+        ]);
     }
 }
