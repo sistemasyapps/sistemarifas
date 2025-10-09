@@ -233,6 +233,19 @@ class OrderController extends Controller
             return response()->json($payload, 422);
         }
 
+        if ($preOrder) {
+            try {
+                $preOrder->consumida_at = now();
+                $preOrder->save();
+            } catch (\Throwable $e) {
+                Log::warning('No se pudo marcar la pre-orden como consumida', [
+                    'pre_order_id' => $preOrder->id,
+                    'order_uuid' => $order->uuid ?? null,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
         // if(strtolower($cliente->correo) != "soporte@gmail.com" ) {
         //     try{
         //         $options = Option::All()->pluck('valor', 'clave');

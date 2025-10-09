@@ -1221,6 +1221,13 @@
       // Variable para controlar si ya se mostraron los datos de pago
       let paymentDataShown = false;
       window.paymentDataShown = paymentDataShown;
+      let preOrderRequestInFlight = false;
+      window.preOrderRequestInFlight = preOrderRequestInFlight;
+
+      function setPreOrderRequestState(state) {
+        preOrderRequestInFlight = Boolean(state);
+        window.preOrderRequestInFlight = preOrderRequestInFlight;
+      }
 
       // Función para seleccionar método de pago (sin mostrar datos aún)
       function selectPaymentMethod(element, metodo) {
@@ -1239,11 +1246,12 @@
         window.paymentFlowMode = paymentFlowMode;
         togglePayerCedulaInput(requiresCedula);
         toggleManualUploadContainer(false);
+        PRE_ORDER_UUID = null;
+        window.PRE_ORDER_UUID = PRE_ORDER_UUID;
+        setPreOrderRequestState(false);
         if (!requiresCedula) {
           paymentPayerCedula = null;
           window.paymentPayerCedula = paymentPayerCedula;
-          PRE_ORDER_UUID = null;
-          window.PRE_ORDER_UUID = PRE_ORDER_UUID;
         }
 
         if (metodo && metodo.id) {
@@ -1283,6 +1291,8 @@
 
       function hidePaymentData() {
         if (!window.paymentDataShown) return;
+
+        setPreOrderRequestState(false);
 
         const paymentDataContainer = document.getElementById('payment_data_container');
         const paymentDataDivStep0 = document.getElementById('payment_data_step0');
@@ -1570,6 +1580,8 @@
           return;
         }
 
+        const buttonEl = this;
+
         const pre = {
           cedula: jQuery('#pre_cedula').val().trim(),
           nombre_completo: jQuery('#pre_nombre').val().trim(),
@@ -1609,7 +1621,14 @@
         // Si los datos aún no se han mostrado, crearlos y mostrarlos
         if (!window.paymentDataShown) {
           // Si requiere cédula del pagador, crear la preorden primero
-          if (requiresCedula) {
+          if (requiresCedula && !PRE_ORDER_UUID) {
+            if (preOrderRequestInFlight) {
+              return;
+            }
+
+            setPreOrderRequestState(true);
+            buttonEl.disabled = true;
+
             const preOrderPayload = {
               raffle_id: {{$rifa->id}},
               cantidad: datos.cant_boletos,
@@ -1634,8 +1653,16 @@
                 return;
               }
               PRE_ORDER_UUID = data.pre_order.uuid;
+              window.PRE_ORDER_UUID = PRE_ORDER_UUID;
             } catch (error) {
               Swal.fire('Error de red creando pre-orden');
+              return;
+            } finally {
+              buttonEl.disabled = false;
+              setPreOrderRequestState(false);
+            }
+
+            if (!PRE_ORDER_UUID) {
               return;
             }
           }
@@ -1681,12 +1708,19 @@
           }
         } else {
           if (!requiresCedula) {
-            finalizar_compra(this);
+            finalizar_compra(buttonEl);
             return;
           }
 
           // Si ya se mostraron los datos y es flujo automático, asegurarse de contar con la preorden
           if (!PRE_ORDER_UUID) {
+            if (preOrderRequestInFlight) {
+              return;
+            }
+
+            setPreOrderRequestState(true);
+            buttonEl.disabled = true;
+
             const preOrderPayload = {
               raffle_id: {{$rifa->id}},
               cantidad: datos.cant_boletos,
@@ -1711,12 +1745,20 @@
                 return;
               }
               PRE_ORDER_UUID = data.pre_order.uuid;
+              window.PRE_ORDER_UUID = PRE_ORDER_UUID;
             } catch (error) {
               Swal.fire('Error de red creando pre-orden');
               return;
+            } finally {
+              buttonEl.disabled = false;
+              setPreOrderRequestState(false);
+            }
+
+            if (!PRE_ORDER_UUID) {
+              return;
             }
           }
-          finalizar_compra_auto(this);
+          finalizar_compra_auto(buttonEl);
         }
       });
 
@@ -1752,8 +1794,10 @@
         paymentPayerCedula = null;
         window.paymentPayerCedula = paymentPayerCedula;
         PRE_ORDER_UUID = null;
+        window.PRE_ORDER_UUID = PRE_ORDER_UUID;
         currentOrderUuid = null;
         window.currentOrderUuid = currentOrderUuid;
+        setPreOrderRequestState(false);
 
         jQuery('#pre_cedula').val('');
         jQuery('#pre_nombre').val('');

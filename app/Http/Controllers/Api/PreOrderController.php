@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 
 class PreOrderController extends Controller
 {
+    private const DEDUP_WINDOW_MINUTES = 20;
+
     public function create(Request $request)
     {
         $metodoPagoId = (int) $request->input('metodo_pago_id');
@@ -50,12 +52,11 @@ class PreOrderController extends Controller
         $bankCode = $bankCode === '' ? null : $bankCode;
 
         $data = [
-            'uuid' => Str::uuid()->toString(),
             'raffle_id' => (int) $request->raffle_id,
             'cantidad' => (int) $request->cantidad,
             'cedula' => $cedulaNumerica,
-            'nombre_completo' => (string) $request->nombre_completo,
-            'correo' => (string) $request->correo,
+            'nombre_completo' => trim((string) $request->nombre_completo),
+            'correo' => trim((string) $request->correo),
             'telefono' => $telefonoNormalizado,
             'bank_code' => $bankCode,
             'metodo_pago_id' => (int) $request->metodo_pago_id,
@@ -63,13 +64,44 @@ class PreOrderController extends Controller
             'IP' => $request->ip(),
         ];
 
-        $preOrder = PreOrder::create($data);
+        $fingerprint = PreOrder::fingerprintFor($data);
+        $dedupMinutes = (int) config('preorders.dedup_window_minutes', self::DEDUP_WINDOW_MINUTES);
+        if ($dedupMinutes <= 0) {
+            $dedupMinutes = self::DEDUP_WINDOW_MINUTES;
+        }
 
-        Log::info('PreOrder creada', ['uuid' => $preOrder->uuid, 'cedula' => $preOrder->cedula, 'monto' => $preOrder->monto]);
+        $existing = PreOrder::query()
+            ->where('fingerprint', $fingerprint)
+            ->whereNull('consumida_at')
+            ->where('created_at', '>=', now()->subMinutes($dedupMinutes))
+            ->latest('id')
+            ->first();
+
+        $created = false;
+        if ($existing) {
+            $existing->fill(array_merge($data, ['fingerprint' => $fingerprint]));
+            if ($existing->isDirty()) {
+                $existing->save();
+            } else {
+                $existing->touch();
+            }
+            $preOrder = $existing;
+        } else {
+            $preOrder = PreOrder::create(array_merge($data, [
+                'uuid' => Str::uuid()->toString(),
+                'fingerprint' => $fingerprint,
+            ]));
+            $created = true;
+        }
+
+        Log::info(
+            $created ? 'PreOrder creada' : 'PreOrder reutilizada',
+            ['uuid' => $preOrder->uuid, 'cedula' => $preOrder->cedula, 'monto' => $preOrder->monto]
+        );
 
         return response()->json([
             'success' => true,
             'pre_order' => $preOrder,
-        ], 201);
+        ], $created ? 201 : 200);
     }
 }

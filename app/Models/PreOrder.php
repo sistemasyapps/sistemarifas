@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use App\Models\MetodoPago;
+use App\Models\Order;
 
 class PreOrder extends Model
 {
@@ -25,6 +27,12 @@ class PreOrder extends Model
         'metodo_pago_id',
         'monto',
         'IP',
+        'fingerprint',
+        'consumida_at',
+    ];
+
+    protected $casts = [
+        'consumida_at' => 'datetime',
     ];
 
     protected static function booted()
@@ -36,8 +44,28 @@ class PreOrder extends Model
         });
     }
 
+    public static function fingerprintFor(array $attributes): string
+    {
+        $fields = [
+            $attributes['raffle_id'] ?? '',
+            $attributes['cantidad'] ?? '',
+            $attributes['cedula'] ?? '',
+            strtolower((string) ($attributes['correo'] ?? '')),
+            $attributes['telefono'] ?? '',
+            $attributes['metodo_pago_id'] ?? '',
+            number_format((float) ($attributes['monto'] ?? 0), 2, '.', ''),
+        ];
+
+        return hash('sha256', implode('|', $fields));
+    }
+
     public function metodoPago(): BelongsTo
     {
         return $this->belongsTo(MetodoPago::class);
+    }
+
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class, 'pre_order_id');
     }
 }

@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // $schedule->job(new \App\Jobs\ScraperBCV)->hourly();
+        $schedule->command('preorders:purge')
+            ->dailyAt('02:30')
+            ->withoutOverlapping();
     }
 
     /**
