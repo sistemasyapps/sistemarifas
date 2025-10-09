@@ -5081,3 +5081,270 @@ body .wpb_content_element {
     vertical-align: -.125em;
     fill: currentcolor;
 }
+
+/* Quick buy overlay */
+.quick-buy-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(12, 16, 31, 0.68);
+    backdrop-filter: blur(6px);
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease-in-out;
+}
+
+.quick-buy-overlay[hidden] {
+    display: none;
+}
+
+.quick-buy-overlay.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.quick-buy-modal {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.95));
+    border-radius: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    padding: 1.75rem 1.5rem;
+    color: #e2e8f0;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.2s ease;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px);
+}
+
+.quick-buy-overlay.is-visible .quick-buy-modal {
+    transform: translateY(0);
+}
+
+.quick-buy-close {
+    display: none;
+}
+
+.quick-buy-header h2 {
+    display: none;
+}
+
+.quick-buy-subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #f8fafc;
+    font-weight: 600;
+    text-align: center;
+}
+
+.quick-buy-body {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.quick-buy-counter {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+    align-items: center;
+}
+
+.quick-buy-counter__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(15, 23, 42, 0.55);
+    color: #f8fafc;
+    font-size: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.quick-buy-counter__btn:hover,
+.quick-buy-counter__btn:focus-visible {
+    border-color: rgba(94, 234, 212, 0.6);
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
+    color: #5eead4;
+}
+
+.quick-buy-counter input {
+    height: 56px;
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: rgba(15, 23, 42, 0.35);
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #f8fafc;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.quick-buy-counter input:focus-visible {
+    border-color: rgba(94, 234, 212, 0.6);
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
+}
+
+.quick-buy-shortcuts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.quick-buy-shortcuts button {
+    border-radius: 10px;
+    border: 1.5px solid rgba(71, 85, 105, 0.5);
+    background: rgba(30, 41, 59, 0.4);
+    padding: 0.85rem 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quick-buy-shortcuts button:hover {
+    border-color: rgba(148, 163, 184, 0.7);
+    background: rgba(51, 65, 85, 0.6);
+    color: #e2e8f0;
+}
+
+.quick-buy-shortcuts button.is-active {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.quick-buy-price {
+    margin: 0;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #10b981;
+    padding: 0.75rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.quick-buy-footer {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    background: transparent !important;
+    padding: 0 !important;
+    text-align: left !important;
+}
+
+.quick-buy-button {
+    border-radius: 10px;
+    padding: 0.9rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 48px;
+}
+
+.quick-buy-button:active {
+    transform: scale(0.98);
+}
+
+.quick-buy-button--secondary {
+    background: rgba(100, 116, 139, 0.6);
+    color: #e2e8f0;
+    border: 1.5px solid rgba(148, 163, 184, 0.7);
+}
+
+.quick-buy-button--secondary:hover {
+    background: rgba(100, 116, 139, 0.8);
+    border-color: rgba(148, 163, 184, 0.9);
+    color: #f1f5f9;
+}
+
+.quick-buy-button--primary {
+    background: #10b981;
+    color: #ffffff;
+    border: 1.5px solid #10b981;
+    font-weight: 700;
+}
+
+.quick-buy-button--primary:hover {
+    background: #059669;
+    border-color: #059669;
+}
+
+body.quick-buy-open {
+    overflow: hidden;
+}
+
+@media (max-width: 576px) {
+    .quick-buy-modal {
+        padding: 1.5rem 1.25rem;
+        border-radius: 18px;
+        max-width: 95%;
+    }
+
+    .quick-buy-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .quick-buy-body {
+        margin-top: 1rem;
+        gap: 1rem;
+    }
+
+    .quick-buy-counter {
+        gap: 0.6rem;
+    }
+
+    .quick-buy-counter__btn,
+    .quick-buy-counter input {
+        height: 48px;
+        font-size: 1.5rem;
+    }
+
+    .quick-buy-shortcuts {
+        gap: 0.6rem;
+    }
+
+    .quick-buy-shortcuts button {
+        min-height: 48px;
+        padding: 0.75rem 0.5rem;
+        font-size: 1.1rem;
+    }
+
+    .quick-buy-price {
+        font-size: 1rem;
+        padding: 0.65rem 0.85rem;
+    }
+
+    .quick-buy-footer {
+        margin-top: 1.25rem;
+        gap: 0.6rem;
+    }
+
+    .quick-buy-button {
+        padding: 0.85rem 1.25rem;
+        font-size: 0.95rem;
+        min-height: 46px;
+    }
+}

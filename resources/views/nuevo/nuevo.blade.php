@@ -2,6 +2,7 @@
 
 @php
     use Illuminate\Support\Str;
+    $minimumTickets = max((int) ($minimumTickets ?? 1), 1);
 @endphp
 
 @section('content')
@@ -75,7 +76,13 @@
                 </div>
                 <div class="raffle-card__actions">
                   @if($raffle->is_buyable)
-                    <a class="raffle-card__cta" href="{{ route('compra', ['raffle' => $raffle->id]) }}">
+                    <a class="raffle-card__cta js-quick-buy"
+                       href="{{ route('compra', ['raffle' => $raffle->id]) }}"
+                       data-purchase-url="{{ route('compra', ['raffle' => $raffle->id]) }}"
+                       data-raffle-name="{{ $raffle->nombre }}"
+                       data-min="{{ $minimumTickets }}"
+                       data-max="{{ $raffle->queda ?? '' }}"
+                       data-price="{{ $raffle->precio ?? '' }}">
                       Comprar tickets
                     </a>
                   @else
@@ -101,6 +108,45 @@
           </div>
         </div>
       </section>
+
+      <div class="quick-buy-overlay" data-quick-buy-overlay hidden aria-hidden="true">
+        <div class="quick-buy-modal" role="dialog" aria-modal="true" aria-labelledby="quick-buy-title">
+          <button type="button" class="quick-buy-close" data-quick-buy-close aria-label="Cerrar selector de tickets">&times;</button>
+          <header class="quick-buy-header">
+            <h2 id="quick-buy-title">Selecciona tus tickets</h2>
+            <p class="quick-buy-subtitle" data-quick-buy-subtitle></p>
+          </header>
+          <div class="quick-buy-body">
+            <div class="quick-buy-counter">
+              <button type="button" class="quick-buy-counter__btn" data-quick-buy-decrease aria-label="Disminuir cantidad">
+                <span aria-hidden="true">−</span>
+              </button>
+              <input
+                type="number"
+                inputmode="numeric"
+                min="{{ $minimumTickets }}"
+                value="{{ $minimumTickets }}"
+                step="1"
+                data-quick-buy-input
+                aria-live="polite"
+                aria-label="Cantidad de tickets seleccionada">
+              <button type="button" class="quick-buy-counter__btn" data-quick-buy-increase aria-label="Incrementar cantidad">
+                <span aria-hidden="true">+</span>
+              </button>
+            </div>
+            <div class="quick-buy-shortcuts" data-quick-buy-shortcuts aria-label="Selecciona rápidamente la cantidad deseada"></div>
+            <p class="quick-buy-price" data-quick-buy-price hidden></p>
+          </div>
+          <footer class="quick-buy-footer">
+            <button type="button" class="quick-buy-button quick-buy-button--secondary" data-quick-buy-close>
+              Cancelar
+            </button>
+            <button type="button" class="quick-buy-button quick-buy-button--primary" data-quick-buy-confirm>
+              Continuar
+            </button>
+          </footer>
+        </div>
+      </div>
     </main>
   </div>
 @endsection

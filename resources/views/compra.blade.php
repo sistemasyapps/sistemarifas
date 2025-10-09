@@ -431,6 +431,10 @@
     </script>
   </head>
   <body>
+    @php
+      $cantidadMinima = max((int) ($cantidad_minima ?? 1), 1);
+      $initialTickets = max((int) request()->input('q', $cantidadMinima), $cantidadMinima);
+    @endphp
     <div class="wpb-content--blank">
       <article id="post-25415" class="post-25415 page type-page status-private hentry">
         <div class="entry-content">
@@ -718,7 +722,7 @@
                                 <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
                                   <div class="wpb_wrapper">
                                     <div class="flex center flex-center">
-                                      <input type="text" onblur="validar_cant(this.value)" onkeyup="put_cant(this.value)" id="cant_boletos" name="cant_boletos" value="{{$cantidad_minima}}" class="form-control">
+                                          <input type="text" onblur="validar_cant(this.value)" onkeyup="put_cant(this.value)" id="cant_boletos" name="cant_boletos" value="{{ $initialTickets }}" class="form-control">
                                     </div>
                                   </div>
                                 </div>
@@ -777,7 +781,7 @@
                             <!-- Top summary: tickets y total -->
                             <div class="d-flex justify-content-center mb-3">
                               <div class="d-inline-flex align-items-center px-3 py-1" style="background: rgba(30, 41, 59, 0.2); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 9999px; gap: 0.75rem;">
-                                <span class="text-slate-200" style="font-weight: 600; font-size: 0.9rem;">Tickets: <span id="top_tickets_display"><?=$_GET["q"]?></span></span>
+                                <span class="text-slate-200" style="font-weight: 600; font-size: 0.9rem;">Tickets: <span id="top_tickets_display">{{ $initialTickets }}</span></span>
                                 <span style="opacity: .5;">•</span>
                                 <span class="text-emerald-400" style="font-weight: 700; font-size: 0.95rem;">Total: <span id="top_total_display"></span></span>
                               </div>
@@ -1211,7 +1215,7 @@
         // Get current total amount
         const totalElement = document.getElementById('top_total_display') || document.getElementById('payment_total_display') || document.getElementById('summary_total');
         const totalAmount = totalElement ? totalElement.textContent : '';
-        const ticketCount = <?= $_GET["q"] ?>;
+        const ticketCount = {{ $initialTickets }};
         
         // Build simple data string: bank data + amount
         const cleanAmount = totalAmount.replace(' Bs.', '').trim();
@@ -1252,7 +1256,7 @@
       }
 
       const datos = {
-        cant_boletos: <?= $_GET["q"] ?>,
+        cant_boletos: {{ $initialTickets }},
         precio: {{ $rifa->precio }},
         bcv: {{ $BCV }},
         persona: {

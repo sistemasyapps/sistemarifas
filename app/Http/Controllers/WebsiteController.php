@@ -58,8 +58,7 @@ class WebsiteController extends Controller
     public function HomeNuevo()
     {
         $raffles = RaffleHelper::getActiveRaffles();
-        $currentRaffle = $raffles->first();
-        $remainingRaffles = array_slice($raffles->toArray(), 1);
+        $raffles = $raffles ? $raffles->values() : collect();
 
         $meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiempre","Octubre","Noviembre","Diciembre"];
 
@@ -67,10 +66,11 @@ class WebsiteController extends Controller
             return [$raffle->id => $this->getBarraOptimizado($raffle)];
         });
 
-         $staticData = Cache::remember('home_static_data', 1440, function() {
+        $staticData = Cache::remember('home_static_data', 1440, function() {
             $options = Option::all()->pluck('valor', 'clave');
             $whatsapp = $options->get('Whatsapp');
             $logo = $options->get('logo');
+            $minimumTickets = max((int) ($options->get('cantidad_minima') ?? 1), 1);
 
             $patrocinadores = collect();
             if (Schema::hasTable('sponsors')) {
@@ -87,23 +87,43 @@ class WebsiteController extends Controller
                 'logo' => $logo,
                 'patrocinadores' => $patrocinadores,
                 'rrss' => $rrss,
+                'minimumTickets' => $minimumTickets,
             ];
         });
 
-        $raffles->each(function($raffle) use ($rafflesData, $meses) {
-            $barra = ($raffle->estatus_compra == 0) ? 0 : $rafflesData[$raffle->id];
+        $enrichedRaffles = $raffles->map(function ($raffle, $index) use ($rafflesData, $meses) {
+            $barra = $raffle->estatus_compra == 0
+                ? 0
+                : ($rafflesData[$raffle->id] ?? 0);
 
-            $raffle->queda = $rafflesData[$raffle->id] * 100;
-            $raffle->barra = ($barra < 0.00) ? 0.00 : $barra;
-            $raffle->mes = $meses[date("n", strtotime($raffle->fecha_final)) - 1];
-            $raffle->dia = date("d", strtotime($raffle->fecha_final));
+            $barra = max(0, min(100, $barra));
+            $totalTickets = (int) ($raffle->cantidad_max ?? 0);
+            $ticketsLeft = $totalTickets > 0
+                ? (int) max(0, round(($barra / 100) * $totalTickets))
+                : 0;
+            $soldPercent = max(0, min(100, 100 - $barra));
+
+            $raffle->queda = $ticketsLeft;
+            $raffle->barra = $barra;
+            $raffle->vendido = $soldPercent;
+            $raffle->vendidos = $totalTickets > 0 ? max(0, $totalTickets - $ticketsLeft) : 0;
+            $raffle->mes = $raffle->fecha_final
+                ? $meses[date("n", strtotime($raffle->fecha_final)) - 1] ?? ''
+                : '';
+            $raffle->dia = $raffle->fecha_final ? date("d", strtotime($raffle->fecha_final)) : '';
             $raffle->sorteo_label = $raffle->mensaje_proximo_sorteo
-                ?: ('Sorteo: ' . $raffle->dia . ' ' . $raffle->mes);
+                ?: ($raffle->dia && $raffle->mes
+                    ? ('Sorteo: ' . $raffle->dia . ' ' . $raffle->mes)
+                    : 'Próximo sorteo');
+            $raffle->is_featured = $index === 0;
+            $raffle->is_buyable = $raffle->estatus_compra == 1 && $ticketsLeft > 0;
+
+            return $raffle;
         });
 
         return view('nuevo.nuevo', array_merge($staticData, [
-            'raffle' => $currentRaffle,
-            'raffles' => $remainingRaffles
+            'featuredRaffle' => $enrichedRaffles->first(),
+            'raffles' => $enrichedRaffles,
         ]));
     }
 

@@ -1,21 +1,28 @@
+# Laravel
 storage/
 vendor/
-node_modules/
 .env
-package-lock.json
+.env.testing
 .phpunit.result.cache
-documentacion/
-captures/
+worker.log
+
+# Node/NPM
+node_modules/
+package-lock.json
+
+# Build artifacts
+public/build/
+
+# Testing
+playwright-report/
+test-results/
+.playwright-mcp/
+
+# System files
 .DS_Store
 **/.DS_Store
-CLAUDE.md
-AGENTS.md
-.claude/
-.env.testing
-E2E-TESTING-SETUP.md
-playwright.config.js
-tests
-package.json
-phpunit.xml
-worker.log
+
+# Project specific
+documentacion/
+captures/
 papelera/
