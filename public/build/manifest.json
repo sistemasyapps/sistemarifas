@@ -1,6 +1,6 @@
 {
   "resources/js/app.js": {
-    "file": "assets/app.8a93381d.js",
+    "file": "assets/app.d8586cde.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
@@ -8,7 +8,8 @@
       "node_modules/firebase/messaging/dist/esm/index.esm.js"
     ],
     "css": [
-      "assets/app.79fe8f53.css"
+      "assets/app.daca7cbf.css",
+      "assets/app.740bdf92.css"
     ]
   },
   "node_modules/firebase/app/dist/esm/index.esm.js": {
@@ -30,8 +31,12 @@
       "_index.esm.9da7bf65.js"
     ]
   },
+  "resources/js/app.css": {
+    "file": "assets/app.daca7cbf.css",
+    "src": "resources/js/app.css"
+  },
   "resources/css/app.css": {
-    "file": "assets/app.79fe8f53.css",
+    "file": "assets/app.740bdf92.css",
     "src": "resources/css/app.css",
     "isEntry": true
   }

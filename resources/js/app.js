@@ -1,4 +1,10 @@
+import '../css/app.css';
 import './bootstrap';
+import Swiper from 'swiper';
+import { Navigation, EffectCoverflow } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/effect-coverflow';
 /*import Echo from 'laravel-echo';
 
 window.Echo = new Echo({
@@ -78,3 +84,46 @@ if (typeof window !== 'undefined') {
         });
     }
 }
+
+// Swiper carousel for raffles
+document.addEventListener('DOMContentLoaded', () => {
+    const swiperContainer = document.querySelector('.raffle-swiper');
+
+    if (!swiperContainer) return;
+
+    const swiper = new Swiper('.raffle-swiper', {
+        modules: [Navigation, EffectCoverflow],
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        initialSlide: 0,
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 2,
+            slideShadows: false,
+        },
+        navigation: {
+            nextEl: '#nextRaffle',
+            prevEl: '#prevRaffle',
+        },
+        breakpoints: {
+            320: {
+                slidesPerView: 1,
+                coverflowEffect: {
+                    depth: 100,
+                    modifier: 1.5,
+                },
+            },
+            768: {
+                slidesPerView: 'auto',
+                coverflowEffect: {
+                    depth: 150,
+                    modifier: 2,
+                },
+            },
+        },
+    });
+});
