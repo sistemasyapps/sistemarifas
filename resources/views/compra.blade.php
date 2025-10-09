@@ -294,7 +294,7 @@
 
         /* Payment data card compact layout */
         .payment-data-card {
-          padding: 0.75rem 0.9rem !important;
+          padding: 0.75rem 0.9rem 0.6rem !important;
         }
 
         .payment-data-card .payment-data-header {
@@ -370,24 +370,40 @@
           color: #cbd5f5 !important;
         }
 
-        .payment-data-card #payment_data_step0 {
-          font-size: 0.8rem !important;
-          padding: 0.65rem !important;
-          background: rgba(30, 41, 59, 0.35) !important;
-          border-radius: 8px !important;
-          margin: 0.6rem 0 !important;
-          text-align: center !important;
-          color: #ffffff !important;
-          line-height: 1.4 !important;
-        }
-
-        .payment-data-card .copy-wrapper {
+        .payment-data-card .payment-data-body {
+          display: flex !important;
+          align-items: flex-start !important;
+          justify-content: space-between !important;
+          gap: 0.75rem !important;
+          flex-wrap: wrap !important;
           margin-top: 0.5rem !important;
         }
 
-        .payment-data-card button {
-          padding: 0.45rem 0.9rem !important;
-          font-size: 0.85rem !important;
+        .payment-data-card .payment-data-details {
+          font-size: 0.8rem !important;
+          padding: 0.55rem 0.65rem !important;
+          background: rgba(30, 41, 59, 0.35) !important;
+          border-radius: 8px !important;
+          margin: 0 !important;
+          text-align: center !important;
+          color: #ffffff !important;
+          line-height: 1.4 !important;
+          flex: 1 1 0 !important;
+        }
+
+        .payment-data-card .payment-data-copy {
+          padding: 0.4rem 0.9rem !important;
+          font-size: 0.82rem !important;
+          border-radius: 10px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 0.35rem !important;
+          box-shadow: 0 6px 15px rgba(16, 185, 129, 0.25) !important;
+          white-space: nowrap !important;
+          align-self: flex-start !important;
+          color: #ffffff !important;
+          font-weight: 600 !important;
+          transition: all 0.3s ease !important;
         }
 
         @media (max-width: 575.98px) {
@@ -404,6 +420,16 @@
 
           .payment-data-card .payment-data-summary .summary-item {
             white-space: normal !important;
+          }
+
+          .payment-data-card .payment-data-body {
+            flex-wrap: nowrap !important;
+            gap: 0.5rem !important;
+          }
+
+          .payment-data-card .payment-data-copy {
+            padding: 0.4rem 0.75rem !important;
+            font-size: 0.8rem !important;
           }
         }
 
@@ -748,7 +774,7 @@
                         <i class="fas fa-credit-card" style="font-size: 1.2rem; color: white;"></i>
                       </div>
                       <div class="flex-grow-1">
-                        <h4 class="text-white mb-0" style="font-weight: 700; font-size: 1.25rem; letter-spacing: -0.025em;">Método de pago</h4>
+                        <h4 class="text-white mb-0" style="font-weight: 700; font-size: 1.25rem; letter-spacing: -0.025em;">Seleccione el método de pago</h4>
                       </div>
                       <div class="info-tooltip" onclick="toggleTooltip(this)">
                         <i class="fas fa-info-circle" style="color: #94a3b8; font-size: 1.1rem;"></i>
@@ -846,9 +872,9 @@
                                 <div class="col-md-12">
                                   <div class="modern-input-group">
                                     <label for="pre_emisor_cedula" class="modern-label">
-                                      <i class="fas fa-id-badge me-2"></i>Cédula del pagador
+                                      <i class="fas fa-id-badge me-2"></i>Cédula del titular de la cuenta
                                     </label>
-                                    <input type="text" id="pre_emisor_cedula" class="form-control modern-form-control" maxlength="12" inputmode="numeric" placeholder="Ingresa la cédula de quien paga">
+                                    <input type="text" id="pre_emisor_cedula" class="form-control modern-form-control" maxlength="12" inputmode="numeric" placeholder="Ingresa la cédula del titular de la cuenta">
                                   </div>
                                 </div>
                               </div>
@@ -875,10 +901,10 @@
                                       </span>
                                     </div>
                                   </div>
-                                  <div id="payment_data_step0"></div>
-                                  <div class="copy-wrapper text-center">
-                                    <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 0.65rem 1.25rem; font-weight: 600; color: white; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);" onclick="copiarDatosCompletos(document.getElementById('payment_data_step0').innerHTML)" type="button">
-                                      <i class="fas fa-copy me-2"></i>Copiar datos
+                                  <div class="payment-data-body">
+                                    <div class="payment-data-details" id="payment_data_step0"></div>
+                                    <button class="btn payment-data-copy" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white;" onclick="copiarDatosCompletos(document.getElementById('payment_data_step0').innerHTML)" type="button">
+                                      <i class="fas fa-copy"></i>Copiar
                                     </button>
                                   </div>
                                 </div>
@@ -1332,8 +1358,7 @@
       }
 
       const metodoPagoEntityParser = document.createElement('textarea');
-      const defaultMetodoPagoId = @json(optional($metodos->first())->id);
-      let selectedMetodoPagoId = defaultMetodoPagoId;
+      let selectedMetodoPagoId = null;
       window.selectedMetodoPagoId = selectedMetodoPagoId;
       let paymentFlowMode = null;
       window.paymentFlowMode = paymentFlowMode;
@@ -1506,11 +1531,10 @@
           telefono: jQuery('#pre_telefono').val().trim(),
         };
 
-        const hasMethod = !!window.selectedMetodoPagoId;
         const requiresCedula = paymentFlowMode === 'auto';
         const payerCedula = jQuery('#pre_emisor_cedula').val().trim();
 
-        let allFieldsComplete = pre.cedula && pre.nombre_completo && pre.correo && pre.telefono && hasMethod;
+        let allFieldsComplete = pre.cedula && pre.nombre_completo && pre.correo && pre.telefono;
 
         if (requiresCedula) {
           allFieldsComplete = allFieldsComplete && payerCedula && payerCedula.replace(/[^0-9]/g, '').length >= 6;
@@ -1632,6 +1656,11 @@
 
       // Paso 1: Datos del concursante y preparación de pre-orden
       jQuery('#btnPreOrder').on('click', async function() {
+        if (!window.selectedMetodoPagoId) {
+          Swal.fire('Selecciona un método de pago');
+          return;
+        }
+
         const pre = {
           cedula: jQuery('#pre_cedula').val().trim(),
           nombre_completo: jQuery('#pre_nombre').val().trim(),
@@ -1646,11 +1675,6 @@
 
         if (pre.telefono.replace(/[^0-9]/g, '').length !== 11) {
           Swal.fire('El teléfono del concursante debe tener exactamente 11 dígitos');
-          return;
-        }
-
-        if (!window.selectedMetodoPagoId) {
-          Swal.fire('Selecciona un método de pago');
           return;
         }
 
@@ -1851,7 +1875,7 @@
         datos.pago.archivo_pago = '';
         datos.pago.ref = '';
 
-        selectedMetodoPagoId = defaultMetodoPagoId;
+        selectedMetodoPagoId = null;
         window.selectedMetodoPagoId = selectedMetodoPagoId;
         paymentFlowMode = null;
         window.paymentFlowMode = paymentFlowMode;
