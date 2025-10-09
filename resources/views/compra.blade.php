@@ -271,6 +271,27 @@
           row-gap: 0.5rem !important;
         }
 
+        /* Contestant form compact spacing */
+        .contestant-form .modern-form-control {
+          padding: 0.65rem !important;
+        }
+
+        .contestant-form .modern-label {
+          margin-bottom: 0.3rem !important;
+        }
+
+        .contestant-form .modern-input-group {
+          margin-bottom: 0.45rem !important;
+        }
+
+        .contestant-form .row.g-2 {
+          row-gap: 0.3rem !important;
+        }
+
+        .contestant-form .row.g-2.mb-2 {
+          margin-bottom: 0.4rem !important;
+        }
+
         /* Payment data card compact layout */
         .payment-data-card {
           padding: 0.75rem 0.9rem !important;
@@ -782,7 +803,7 @@
                             </div>
 
                             <!-- Form Fields -->
-                            <form>
+                            <form class="contestant-form">
                               <div class="row g-2 mb-2">
                                 <div class="col-md-6">
                                   <div class="modern-input-group">
