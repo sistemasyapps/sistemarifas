@@ -918,6 +918,7 @@
                                   </span>
                                 </button>
                               </div>
+                              <div id="payment_scroll_anchor" style="height: 1px;"></div>
                             </form>
                   </div>
                 </div>
@@ -1440,13 +1441,20 @@
           window.paymentDataShown = paymentDataShown;
 
           // Auto-scroll al contenedor de datos de pago después de un pequeño delay
-          setTimeout(() => {
-            paymentDataContainer.scrollIntoView({
-              behavior: 'smooth',
-              block: 'end',
-              inline: 'nearest'
-            });
-          }, 300);
+          const scrollToPaymentSection = () => {
+            const target = document.getElementById('payment_scroll_anchor') 
+              || document.getElementById('btnPreOrder') 
+              || paymentDataContainer;
+            if (target && typeof target.scrollIntoView === 'function') {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'nearest'
+              });
+            }
+          };
+          setTimeout(scrollToPaymentSection, 200);
+          setTimeout(scrollToPaymentSection, 600);
 
           // Cambiar el botón a "Continuar"
           const btnText = document.getElementById('btnText');
@@ -1459,10 +1467,6 @@
         }
 
         if (paymentDataDivStep0) {
-          paymentDataDivStep0.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest'
-          });
           paymentDataDivStep0.style.animation = 'none';
           setTimeout(() => {
             paymentDataDivStep0.style.animation = 'pulseGlow 2s infinite';
@@ -1739,13 +1743,20 @@
             window.paymentDataShown = true;
 
             // Auto-scroll al contenedor de datos de pago después de un pequeño delay
-            setTimeout(() => {
-              paymentDataContainer.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end',
-                inline: 'nearest'
-              });
-            }, 300);
+            const scrollToPaymentSection = () => {
+              const target = document.getElementById('payment_scroll_anchor')
+                || document.getElementById('btnPreOrder')
+                || paymentDataContainer;
+              if (target && typeof target.scrollIntoView === 'function') {
+                target.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                  inline: 'nearest'
+                });
+              }
+            };
+            setTimeout(scrollToPaymentSection, 200);
+            setTimeout(scrollToPaymentSection, 600);
 
             // Cambiar el botón a "Continuar"
             const btnText = document.getElementById('btnText');
