@@ -903,6 +903,9 @@
                                   </div>
                                   <div class="payment-data-body">
                                     <div class="payment-data-details" id="payment_data_step0"></div>
+                                    <div class="payment-data-note" id="payment_data_note" style="display: none; font-size: 0.78rem; color: #fef3c7; background: rgba(251, 191, 36, 0.15); border-radius: 6px; padding: 0.45rem 0.6rem; margin-top: 0.5rem; text-align: center;">
+                                      Nota: la cédula debe ser la del titular de la cuenta.
+                                    </div>
                                     <button class="btn payment-data-copy" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white;" onclick="copiarDatosCompletos(document.getElementById('payment_data_step0').innerHTML)" type="button">
                                       <i class="fas fa-copy"></i>Copiar
                                     </button>
@@ -1421,8 +1424,47 @@
 
         paymentDataTemplate = metodo?.descripcion || '';
 
+        if (window.paymentDataShown) {
+          hidePaymentData();
+        }
+
         // Verificar si todos los campos están completos
         checkFieldsComplete();
+      }
+
+      function hidePaymentData() {
+        if (!window.paymentDataShown) return;
+
+        const paymentDataContainer = document.getElementById('payment_data_container');
+        const paymentDataDivStep0 = document.getElementById('payment_data_step0');
+        setPaymentNoteVisibility(false);
+        if (paymentDataContainer) {
+          paymentDataContainer.style.display = 'none';
+        }
+        if (paymentDataDivStep0) {
+          paymentDataDivStep0.style.animation = 'none';
+        }
+
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        if (btnText) {
+          btnText.textContent = 'Ver datos para el pago';
+        }
+        if (btnIcon) {
+          btnIcon.classList.remove('fa-arrow-right');
+          if (!btnIcon.classList.contains('fa-eye')) {
+            btnIcon.classList.add('fa-eye');
+          }
+        }
+
+        paymentDataShown = false;
+        window.paymentDataShown = paymentDataShown;
+      }
+
+      function setPaymentNoteVisibility(shouldShow) {
+        const note = document.getElementById('payment_data_note');
+        if (!note) return;
+        note.style.display = shouldShow ? 'block' : 'none';
       }
 
       // Función para mostrar los datos de pago
@@ -1439,6 +1481,7 @@
           paymentDataContainer.style.display = 'block';
           paymentDataShown = true;
           window.paymentDataShown = paymentDataShown;
+          setPaymentNoteVisibility(paymentFlowMode === 'auto');
 
           // Auto-scroll al contenedor de datos de pago después de un pequeño delay
           const scrollToPaymentSection = () => {
@@ -1509,6 +1552,10 @@
         const input = document.getElementById('pre_emisor_cedula');
         if (!row) return;
 
+        if (window.paymentDataShown) {
+          hidePaymentData();
+        }
+
         if (shouldShow) {
           row.style.display = 'flex';
           if (input) {
@@ -1565,6 +1612,9 @@
           const clampCedula = () => {
             cedulaInput.value = (cedulaInput.value || '').replace(/[^0-9]/g, '').slice(0, 12);
             renderPaymentDataViews();
+            if (window.paymentDataShown) {
+              hidePaymentData();
+            }
             checkFieldsComplete();
           };
           ['input','change','blur'].forEach(evt => cedulaInput.addEventListener(evt, clampCedula));
@@ -1740,7 +1790,9 @@
           const paymentDataContainer = document.getElementById('payment_data_container');
           if (paymentDataContainer) {
             paymentDataContainer.style.display = 'block';
-            window.paymentDataShown = true;
+            paymentDataShown = true;
+            window.paymentDataShown = paymentDataShown;
+            setPaymentNoteVisibility(paymentFlowMode === 'auto');
 
             // Auto-scroll al contenedor de datos de pago después de un pequeño delay
             const scrollToPaymentSection = () => {
