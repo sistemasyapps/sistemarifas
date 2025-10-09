@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\PreOrder;
+use App\Models\MetodoPago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -96,7 +97,7 @@ class R4WebhookController extends Controller
             '92' => 'BANCO RECEPTOR NO AFILIA',
         ];
 
-        $ref8 = substr(preg_replace('/[^0-9]/', '', $ref), -8);
+        $refDigits = $this->extractReference((string) $ref);
         $telCom = preg_replace('/[^0-9]/', '', $telefonoComercio);
         $telEmi = preg_replace('/[^0-9]/', '', $telefonoEmisor);
         // Validar teléfono de comercio si está configurado
@@ -105,13 +106,41 @@ class R4WebhookController extends Controller
             return response()->json(['abono' => false]);
         }
 
+        $cedulaPagador = preg_replace('/[^0-9]/', '', (string) $idComercio);
+        if ($cedulaPagador !== '' && is_numeric($monto)) {
+            $preCedula = PreOrder::with('metodoPago')
+                ->where('created_at', '>=', now()->subDay())
+                ->whereIn('estatus_preorden', [null, 'pendiente_por_orden'])
+                ->where('cedula', $cedulaPagador)
+                ->where('monto', round((float) $monto, 2))
+                ->latest('id')
+                ->first();
+
+            if ($preCedula && $this->preOrderRequiresCedula($preCedula)) {
+                $this->handleCedulaBasedNotification($preCedula, [
+                    'codigoRed' => $codigoRed,
+                    'ref_digits' => $refDigits,
+                    'telefonoEmisor' => $telEmi,
+                    'telefonoComercio' => $telCom,
+                    'banco' => $banco,
+                    'monto' => $monto,
+                    'fechaHora' => $fechaHora,
+                    'concepto' => $concepto,
+                    'idComercio' => $idComercio,
+                    'cedulaPagador' => $cedulaPagador,
+                ], $codigos);
+
+                return response()->json(['abono' => true]);
+            }
+        }
+
         // Si el código no es 00, actualizar (pendiente) y terminar
         if ($codigoRed !== '00') {
             // Buscar pre-orden por referencia si ya existe, o por monto + banco (3 últimos dígitos) + vigencia
             $banco3 = substr($banco, -3);
             $pre = null;
-            if ($ref8 !== '') {
-                $pre = PreOrder::where('ref_banco', $ref8)
+            if ($refDigits !== '') {
+                $pre = PreOrder::where('ref_banco', $refDigits)
                     ->where('telefono', $telEmi)
                     ->whereNull('estatus_preorden')
                     ->latest('id')->first();
@@ -131,7 +160,7 @@ class R4WebhookController extends Controller
                 // estatus_preorden ya fue filtrado (solo nulos). No reprocesar estados asignados
                 $pre->codigo_red = $codigoRed;
                 $pre->codigo_red_texto = $codigos[$codigoRed] ?? null;
-                $pre->ref_banco = $ref8 ?: $pre->ref_banco;
+                $pre->ref_banco = $refDigits ?: $pre->ref_banco;
                 $pre->id_comercio = $idComercio ?: $pre->id_comercio;
                 $pre->telefono_comercio = $telCom ?: $pre->telefono_comercio;
                 $pre->telefono_emisor = preg_replace('/[^0-9]/', '', (string)$telefonoEmisor) ?: $pre->telefono_emisor;
@@ -168,7 +197,7 @@ class R4WebhookController extends Controller
 
         if ($pre) {
             // Si la pre ya tiene referencia y no coincide, no avanzar a aprobación
-            if (!empty($pre->ref_banco) && $pre->ref_banco !== $ref8) {
+            if (!empty($pre->ref_banco) && $pre->ref_banco !== $refDigits) {
                 $pre->codigo_red = $codigoRed;
                 $pre->codigo_red_texto = $codigos[$codigoRed] ?? null;
                 $pre->fecha_hora = (strtotime($fechaHora) ? date('Y-m-d H:i:s', strtotime($fechaHora)) : now());
@@ -177,7 +206,7 @@ class R4WebhookController extends Controller
             }
 
             // Persistir datos del payload
-            $pre->ref_banco = $ref8 ?: $pre->ref_banco;
+            $pre->ref_banco = $refDigits ?: $pre->ref_banco;
             $pre->codigo_red = $codigoRed ?: $pre->codigo_red;
             $pre->codigo_red_texto = $codigos[$codigoRed] ?? null;
             $pre->fecha_hora = (strtotime($fechaHora) ? date('Y-m-d H:i:s', strtotime($fechaHora)) : now());
@@ -191,7 +220,7 @@ class R4WebhookController extends Controller
             $pre->banco_emisor = substr($banco ?? '', 0, 3) ?: $pre->banco_emisor;
 
             // Si hay una Order no aprobada con esta referencia, marcamos preorden como aprobada, si no, queda pendiente_por_orden
-            $order = \App\Models\Order::where('ref_banco', $ref8)
+            $order = \App\Models\Order::where('ref_banco', $refDigits)
                 ->whereRaw('RIGHT(bank_code,3) = ?', [$banco3])
                 ->where('emisor_telefono', $telEmi)
                 ->where('estatus', '<>', '1')
@@ -211,7 +240,121 @@ class R4WebhookController extends Controller
             return response()->json(['abono' => true]);
         }
 
-        Log::warning('R4notifica sin pre_orden u orden', ['Banco' => $banco, 'Referencia' => $ref8, 'Monto' => $monto]);
+        Log::warning('R4notifica sin pre_orden u orden', ['Banco' => $banco, 'Referencia' => $refDigits, 'Monto' => $monto]);
         return response()->json(['abono' => false]);
+    }
+
+    private function preOrderRequiresCedula(PreOrder $pre): bool
+    {
+        if (!$pre->metodo_pago_id) {
+            return false;
+        }
+
+        $metodo = $pre->relationLoaded('metodoPago') ? $pre->metodoPago : MetodoPago::find($pre->metodo_pago_id);
+        if (!$metodo) {
+            return false;
+        }
+
+        return stripos((string) $metodo->descripcion, '{{CEDULA_PAGADOR}}') !== false;
+    }
+
+    private function handleCedulaBasedNotification(PreOrder $pre, array $data, array $codigos): void
+    {
+        $codigoRed = (string) ($data['codigoRed'] ?? '');
+        $refDigits = (string) ($data['ref_digits'] ?? '');
+        $telefonoEmisor = preg_replace('/[^0-9]/', '', (string) ($data['telefonoEmisor'] ?? ''));
+        $telefonoComercio = preg_replace('/[^0-9]/', '', (string) ($data['telefonoComercio'] ?? ''));
+        $banco = (string) ($data['banco'] ?? '');
+        $concepto = (string) ($data['concepto'] ?? '');
+        $idComercio = (string) ($data['idComercio'] ?? '');
+        $fechaHora = (string) ($data['fechaHora'] ?? now()->toISOString());
+        $monto = $data['monto'] ?? null;
+        $cedulaPagador = preg_replace('/[^0-9]/', '', (string) ($data['cedulaPagador'] ?? ''));
+
+        $pre->codigo_red = $codigoRed ?: $pre->codigo_red;
+        $pre->codigo_red_texto = $codigos[$codigoRed] ?? $pre->codigo_red_texto;
+        if ($refDigits !== '') {
+            $pre->ref_banco = $refDigits;
+        }
+        if ($idComercio !== '') {
+            $pre->id_comercio = $idComercio;
+        }
+        if ($telefonoComercio !== '') {
+            $pre->telefono_comercio = $telefonoComercio;
+        }
+        if ($telefonoEmisor !== '') {
+            $pre->telefono_emisor = $telefonoEmisor;
+        }
+        if ($concepto !== '') {
+            $pre->concepto = $concepto;
+        }
+        if ($banco !== '') {
+            $pre->banco_emisor = substr($banco, 0, 3) ?: $pre->banco_emisor;
+            $bankCode = substr(preg_replace('/[^0-9]/', '', $banco), 0, 4);
+            if ($bankCode !== '') {
+                $pre->bank_code = $bankCode;
+            }
+        }
+        if (is_numeric($monto)) {
+            $pre->monto_notificado = round((float) $monto, 2);
+        }
+        $pre->fecha_hora = (strtotime($fechaHora) ? date('Y-m-d H:i:s', strtotime($fechaHora)) : now());
+
+        $order = \App\Models\Order::where('pre_order_id', $pre->id)
+            ->where('estatus', '<>', '1')
+            ->latest('id')
+            ->first();
+
+        if ($order) {
+            if ($refDigits !== '') {
+                $order->ref_banco = $refDigits;
+            }
+            if ($banco !== '') {
+                $bankCode = substr(preg_replace('/[^0-9]/', '', $banco), 0, 4);
+                if ($bankCode !== '') {
+                    $order->bank_code = $bankCode;
+                }
+            }
+            if ($cedulaPagador !== '') {
+                $order->emisor_cedula = $cedulaPagador;
+            }
+            if ($telefonoEmisor !== '') {
+                $order->emisor_telefono = $telefonoEmisor;
+            }
+            $order->save();
+        }
+
+        if ($codigoRed === '00') {
+            if ($order) {
+                $pre->estatus_preorden = 'aprobada';
+                $pre->notificado = true;
+                $pre->notificado_at = now();
+                $pre->save();
+
+                try {
+                    \App\Jobs\ApproveOrderJob::dispatch($order->id)->delay(now()->addSeconds(5));
+                } catch (\Throwable $e) {
+                    // best effort
+                }
+            } else {
+                $pre->estatus_preorden = 'pendiente_por_orden';
+                $pre->save();
+            }
+        } else {
+            if (empty($pre->estatus_preorden)) {
+                $pre->estatus_preorden = 'pendiente_por_orden';
+            }
+            $pre->save();
+        }
+    }
+
+    private function extractReference(string $value, int $length = 6): string
+    {
+        $digits = preg_replace('/[^0-9]/', '', $value);
+        if ($digits === '') {
+            return '';
+        }
+
+        return substr($digits, -$length);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PreOrder;
 use App\Models\Raffle;
+use App\Models\MetodoPago;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
@@ -14,14 +15,18 @@ class PreOrderController extends Controller
 {
     public function create(Request $request)
     {
+        $metodoPagoId = (int) $request->input('metodo_pago_id');
+        $metodoPago = MetodoPago::find($metodoPagoId);
+        $requiresCedulaPagador = $metodoPago && stripos((string) $metodoPago->descripcion, '{{CEDULA_PAGADOR}}') !== false;
+
         $validator = Validator::make($request->all(), [
             'raffle_id' => 'required|integer|exists:raffles,id',
             'cantidad' => 'required|integer|min:1',
-            'cedula' => 'required|string',
+            'cedula' => ($requiresCedulaPagador ? 'required' : 'nullable') . '|string',
             'nombre_completo' => 'required|string',
             'correo' => 'required|string',
-            'telefono' => 'required|string',
-            'bank_code' => 'required|digits:4',
+            'telefono' => 'nullable|string',
+            'bank_code' => 'nullable|digits:4',
             'metodo_pago_id' => 'required|integer|exists:metodo_pagos,id',
         ]);
 
@@ -37,7 +42,12 @@ class PreOrderController extends Controller
         $monto = round($raffle->precio * $request->cantidad, 2);
 
         // Normalizar cédula a solo números para guardar en pre_orden
-        $cedulaNumerica = preg_replace('/[^0-9]/', '', (string) $request->cedula);
+        $cedulaNumerica = $request->filled('cedula') ? preg_replace('/[^0-9]/', '', (string) $request->cedula) : null;
+        $cedulaNumerica = $cedulaNumerica === '' ? null : $cedulaNumerica;
+        $telefonoNormalizado = $request->filled('telefono') ? preg_replace('/[^0-9]/', '', (string) $request->telefono) : null;
+        $telefonoNormalizado = $telefonoNormalizado === '' ? null : $telefonoNormalizado;
+        $bankCode = $request->filled('bank_code') ? substr(preg_replace('/[^0-9]/', '', (string) $request->bank_code), 0, 4) : null;
+        $bankCode = $bankCode === '' ? null : $bankCode;
 
         $data = [
             'uuid' => Str::uuid()->toString(),
@@ -46,8 +56,8 @@ class PreOrderController extends Controller
             'cedula' => $cedulaNumerica,
             'nombre_completo' => (string) $request->nombre_completo,
             'correo' => (string) $request->correo,
-            'telefono' => (string) $request->telefono,
-            'bank_code' => (string) $request->bank_code,
+            'telefono' => $telefonoNormalizado,
+            'bank_code' => $bankCode,
             'metodo_pago_id' => (int) $request->metodo_pago_id,
             'monto' => $monto,
             'IP' => $request->ip(),

@@ -47,7 +47,7 @@ class OrderResource extends Resource
                     ->numeric(),
                 Forms\Components\TextInput::make('ref_banco')
                     ->required()
-                    ->maxLength(8),
+                    ->maxLength(6),
                 FileUpload::make('ref_imagen'),
                 Forms\Components\DatePicker::make('ref_fecha')
                     ->native(false)

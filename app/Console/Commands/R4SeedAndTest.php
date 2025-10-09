@@ -106,7 +106,7 @@ class R4SeedAndTest extends Command
             'client_id' => $c2->id,
             'precio_dolar' => 40.00,
             'cantidad' => 1,
-            'ref_banco' => '87654321',
+            'ref_banco' => '654321',
             'ref_imagen' => 'images/test.jpg',
             'ref_fecha' => now()->toDateString(),
             'estatus' => '0',
@@ -119,11 +119,10 @@ class R4SeedAndTest extends Command
         $auth = env('R4_AUTH_TOKEN');
         $base = config('app.url');
         $this->line("R4consulta (TRUE): curl -s -X POST {$base}/api/R4consulta -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdCliente\":\"18671986\",\"TelefonoComercio\":\"04125555555\",\"Monto\":150.00}'");
-        $this->line("R4notifica pre1 (pendiente_por_orden -> TRUE): curl -s -X POST {$base}/api/R4notifica -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdComercio\":\"13536734\",\"TelefonoComercio\":\"04125555555\",\"TelefonoEmisor\":\"04146666666\",\"Concepto\":\"PRUEBA\",\"BancoEmisor\":\"102\",\"Monto\":150.00,\"FechaHora\":\"2025-09-02T10:00:00Z\",\"Referencia\":\"12345678\",\"CodigoRed\":\"00\"}'");
-        $this->line("R4notifica pre2 (aprobada -> TRUE): curl -s -X POST {$base}/api/R4notifica -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdComercio\":\"13536734\",\"TelefonoComercio\":\"04125555555\",\"TelefonoEmisor\":\"04147777777\",\"Concepto\":\"PRUEBA\",\"BancoEmisor\":\"134\",\"Monto\":200.50,\"FechaHora\":\"2025-09-02T10:00:00Z\",\"Referencia\":\"87654321\",\"CodigoRed\":\"00\"}'");
-        $this->line("R4notifica pre3 (no-00 -> TRUE): curl -s -X POST {$base}/api/R4notifica -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdComercio\":\"13536734\",\"TelefonoComercio\":\"04125555555\",\"TelefonoEmisor\":\"04148888888\",\"Concepto\":\"PRUEBA\",\"BancoEmisor\":\"191\",\"Monto\":300.00,\"FechaHora\":\"2025-09-02T10:00:00Z\",\"Referencia\":\"22223333\",\"CodigoRed\":\"41\"}'");
+        $this->line("R4notifica pre1 (pendiente_por_orden -> TRUE): curl -s -X POST {$base}/api/R4notifica -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdComercio\":\"13536734\",\"TelefonoComercio\":\"04125555555\",\"TelefonoEmisor\":\"04146666666\",\"Concepto\":\"PRUEBA\",\"BancoEmisor\":\"102\",\"Monto\":150.00,\"FechaHora\":\"2025-09-02T10:00:00Z\",\"Referencia\":\"123456\",\"CodigoRed\":\"00\"}'");
+        $this->line("R4notifica pre2 (aprobada -> TRUE): curl -s -X POST {$base}/api/R4notifica -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdComercio\":\"13536734\",\"TelefonoComercio\":\"04125555555\",\"TelefonoEmisor\":\"04147777777\",\"Concepto\":\"PRUEBA\",\"BancoEmisor\":\"134\",\"Monto\":200.50,\"FechaHora\":\"2025-09-02T10:00:00Z\",\"Referencia\":\"654321\",\"CodigoRed\":\"00\"}'");
+        $this->line("R4notifica pre3 (no-00 -> TRUE): curl -s -X POST {$base}/api/R4notifica -H 'Content-Type: application/json' -H 'Authorization: {$auth}' -d '{\"IdComercio\":\"13536734\",\"TelefonoComercio\":\"04125555555\",\"TelefonoEmisor\":\"04148888888\",\"Concepto\":\"PRUEBA\",\"BancoEmisor\":\"191\",\"Monto\":300.00,\"FechaHora\":\"2025-09-02T10:00:00Z\",\"Referencia\":\"223333\",\"CodigoRed\":\"41\"}'");
 
         return self::SUCCESS;
     }
 }
-

@@ -294,14 +294,14 @@
 
         /* Payment data card compact layout */
         .payment-data-card {
-          padding: 0.75rem 0.9rem 0.6rem !important;
+          padding: 0.7rem 0.9rem 0.65rem !important;
         }
 
         .payment-data-card .payment-data-header {
           display: flex !important;
           align-items: center !important;
           justify-content: space-between !important;
-          gap: 0.75rem !important;
+          gap: 0.6rem !important;
           flex-wrap: wrap !important;
         }
 
@@ -374,26 +374,26 @@
           display: flex !important;
           align-items: flex-start !important;
           justify-content: space-between !important;
-          gap: 0.75rem !important;
+          gap: 0.65rem !important;
           flex-wrap: wrap !important;
-          margin-top: 0.5rem !important;
+          margin-top: 0.45rem !important;
         }
 
         .payment-data-card .payment-data-details {
           font-size: 0.8rem !important;
-          padding: 0.55rem 0.65rem !important;
+          padding: 0.5rem 0.65rem !important;
           background: rgba(30, 41, 59, 0.35) !important;
           border-radius: 8px !important;
           margin: 0 !important;
           text-align: center !important;
           color: #ffffff !important;
-          line-height: 1.4 !important;
+          line-height: 1.35 !important;
           flex: 1 1 0 !important;
         }
 
         .payment-data-card .payment-data-copy {
-          padding: 0.4rem 0.9rem !important;
-          font-size: 0.82rem !important;
+          padding: 0.45rem 0.85rem !important;
+          font-size: 0.8rem !important;
           border-radius: 10px !important;
           display: inline-flex !important;
           align-items: center !important;
@@ -406,16 +406,31 @@
           transition: all 0.3s ease !important;
         }
 
+        /* Mobile-first responsive adjustments */
         @media (max-width: 575.98px) {
+          .payment-data-card {
+            padding: 0.65rem 0.85rem 0.6rem !important;
+          }
+
           .payment-data-card h4 {
-            font-size: 0.9rem !important;
+            font-size: 0.88rem !important;
             white-space: normal !important;
+          }
+
+          .payment-data-card .payment-data-icon {
+            width: 2rem !important;
+            height: 2rem !important;
+          }
+
+          .payment-data-card .payment-data-icon i {
+            font-size: 0.95rem !important;
           }
 
           .payment-data-card .payment-data-summary {
             width: 100% !important;
             justify-content: space-between !important;
-            gap: 0.4rem !important;
+            gap: 0.35rem !important;
+            font-size: 0.78rem !important;
           }
 
           .payment-data-card .payment-data-summary .summary-item {
@@ -425,11 +440,24 @@
           .payment-data-card .payment-data-body {
             flex-wrap: nowrap !important;
             gap: 0.5rem !important;
+            margin-top: 0.4rem !important;
+          }
+
+          .payment-data-card .payment-data-details {
+            font-size: 0.78rem !important;
+            padding: 0.45rem 0.6rem !important;
+            line-height: 1.3 !important;
           }
 
           .payment-data-card .payment-data-copy {
-            padding: 0.4rem 0.75rem !important;
-            font-size: 0.8rem !important;
+            padding: 0.4rem 0.7rem !important;
+            font-size: 0.78rem !important;
+          }
+
+          .payment-data-card .payment-data-note {
+            font-size: 0.68rem !important;
+            margin-top: 0.35rem !important;
+            line-height: 1.25 !important;
           }
         }
 
@@ -903,12 +931,40 @@
                                   </div>
                                   <div class="payment-data-body">
                                     <div class="payment-data-details" id="payment_data_step0"></div>
-                                    <div class="payment-data-note" id="payment_data_note" style="display: none; font-size: 0.78rem; color: #fef3c7; background: rgba(251, 191, 36, 0.15); border-radius: 6px; padding: 0.45rem 0.6rem; margin-top: 0.5rem; text-align: center;">
-                                      Nota: la cédula debe ser la del titular de la cuenta.
-                                    </div>
                                     <button class="btn payment-data-copy" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white;" onclick="copiarDatosCompletos(document.getElementById('payment_data_step0').innerHTML)" type="button">
                                       <i class="fas fa-copy"></i>Copiar
                                     </button>
+                                  </div>
+                                  <div class="payment-data-note" id="payment_data_note" style="display: none; font-size: 0.7rem; color: #fbbf24; opacity: 0.9; margin-top: 0.4rem; text-align: center; font-style: italic; line-height: 1.3;">
+                                    Nota: la cédula es la del titular de la cuenta.
+                                  </div>
+                                </div>
+                                <div id="manual_upload_container" style="display: none; margin-top: 1rem;">
+                                  <div class="row g-3">
+                                    <div class="col-12">
+                                      <div class="modern-input-group">
+                                        <label for="archivo_pago" class="modern-label">
+                                          <i class="fas fa-camera me-2"></i>Comprobante de pago
+                                        </label>
+                                        <input type="file" accept="image/jpeg,image/png,image/svg+xml" id="archivo_pago" name="archivo_pago" class="form-control modern-form-control" style="font-weight: 600; padding: 0.875rem 1rem;">
+                                        <div class="info-text mt-2">
+                                          <i class="fas fa-info-circle"></i>
+                                          <span>Sube una imagen clara del comprobante (JPG, PNG o SVG, máximo 4 MB).</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                      <div class="modern-input-group">
+                                        <label for="ref" class="modern-label">
+                                          <i class="fas fa-hashtag me-2"></i>Referencia bancaria
+                                        </label>
+                                        <input type="text" id="ref" name="ref" class="form-control modern-form-control" maxlength="6" placeholder="123456" inputmode="numeric" autocomplete="off">
+                                        <div class="info-text-small mt-1">
+                                          <i class="fas fa-info-circle"></i>
+                                          <span>Introduce los últimos 6 dígitos de la referencia.</span>
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -968,236 +1024,6 @@
               </div>
             </div> -->
             <!-- <div class="vc_row-full-width vc_clearfix"></div> -->
-            <div class="row paso1 hidden" id="paso1">
-              <div class="col-md-6 col-sm-12 col-xs-12">
-                <div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid slide_pasos">
-                  <div class="wpb_column container-fluid vc_col-sm-12">
-                    <div class="vc_column-inner">
-                      <div class="wpb_wrapper">
-                        <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
-                          <div class="wpb_wrapper">
-                            <h3 class="h3_responsive fecha_sorteo" style="text-align: center;"></h3><span id="countdown"></span>
-                          </div>
-                        </div>
-                        <!-- Modern Progress Bar - HIDDEN -->
-                        <div class="mb-4" style="display: none; background: rgba(15, 23, 42, 0.6); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(148, 163, 184, 0.1);">
-                          <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center">
-                              <div class="d-inline-flex align-items-center justify-content-center me-3" style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-ticket-alt" style="font-size: 1.5rem; color: white;"></i>
-                              </div>
-                              <div>
-                                <h5 class="text-white mb-1" style="font-weight: 600;">Disponibilidad de Tickets</h5>
-                                <p class="text-slate-400 mb-0" style="font-size: 0.9rem;">Tickets disponibles en esta rifa</p>
-                              </div>
-                            </div>
-                            <div class="text-end">
-                              <span class="text-emerald-400" style="font-size: 1.5rem; font-weight: 700;" id="barraRealTimeText">{{ $Barra }}%</span>
-                              <div class="text-slate-400" style="font-size: 0.8rem;">disponible</div>
-                            </div>
-                          </div>
-                          <div class="progress" style="height: 8px; border-radius: 4px; background: rgba(30, 41, 59, 0.5);">
-                            <div class="progress-bar" style="background: linear-gradient(90deg, #10b981, #059669); width: {{ $Barra }}%; border-radius: 4px; transition: width 0.3s ease;" id="barraRealTime"></div>
-                          </div>
-                        </div>
-                        
-                        <!-- <div class="wpb_raw_code wpb_content_element wpb_raw_html compra_manual d-none">
-                          <div class="wpb_wrapper">
-                          <h3 class="h3_responsive" style="text-align: center; color: white">Escriba los números a comprar</h3>
-                          </div>
-                        </div> -->
-                        <!-- <div class="vc_row wpb_row vc_inner vc_row-fluid flex flex_row compra_manual d-none">
-                          <div class="wpb_column container-fluid vc_col-sm-3">
-                            <div class="vc_column-inner">
-                              <div class="wpb_wrapper">
-                                <div class="flex center flex-center">
-                                  <select class="select2 form-control" id="numeros_manual" style="width: 100%;" multiple="multiple"></select>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div> -->
-                        <!-- <div class="vc_row wpb_row vc_inner vc_row-fluid flex flex_row compra_auto mt-3">
-                          <div class="wpb_column container-fluid vc_col-sm-3">
-                            <div class="vc_column-inner">
-                              <div class="wpb_wrapper">
-                                <div class="vc_btn3-container vc_btn3-center" ><button class="vc_general vc_btn3 vc_btn3-size-lg vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-o-empty vc_btn3-block vc_btn3-icon-left vc_btn3-color-danger" onclick="minus_cant()"><i class="vc_btn3-icon fas fa-minus"></i> <span class="vc_btn3-placeholder">&nbsp;</span></button></div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="p_0 m_0 wpb_column container-fluid vc_col-sm-6">
-                            <div class="vc_column-inner">
-                              <div class="wpb_wrapper">
-                                <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
-                                  <div class="wpb_wrapper">
-                                    <div class="flex center flex-center">
-                                          <input type="text" onblur="validar_cant(this.value)" onkeyup="put_cant(this.value)" id="cant_boletos" name="cant_boletos" value="{{ $initialTickets }}" class="form-control">
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="wpb_column container-fluid vc_col-sm-3">
-                            <div class="vc_column-inner">
-                              <div class="wpb_wrapper">
-                                <div class="vc_btn3-container vc_btn3-center" ><button class="vc_general vc_btn3 vc_btn3-size-lg vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-o-empty vc_btn3-block vc_btn3-icon-left vc_btn3-color-success" onclick="sum_cant()"><i class="vc_btn3-icon fas fa-plus"></i> <span class="vc_btn3-placeholder">&nbsp;</span></button></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div> -->
-                       <!--  <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
-                          <div class="wpb_wrapper">
-                            <h3 class="h4_responsive ptop_0" style="text-align: center; color: white">Cantidad mínima permitida: <span class="yellow_color">{{$cantidad_minima}}</span></h3>
-                          </div>
-                        </div> -->
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-              <div class="col-md-6 col-sm-12 col-xs-12">
-                <div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid row slide_pasos">
-                  <div class="wpb_column container-fluid vc_col-sm-12">
-                    <div class="vc_column-inner">
-                      <div class="wpb_wrapper">
-                        <div class="vc_separator wpb_content_element vc_separator_align_center vc_sep_width_100 vc_sep_border_width_2 vc_sep_pos_align_center vc_separator_no_text vc_sep_color_white vc_custom_1712884726693  vc_custom_1712884726693" ><span class="vc_sep_holder vc_sep_holder_l"><span class="vc_sep_line"></span></span><span class="vc_sep_holder vc_sep_holder_r"><span class="vc_sep_line"></span></span>
-                        </div>
-                        <div class="vc_separator wpb_content_element vc_separator_align_center vc_sep_width_100 vc_sep_border_width_2 vc_sep_pos_align_center vc_separator_no_text vc_sep_color_white vc_custom_1712884726693  vc_custom_1712884726693" ><span class="vc_sep_holder vc_sep_holder_l"><span class="vc_sep_line"></span></span><span class="vc_sep_holder vc_sep_holder_r"><span class="vc_sep_line"></span></span>
-                        </div>
-                        <!-- Modern Payment Report Section -->
-                        <div class="modern-card" style="background: rgba(30, 41, 59, 0.2); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 20px; padding: 2rem; margin: 1.5rem 0;">
-                          <div class="container-fluid">
-                            <!-- Header -->
-                            <div class="text-center mb-4">
-                              <div class="d-inline-flex align-items-center justify-content-center" style="width: 4rem; height: 4rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; margin-bottom: 1rem; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-credit-card" style="font-size: 2rem; color: white;"></i>
-                              </div>
-                              <h3 class="h3_responsive text-white mb-2" style="font-weight: 700; font-size: 1.875rem; letter-spacing: -0.025em;">Reporte de Pago</h3>
-                              <p class="text-slate-300" style="font-size: 1.1rem; margin-bottom: 0;">Confirma tu información y sube el comprobante de pago</p>
-                            </div>
-
-                            <!-- Resumen de Información -->
-                            <div class="mb-4 p-3" style="background: rgba(15, 23, 42, 0.4); border: 1px solid rgba(148, 163, 184, 0.1); border-radius: 12px;">
-                              <h5 class="text-white mb-3" style="font-weight: 600; display: flex; align-items: center;">
-                                <i class="fas fa-clipboard-list me-2" style="color: #10b981;"></i>
-                                Resumen de tu compra
-                              </h5>
-                              <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                  <div class="d-flex flex-column" style="background: rgba(30, 41, 59, 0.3); padding: 0.75rem; border-radius: 8px;">
-                                    <span class="text-slate-400" style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.25rem;">CONCURSANTE</span>
-                                    <span id="summary_contestant" class="text-white" style="font-weight: 600;">-</span>
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="d-flex flex-column" style="background: rgba(30, 41, 59, 0.3); padding: 0.75rem; border-radius: 8px;">
-                                    <span class="text-slate-400" style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.25rem;">PAGADOR</span>
-                                    <span id="summary_payer" class="text-white" style="font-weight: 600;">-</span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="row g-3">
-                                <div class="col-md-12">
-                                  <div class="d-flex flex-column" style="background: rgba(30, 41, 59, 0.3); padding: 0.75rem; border-radius: 8px;">
-                                    <span class="text-slate-400" style="font-size: 0.8rem; font-weight: 500; margin-bottom: 0.25rem;">BANCO EMISOR</span>
-                                    <span id="summary_bank" class="text-white" style="font-weight: 600;">-</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <!-- Datos del concursante ya capturados en pasos previos; no se duplican inputs -->
-
-                            <div class="modern-card" style="background: rgba(15, 23, 42, 0.6); border-radius: 16px; padding: 2rem; border: 1px solid rgba(148, 163, 184, 0.1);">
-                              <div id="payment_data_step1" style="color: #e2e8f0;"></div>
-                            </div>
-
-                            <div id="auto_payment_section" class="hidden mt-4">
-                              <div class="alert alert-success" role="alert" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; border-radius: 12px;">
-                                <i class="fas fa-bolt me-2"></i>
-                                Validaremos tu pago automáticamente apenas llegue la notificación del banco.
-                              </div>
-                              <div class="d-grid gap-3 mt-4">
-                                <button type="button" id="btn_auto_paid" class="btn modern-btn-success" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; font-size: 1.1rem; color: white; box-shadow: 0 12px 30px rgba(16, 185, 129, 0.35);">
-                                  <span class="d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-check-circle me-2"></i>
-                                    Ya pagué
-                                  </span>
-                                </button>
-                                <button type="button" class="btn modern-btn-secondary" id="btn_auto_back" style="background: transparent; border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 12px; padding: 0.85rem 2rem; font-weight: 600; color: #e2e8f0;">
-                                  <span class="d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-arrow-left me-2"></i>
-                                    Cambiar método de pago
-                                  </span>
-                                </button>
-                              </div>
-                            </div>
-
-                            <div id="manual_payment_section" class="mt-4">
-                              <div class="alert alert-info" role="alert" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(96, 165, 250, 0.4); color: #60a5fa; border-radius: 12px;">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Adjunta el comprobante y la referencia para que podamos confirmar tu pago manualmente.
-                              </div>
-
-                              <div class="row g-4 mt-2">
-                                <div class="col-12">
-                                  <div class="modern-input-group">
-                                    <label for="archivo_pago" class="modern-label">
-                                      <i class="fas fa-camera me-2"></i>Comprobante de Pago
-                                    </label>
-                                    <input type="file" accept="image/jpeg,image/png,image/svg+xml" id="archivo_pago" name="archivo_pago" class="form-control modern-form-control" style="font-weight: 600; padding: 0.875rem 1rem;">
-                                    <div class="info-text mt-2">
-                                      <i class="fas fa-info-circle"></i>
-                                      <span>Sube una imagen clara del comprobante (JPG, PNG, SVG)</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="row g-4 mt-2">
-                                <div class="col-md-6 col-12">
-                                  <div class="modern-input-group">
-                                    <label for="ref" class="modern-label">
-                                      <i class="fas fa-hashtag me-2"></i>Referencia Bancaria
-                                    </label>
-                                    <input type="text" id="ref" name="ref" class="form-control modern-form-control" maxlength="8" placeholder="12345678" inputmode="numeric" autocomplete="off">
-                                    <div class="info-text-small mt-1">
-                                      <i class="fas fa-info-circle"></i>
-                                      <span>Últimos 8 dígitos de la referencia</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="d-grid mt-4">
-                                <button class="btn modern-btn-primary w-100" onclick="finalizar_compra(this)" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 1.5rem; font-weight: 700; color: white; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); position: relative; overflow: hidden;">
-                                  <span class="d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-shopping-cart me-2" style="font-size: 1.2rem;"></i>
-                                    Comprar
-                                  </span>
-                                </button>
-                                <button type="button" id="btn_manual_back" class="btn modern-btn-secondary w-100 mt-3" style="background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem 1.5rem; font-weight: 700; color: #ef4444;">
-                                  <span class="d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-arrow-left me-2"></i>
-                                    Volver
-                                  </span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="vc_separator wpb_content_element vc_separator_align_center vc_sep_width_100 vc_sep_border_width_2 vc_sep_pos_align_center vc_separator_no_text vc_sep_color_white vc_custom_1712884726693  vc_custom_1712884726693" ><span class="vc_sep_holder vc_sep_holder_l"><span class="vc_sep_line"></span></span><span class="vc_sep_holder vc_sep_holder_r"><span class="vc_sep_line"></span></span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
             <div class="vc_row-full-width vc_clearfix"></div>
             <div id="paso_final" data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid hidden row slide_pasos paso5">
               <div class="wpb_column container-fluid vc_col-sm-12">
@@ -1412,9 +1238,12 @@
         paymentFlowMode = requiresCedula ? 'auto' : 'manual';
         window.paymentFlowMode = paymentFlowMode;
         togglePayerCedulaInput(requiresCedula);
+        toggleManualUploadContainer(false);
         if (!requiresCedula) {
           paymentPayerCedula = null;
           window.paymentPayerCedula = paymentPayerCedula;
+          PRE_ORDER_UUID = null;
+          window.PRE_ORDER_UUID = PRE_ORDER_UUID;
         }
 
         if (metodo && metodo.id) {
@@ -1432,12 +1261,33 @@
         checkFieldsComplete();
       }
 
+      function resetManualUploadFields() {
+        const fileInput = document.getElementById('archivo_pago');
+        const refInput = document.getElementById('ref');
+        if (fileInput) {
+          fileInput.value = '';
+        }
+        if (refInput) {
+          refInput.value = '';
+        }
+      }
+
+      function toggleManualUploadContainer(shouldShow) {
+        const container = document.getElementById('manual_upload_container');
+        if (!container) return;
+        container.style.display = shouldShow ? 'block' : 'none';
+        if (!shouldShow) {
+          resetManualUploadFields();
+        }
+      }
+
       function hidePaymentData() {
         if (!window.paymentDataShown) return;
 
         const paymentDataContainer = document.getElementById('payment_data_container');
         const paymentDataDivStep0 = document.getElementById('payment_data_step0');
         setPaymentNoteVisibility(false);
+        toggleManualUploadContainer(false);
         if (paymentDataContainer) {
           paymentDataContainer.style.display = 'none';
         }
@@ -1452,6 +1302,7 @@
         }
         if (btnIcon) {
           btnIcon.classList.remove('fa-arrow-right');
+          btnIcon.classList.remove('fa-check-circle');
           if (!btnIcon.classList.contains('fa-eye')) {
             btnIcon.classList.add('fa-eye');
           }
@@ -1473,7 +1324,7 @@
 
         const paymentDataDivStep0 = document.getElementById('payment_data_step0');
         renderPaymentDataViews();
-        updateStep1Sections();
+        toggleManualUploadContainer(paymentFlowMode === 'manual');
 
         // Mostrar el contenedor de datos de pago
         const paymentDataContainer = document.getElementById('payment_data_container');
@@ -1499,13 +1350,17 @@
           setTimeout(scrollToPaymentSection, 200);
           setTimeout(scrollToPaymentSection, 600);
 
-          // Cambiar el botón a "Continuar"
+        // Cambiar el botón según el flujo de pago
           const btnText = document.getElementById('btnText');
           const btnIcon = document.getElementById('btnIcon');
-          if (btnText) btnText.textContent = 'Continuar';
+          if (btnText) {
+            btnText.textContent = paymentFlowMode === 'auto' ? 'Ya pague' : 'Continuar';
+          }
           if (btnIcon) {
             btnIcon.classList.remove('fa-eye');
-            btnIcon.classList.add('fa-arrow-right');
+            btnIcon.classList.remove('fa-arrow-right');
+            btnIcon.classList.remove('fa-check-circle');
+            btnIcon.classList.add(paymentFlowMode === 'auto' ? 'fa-check-circle' : 'fa-arrow-right');
           }
         }
 
@@ -1793,6 +1648,7 @@
             paymentDataShown = true;
             window.paymentDataShown = paymentDataShown;
             setPaymentNoteVisibility(paymentFlowMode === 'auto');
+            toggleManualUploadContainer(paymentFlowMode === 'manual');
 
             // Auto-scroll al contenedor de datos de pago después de un pequeño delay
             const scrollToPaymentSection = () => {
@@ -1810,18 +1666,27 @@
             setTimeout(scrollToPaymentSection, 200);
             setTimeout(scrollToPaymentSection, 600);
 
-            // Cambiar el botón a "Continuar"
+            // Cambiar el botón según el flujo de pago
             const btnText = document.getElementById('btnText');
             const btnIcon = document.getElementById('btnIcon');
-            if (btnText) btnText.textContent = 'Continuar';
+            if (btnText) {
+              btnText.textContent = paymentFlowMode === 'auto' ? 'Ya pague' : 'Continuar';
+            }
             if (btnIcon) {
               btnIcon.classList.remove('fa-eye');
-              btnIcon.classList.add('fa-arrow-right');
+              btnIcon.classList.remove('fa-arrow-right');
+              btnIcon.classList.remove('fa-check-circle');
+              btnIcon.classList.add(paymentFlowMode === 'auto' ? 'fa-check-circle' : 'fa-arrow-right');
             }
           }
         } else {
-          // Si ya se mostraron los datos, crear preorden (si no se hizo antes) y avanzar al siguiente paso
-          if (!requiresCedula || !PRE_ORDER_UUID) {
+          if (!requiresCedula) {
+            finalizar_compra(this);
+            return;
+          }
+
+          // Si ya se mostraron los datos y es flujo automático, asegurarse de contar con la preorden
+          if (!PRE_ORDER_UUID) {
             const preOrderPayload = {
               raffle_id: {{$rifa->id}},
               cantidad: datos.cant_boletos,
@@ -1829,7 +1694,7 @@
               correo: pre.correo,
               telefono: pre.telefono,
               metodo_pago_id: window.selectedMetodoPagoId,
-              cedula: requiresCedula ? payerCedulaDigits : pre.cedula,
+              cedula: payerCedulaDigits,
             };
 
             try {
@@ -1851,13 +1716,7 @@
               return;
             }
           }
-
-          jQuery('#pre_final_bs_2').text(jQuery('#pre_final_bs').text());
-          jQuery('#pre_tickets_count_2').text(datos.cant_boletos);
-          updateSummary();
-
-          jQuery('#paso0').addClass('hidden');
-          showPaso1();
+          finalizar_compra_auto(this);
         }
       });
 
@@ -1865,25 +1724,6 @@
         const fd = new FormData();
         Object.keys(obj).forEach(k => fd.append(k, obj[k]));
         return fd;
-      }
-
-      function showPaso1() {
-        jQuery('#paso1').removeClass('hidden');
-        jQuery('#paso_verificando').addClass('hidden');
-        updateStep1Sections();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      function updateStep1Sections() {
-        const isAuto = paymentFlowMode === 'auto';
-        const autoSection = document.getElementById('auto_payment_section');
-        const manualSection = document.getElementById('manual_payment_section');
-        if (autoSection) {
-          autoSection.classList.toggle('hidden', !isAuto);
-        }
-        if (manualSection) {
-          manualSection.classList.toggle('hidden', isAuto);
-        }
       }
 
       function showVerificationScreen(uuid) {
@@ -1895,21 +1735,8 @@
             ? `Tu compra #${uuid} está en revisión. Recibirás una notificación en cuanto el pago sea aprobado.`
             : 'Estamos confirmando tu pago con el banco. Recibirás una notificación automática apenas se apruebe.';
         }
-        jQuery('#paso1').addClass('hidden');
+        jQuery('#paso0').addClass('hidden');
         jQuery('#paso_verificando').removeClass('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
-      function goBackToStep0() {
-        jQuery('#paso1').addClass('hidden');
-        jQuery('#paso_verificando').addClass('hidden');
-        jQuery('#paso0').removeClass('hidden');
-        PRE_ORDER_UUID = null;
-        paymentPayerCedula = null;
-        window.paymentPayerCedula = paymentPayerCedula;
-        jQuery('#pre_emisor_cedula').val('');
-        togglePayerCedulaInput(paymentFlowMode === 'auto');
-        renderPaymentDataViews();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
@@ -2176,9 +2003,9 @@
         }
 
         const refRaw = jQuery('#ref').val().trim();
-        const refDigits = refRaw.replace(/[^0-9]/g, '').slice(-8);
-        if (!refDigits || refDigits.length !== 8) {
-          Swal.fire('La referencia bancaria debe tener 8 dígitos');
+        const refDigits = refRaw.replace(/[^0-9]/g, '').slice(-6);
+        if (!refDigits || refDigits.length !== 6) {
+          Swal.fire('La referencia bancaria debe tener 6 dígitos');
           return;
         }
 
@@ -2201,7 +2028,7 @@
         if (telefonoNormalizado.length === 11) {
           formData.append('emisor_telefono', telefonoNormalizado);
         }
-        if (PRE_ORDER_UUID) {
+        if (paymentFlowMode === 'auto' && PRE_ORDER_UUID) {
           formData.append('pre_order_uuid', PRE_ORDER_UUID);
         }
         formData.append('ref_imagen', archivo_pago.files[0]);
@@ -2209,8 +2036,11 @@
         const linkGuardar = "{{config('app.url')}}/api/orderCliente";
         let UUID_COMPRA;
 
-        _this.disabled = true;
-        _this.innerHTML = `
+        const button = _this;
+        const previousHtml = button.dataset.originalHtml || button.innerHTML;
+        button.dataset.originalHtml = previousHtml;
+        button.disabled = true;
+        button.innerHTML = `
           <span class="d-flex align-items-center justify-content-center">
             <i class="fas fa-spinner fa-spin me-2" style="font-size: 1.2rem;"></i>
             Realizando Compra...
@@ -2258,13 +2088,21 @@
               text: errorMessage,
             });
 
-            _this.disabled = false;
-            _this.innerHTML = `
-              <span class="d-flex align-items-center justify-content-center">
-                <i class="fas fa-shopping-cart me-2" style="font-size: 1.2rem;"></i>
-                Comprar
-              </span>
-            `;
+            button.disabled = false;
+            button.innerHTML = button.dataset.originalHtml || previousHtml;
+            if (button.id === 'btnPreOrder') {
+              const btnIconEl = document.getElementById('btnIcon');
+              const btnTextEl = document.getElementById('btnText');
+              if (btnIconEl) {
+                btnIconEl.classList.remove('fa-eye');
+                btnIconEl.classList.remove('fa-arrow-right');
+                btnIconEl.classList.remove('fa-check-circle');
+                btnIconEl.classList.add(paymentFlowMode === 'auto' ? 'fa-check-circle' : 'fa-arrow-right');
+              }
+              if (btnTextEl) {
+                btnTextEl.textContent = paymentFlowMode === 'auto' ? 'Ya pague' : 'Continuar';
+              }
+            }
           }
         });
       }
@@ -2350,13 +2188,6 @@
           button.innerHTML = originalLabel;
         }
       }
-
-      jQuery('#btn_auto_paid').on('click', function() {
-        finalizar_compra_auto(this);
-      });
-
-      jQuery('#btn_auto_back').on('click', goBackToStep0);
-      jQuery('#btn_manual_back').on('click', goBackToStep0);
 
       function showTickets(uuid) {
         let timeLeft = 5;
@@ -2499,12 +2330,12 @@
           if (firstField) firstField.focus();
         }, 500);
 
-        // Campo Referencia Bancaria: permitir pegar cualquier largo, conservar últimos 8 dígitos.
-        // En digitación manual, solo números y máximo 8.
+        // Campo Referencia Bancaria: permitir pegar cualquier largo, conservar últimos 6 dígitos.
+        // En digitación manual, solo números y máximo 6.
         const refInput = document.getElementById('ref');
         if (refInput) {
           const clampDigits = () => {
-            const digits = (refInput.value || '').replace(/\D/g, '').slice(0, 8);
+            const digits = (refInput.value || '').replace(/\D/g, '').slice(0, 6);
             if (refInput.value !== digits) {
               refInput.value = digits;
             }
@@ -2515,9 +2346,9 @@
             e.preventDefault();
             const pastedText = (e.clipboardData || window.clipboardData).getData('text') || '';
             const numbersOnly = pastedText.replace(/[^0-9]/g, '');
-            const last8Digits = numbersOnly.slice(-8);
-            this.value = last8Digits;
-            try { put_pago('ref', last8Digits); } catch(e) {}
+            const last6Digits = numbersOnly.slice(-6);
+            this.value = last6Digits;
+            try { put_pago('ref', last6Digits); } catch(e) {}
             this.dispatchEvent(new Event('input'));
           });
 

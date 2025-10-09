@@ -14,6 +14,7 @@ use App\Models\Country;
 use App\Models\Region;
 use App\Models\City;
 use App\Models\PreOrder;
+use App\Models\MetodoPago;
 use App\Jobs\CreateTickets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -40,6 +41,10 @@ class OrderController extends Controller
         $success = true;
         Log::info('Empieza el crear, antes de las validaciones');
 
+        $metodoPagoId = (int) $request->input('metodo_pago_id');
+        $metodoPago = MetodoPago::find($metodoPagoId);
+        $requiresCedulaPagador = $metodoPago && stripos((string) $metodoPago->descripcion, '{{CEDULA_PAGADOR}}') !== false;
+
         $validator = Validator::make($request->all(), [
             'raffle_id' => 'required',
             'cedula' => 'required',
@@ -47,17 +52,18 @@ class OrderController extends Controller
             'correo' => 'required',
             'tlf' => 'required',
             'cantidad' => 'required',
-            'ref_banco' => 'required|digits:8',
-            'bank_code' => 'required|digits:4',
-            'ref_imagen' => 'required',
+            'ref_banco' => ($requiresCedulaPagador ? 'nullable' : 'required') . '|digits:6',
+            'bank_code' => 'nullable|digits:4',
+            'ref_imagen' => ($requiresCedulaPagador ? 'sometimes' : 'required') . '|file|mimes:jpeg,png,svg|max:4096',
             'metodo_pago_id' => 'required|integer|exists:metodo_pagos,id',
-            // Datos del emisor (opcional para compatibilidad; si vienen, deben cumplir formato)
-            'emisor_cedula' => 'nullable|digits_between:6,12',
+            'emisor_cedula' => ($requiresCedulaPagador ? 'required' : 'nullable') . '|digits_between:6,12',
             'emisor_telefono' => 'nullable|digits:11',
-            // 'ref_fecha' => 'required',
         ], [
-            'ref_banco.digits' => 'La referencia bancaria debe tener exactamente 8 dígitos',
+            'ref_banco.digits' => 'La referencia bancaria debe tener exactamente 6 dígitos',
             'bank_code.digits' => 'El código del banco debe tener exactamente 4 dígitos',
+            'ref_imagen.required' => 'Debes adjuntar el comprobante de pago',
+            'ref_imagen.file' => 'El comprobante de pago debe ser una imagen válida',
+            'ref_imagen.mimes' => 'Formato inválido. Usa JPG o PNG',
             'emisor_cedula.digits_between' => 'La cédula del emisor debe tener entre 6 y 12 dígitos',
             'emisor_telefono.digits' => 'El teléfono del emisor debe tener exactamente 11 dígitos',
         ]);
@@ -102,22 +108,41 @@ class OrderController extends Controller
 
         Log::info('Empieza a crear datos personalizados para la orden');
 
-        $data = $request->all();
+        $data = $request->except('ref_imagen');
         $data["uuid"] = Str::uuid()->toString();
         $data['client_id'] = $cliente->id;
         $data['estatus'] = '0';
         $data['precio_dolar'] = (Option::where("clave","BCV")->pluck("valor")->toArray())[0];
-        $data['ref_imagen'] = $request->file('ref_imagen')->store('images', 'public');
+        if ($request->hasFile('ref_imagen')) {
+            $data['ref_imagen'] = $request->file('ref_imagen')->store('images', 'public');
+        } else {
+            $data['ref_imagen'] = null;
+        }
+        if ($request->filled('ref_banco')) {
+            $cleanRef = preg_replace('/[^0-9]/', '', (string) $request->input('ref_banco'));
+            $data['ref_banco'] = substr($cleanRef, -6) ?: null;
+        } else {
+            $data['ref_banco'] = null;
+        }
+        $bankCode = $request->filled('bank_code') ? substr(preg_replace('/[^0-9]/', '', (string) $request->bank_code), 0, 4) : null;
+        $data['bank_code'] = $bankCode ?: null;
+        if (empty($data['ref_fecha'])) {
+            $data['ref_fecha'] = now()->toDateString();
+        }
+
         // Normalizar y setear datos del emisor
         $emisorCedula = preg_replace('/[^0-9]/','', (string) $request->input('emisor_cedula')) ?: null;
         $emisorTelefono = preg_replace('/[^0-9]/','', (string) $request->input('emisor_telefono')) ?: null;
-        if (empty($emisorTelefono)) {
+        if (!$requiresCedulaPagador && empty($emisorTelefono)) {
             // Compatibilidad: si no viene emisor, usar teléfono del cliente normalizado
             $emisorTelefono = preg_replace('/[^0-9]/','', (string) ($cliente->telefono ?? '')) ?: null;
         }
         $data['emisor_cedula'] = $emisorCedula;
         $data['emisor_telefono'] = $emisorTelefono;
-        
+        if ($requiresCedulaPagador && empty($data['emisor_cedula'])) {
+            $data['emisor_cedula'] = preg_replace('/[^0-9]/', '', (string) $request->cedula) ?: null;
+        }
+
         // Link to pre_order if provided
         $preOrder = null;
         if ($request->filled('pre_order_uuid')) {
@@ -134,17 +159,17 @@ class OrderController extends Controller
             ], 422);
         }
 
-
-        $repetido = Order::where('client_id','=',$cliente->id)
-            ->where('ref_banco','=',$data['ref_banco'])
-            ->where('bank_code','=',$request->bank_code)
-            ->where('raffle_id','=',$data['raffle_id'])
-            ->exists();
-        if($repetido) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Esta compra esta repetida'
-            ], 422);
+        if (!$requiresCedulaPagador && $data['ref_banco']) {
+            $repetido = Order::where('client_id','=',$cliente->id)
+                ->where('ref_banco','=',$data['ref_banco'])
+                ->where('raffle_id','=',$data['raffle_id'])
+                ->exists();
+            if($repetido) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Esta compra esta repetida'
+                ], 422);
+            }
         }
 
         $disponibles = $this->getDisponibles($data['raffle_id']);

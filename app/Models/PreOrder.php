@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\MetodoPago;
 
 class PreOrder extends Model
 {
@@ -32,5 +34,10 @@ class PreOrder extends Model
                 $pre->bank_code_last3 = substr((string) $pre->bank_code, -3);
             }
         });
+    }
+
+    public function metodoPago(): BelongsTo
+    {
+        return $this->belongsTo(MetodoPago::class);
     }
 }
