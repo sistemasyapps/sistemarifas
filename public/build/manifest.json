@@ -1,16 +1,14 @@
 {
-  "resources/css/app.css": {
-    "file": "assets/app.7c3c19f8.js",
-    "src": "resources/css/app.css",
-    "isEntry": true
-  },
   "resources/js/app.js": {
-    "file": "assets/app.d6eedc47.js",
+    "file": "assets/app.8a93381d.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "dynamicImports": [
       "node_modules/firebase/app/dist/esm/index.esm.js",
       "node_modules/firebase/messaging/dist/esm/index.esm.js"
+    ],
+    "css": [
+      "assets/app.79fe8f53.css"
     ]
   },
   "node_modules/firebase/app/dist/esm/index.esm.js": {
@@ -31,5 +29,10 @@
     "imports": [
       "_index.esm.9da7bf65.js"
     ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app.79fe8f53.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
   }
 }
