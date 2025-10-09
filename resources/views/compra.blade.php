@@ -143,26 +143,257 @@
       /* Mobile responsiveness - Mobile First Approach */
       @media (max-width: 768px) {
         .modern-card {
-          margin: 1rem 0 !important;
-          padding: 1.25rem !important;
+          margin: 0.5rem 0 !important;
+          padding: 1rem !important;
           border-radius: 16px !important;
         }
-        
+
         .modern-card .card-body {
-          padding: 1.5rem !important;
+          padding: 1rem !important;
         }
-        
+
         .modern-card h3 {
           font-size: 1.5rem !important;
         }
 
+        /* Compact section headers */
+        .modern-card h4 {
+          font-size: 1rem !important;
+        }
+
+        .modern-card .d-flex.align-items-center.mb-3 {
+          margin-bottom: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+        }
+
+        .modern-card .d-flex.align-items-center.mb-3 .d-inline-flex {
+          width: 1.75rem !important;
+          height: 1.75rem !important;
+          margin-right: 0.5rem !important;
+        }
+
+        .modern-card .d-flex.align-items-center.mb-3 .d-inline-flex i {
+          font-size: 0.85rem !important;
+        }
+
+        /* Info icon in headers */
+        .modern-card .d-flex.align-items-center.mb-3 .fa-info-circle {
+          font-size: 0.9rem !important;
+        }
+
+        /* Compact sections */
+        .modern-card .mb-4 {
+          margin-bottom: 1rem !important;
+        }
+
+        .modern-card .mb-3 {
+          margin-bottom: 0.75rem !important;
+        }
+
+        /* Payment methods compact - MOBILE SPECIFIC */
+        .payment-method-card {
+          padding: 0.5rem !important;
+          border-radius: 8px !important;
+          min-height: 44px !important;
+        }
+
+        .payment-method-card > div,
+        .payment-method-card > div.d-flex,
+        .payment-method-card div.d-flex.align-items-center,
+        div.payment-method-card > div:first-child {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          flex-wrap: nowrap !important;
+        }
+
+        div.col-6 > div.payment-method-card > div.d-flex {
+          flex-direction: row !important;
+        }
+
+        .payment-method-card .payment-logo,
+        .payment-method-card div.payment-logo {
+          width: 30px !important;
+          height: 30px !important;
+          min-width: 30px !important;
+          max-width: 30px !important;
+          margin-right: 0.4rem !important;
+          margin-bottom: 0 !important;
+          border-radius: 6px !important;
+          flex-shrink: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+
+        .payment-method-card .payment-logo img,
+        .payment-method-card div.payment-logo img {
+          width: 20px !important;
+          height: 20px !important;
+          max-width: 20px !important;
+          max-height: 20px !important;
+        }
+
+        .payment-method-card .payment-name,
+        .payment-method-card div.payment-name {
+          font-size: 0.7rem !important;
+          line-height: 1.15 !important;
+          word-break: break-word !important;
+          text-align: left !important;
+          flex: 1 !important;
+        }
+
+        .payment-method-card .flex-grow-1,
+        .payment-method-card div.flex-grow-1 {
+          flex: 1 !important;
+          min-width: 0 !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+
         .modern-form-control {
-          padding: 0.875rem !important;
+          padding: 0.75rem !important;
+          font-size: 0.9rem !important;
+        }
+
+        .modern-label {
+          font-size: 0.8rem !important;
+          margin-bottom: 0.4rem !important;
+        }
+
+        .modern-input-group {
+          margin-bottom: 0.75rem !important;
+        }
+
+        /* Row spacing */
+        .row.g-2 {
+          row-gap: 0.5rem !important;
+        }
+
+        /* Payment data card compact layout */
+        .payment-data-card {
+          padding: 0.75rem 0.9rem !important;
+        }
+
+        .payment-data-card .payment-data-header {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          gap: 0.75rem !important;
+          flex-wrap: wrap !important;
+        }
+
+        .payment-data-card .payment-data-title {
+          display: flex !important;
+          align-items: center !important;
+          gap: 0.6rem !important;
+          flex: 1 1 auto !important;
+          min-width: 0 !important;
+        }
+
+        .payment-data-card .payment-data-icon {
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 2.2rem !important;
+          height: 2.2rem !important;
+          border-radius: 50% !important;
+          background: linear-gradient(135deg, #10b981, #059669) !important;
+          box-shadow: 0 6px 15px rgba(16, 185, 129, 0.35) !important;
+          flex-shrink: 0 !important;
+        }
+
+        .payment-data-card .payment-data-icon i {
+          font-size: 1rem !important;
+          color: #ffffff !important;
+        }
+
+        .payment-data-card h4 {
+          font-size: 0.95rem !important;
+          margin: 0 !important;
+          color: #34d399 !important;
+          font-weight: 700 !important;
+          white-space: nowrap !important;
+        }
+
+        .payment-data-card .payment-data-summary {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: flex-end !important;
+          gap: 0.5rem !important;
+          flex-wrap: wrap !important;
+          font-size: 0.8rem !important;
+        }
+
+        .payment-data-card .payment-data-summary .summary-item {
+          display: inline-flex !important;
+          align-items: center !important;
+          gap: 0.25rem !important;
+          color: #f1f5f9 !important;
+          font-weight: 600 !important;
+        }
+
+        .payment-data-card .payment-data-summary .summary-item.summary-total {
+          color: #34d399 !important;
+          font-weight: 700 !important;
+        }
+
+        .payment-data-card .payment-data-summary .summary-label {
+          opacity: 0.75 !important;
+        }
+
+        .payment-data-card .payment-data-summary .summary-separator {
+          opacity: 0.35 !important;
+          margin: 0 !important;
+          color: #cbd5f5 !important;
+        }
+
+        .payment-data-card #payment_data_step0 {
+          font-size: 0.8rem !important;
+          padding: 0.65rem !important;
+          background: rgba(30, 41, 59, 0.35) !important;
+          border-radius: 8px !important;
+          margin: 0.6rem 0 !important;
+          text-align: center !important;
+          color: #ffffff !important;
+          line-height: 1.4 !important;
+        }
+
+        .payment-data-card .copy-wrapper {
+          margin-top: 0.5rem !important;
+        }
+
+        .payment-data-card button {
+          padding: 0.45rem 0.9rem !important;
+          font-size: 0.85rem !important;
+        }
+
+        @media (max-width: 575.98px) {
+          .payment-data-card h4 {
+            font-size: 0.9rem !important;
+            white-space: normal !important;
+          }
+
+          .payment-data-card .payment-data-summary {
+            width: 100% !important;
+            justify-content: space-between !important;
+            gap: 0.4rem !important;
+          }
+
+          .payment-data-card .payment-data-summary .summary-item {
+            white-space: normal !important;
+          }
+        }
+
+        /* Main action button compact */
+        .modern-btn-success {
+          padding: 0.75rem 1.5rem !important;
           font-size: 0.95rem !important;
         }
-        
-        .modern-label {
-          font-size: 0.85rem !important;
+
+        .d-grid.mt-2 {
+          margin-top: 0.5rem !important;
         }
 
         /* Payment report specific mobile styles */
@@ -187,6 +418,49 @@
         .modern-card[style*="background: rgba(30, 41, 59, 0.2)"] .d-inline-flex i {
           font-size: 1.75rem !important;
         }
+      }
+
+      /* Tooltips for info icons */
+      .info-tooltip {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+      }
+
+      .info-tooltip-text {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        margin-top: 0.5rem;
+        background: rgba(30, 41, 59, 0.98);
+        color: #e2e8f0;
+        text-align: center;
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        z-index: 1000;
+        width: 200px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .info-tooltip-text::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        right: 10px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent rgba(30, 41, 59, 0.98) transparent;
+      }
+
+      .info-tooltip.active .info-tooltip-text {
+        visibility: visible;
+        opacity: 1;
       }
 
       /* Payment Methods Hover Effects */
@@ -219,10 +493,12 @@
         }
       }
 
-      #payment_data {
+      #payment_data_step0,
+      #payment_data_step1 {
         animation: pulseGlow 2s infinite;
       }
-      #payment_data, #payment_data * {
+      #payment_data_step0 *,
+      #payment_data_step1 * {
         color: #10b981 !important;
       }
 
@@ -440,30 +716,62 @@
         <div class="entry-content">
           <div class="container-fluid">
             <div class="row paso0" id="paso0">
-              <div class="col-md-6 col-sm-12 col-xs-12 mx-auto">
-                <div class="vc_row wpb_row vc_row-fluid slide_pasos">
-                  <div class="wpb_column container-fluid vc_col-sm-12">
-                    <div class="vc_column-inner">
-                      <div class="wpb_wrapper">
-                        <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
-                          <div class="card-body" style="padding: 1.5rem;">
-                            <!-- Progress Indicator -->
-                            <div class="d-flex justify-content-center mb-2">
-                              <div class="d-flex align-items-center" style="background: rgba(30, 41, 59, 0.4); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2);">
-                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
-                                <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.5rem;"></div>
-                                <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.75rem;"></div>
-                                <span class="text-slate-300" style="font-size: 0.8rem; font-weight: 500;">Paso 1 de 3</span>
-                              </div>
-                            </div>
+              <!-- Tarjeta Unificada -->
+              <div class="col-md-8 col-sm-12 col-xs-12 mx-auto">
+                <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); padding: 2rem;">
 
-                            <!-- Header Section -->
-                            <div class="text-center mb-2">
-                              <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-user-edit" style="font-size: 1.5rem; color: white;"></i>
-                              </div>
-                              <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Concursante</h3>
+                  <!-- Sección de Métodos de Pago -->
+                  <div class="mb-4">
+                    <div class="d-flex align-items-center mb-3" style="border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 0.75rem;">
+                      <div class="d-inline-flex align-items-center justify-content-center me-3" style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-credit-card" style="font-size: 1.2rem; color: white;"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <h4 class="text-white mb-0" style="font-weight: 700; font-size: 1.25rem; letter-spacing: -0.025em;">Método de pago</h4>
+                      </div>
+                      <div class="info-tooltip" onclick="toggleTooltip(this)">
+                        <i class="fas fa-info-circle" style="color: #94a3b8; font-size: 1.1rem;"></i>
+                        <span class="info-tooltip-text">Selecciona cómo procesarás tu pago</span>
+                      </div>
+                    </div>
+
+                    <div class="row g-2">
+                      @foreach($metodos as $i => $metodo)
+                      @php
+                        $requiresCedulaPagador = \Illuminate\Support\Str::contains($metodo->descripcion, '{{CEDULA_PAGADOR}}');
+                      @endphp
+                      <div class="col-6 col-md-6">
+                        <div class="payment-method-card" style="background: rgba(30, 41, 59, 0.4); border: 2px solid rgba(148, 163, 184, 0.2); border-radius: 12px; padding: 1rem; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;" id="step0_metodo_{{$metodo->id}}" data-metodo='@json($metodo->only(["id","metodo","descripcion"]))' data-requires-cedula="{{ $requiresCedulaPagador ? '1' : '0' }}" onclick="selectPaymentMethod(this)">
+                          <div class="d-flex align-items-center">
+                            <div class="payment-logo me-3" style="width: 50px; height: 50px; display: flex; align-items-center; justify-content: center; background: rgba(255, 255, 255, 0.1); border-radius: 10px; backdrop-filter: blur(10px);">
+                              <img src="{{Storage::url($metodo->logo)}}" style="width: 35px; height: 35px; border-radius: 8px; object-fit: cover;" class="img_payment">
                             </div>
+                            <div class="flex-grow-1">
+                              <div class="payment-name" style="color: white; font-weight: 600; font-size: 1rem;">
+                                {!!$metodo['metodo']!!}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      @endforeach
+                    </div>
+                  </div>
+
+                  <!-- Sección de Datos del Concursante -->
+                  <div class="mb-3">
+                    <div class="d-flex align-items-center mb-3" style="border-bottom: 1px solid rgba(148, 163, 184, 0.1); padding-bottom: 0.75rem;">
+                      <div class="d-inline-flex align-items-center justify-content-center me-3" style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-user-edit" style="font-size: 1.2rem; color: white;"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <h4 class="text-white mb-0" style="font-weight: 700; font-size: 1.25rem; letter-spacing: -0.025em;">Datos del Concursante</h4>
+                      </div>
+                      <div class="info-tooltip" onclick="toggleTooltip(this)">
+                        <i class="fas fa-info-circle" style="color: #94a3b8; font-size: 1.1rem;"></i>
+                        <span class="info-tooltip-text">Completa tu información personal</span>
+                      </div>
+                    </div>
 
                             <!-- Compact Total Badge - HIDDEN -->
                             <div class="text-center mb-3" style="display: none;">
@@ -513,138 +821,88 @@
                                 </div>
                               </div>
 
+                              <div class="row g-2 mb-2" id="payer_cedula_row" style="display: none;">
+                                <div class="col-md-12">
+                                  <div class="modern-input-group">
+                                    <label for="pre_emisor_cedula" class="modern-label">
+                                      <i class="fas fa-id-badge me-2"></i>Cédula del pagador
+                                    </label>
+                                    <input type="text" id="pre_emisor_cedula" class="form-control modern-form-control" maxlength="12" inputmode="numeric" placeholder="Ingresa la cédula de quien paga">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <!-- Datos para el Pago (ocultos inicialmente) - AHORA ARRIBA DEL BOTÓN -->
+                              <div id="payment_data_container" style="display: none; margin: 0.75rem 0;">
+                                <div class="modern-card payment-data-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 0.9rem 1rem; position: relative; overflow: hidden;">
+                                  <div class="payment-data-header">
+                                    <div class="payment-data-title">
+                                      <div class="payment-data-icon">
+                                        <i class="fas fa-university"></i>
+                                      </div>
+                                      <h4>Datos para el Pago</h4>
+                                    </div>
+                                    <div class="payment-data-summary">
+                                      <span class="summary-item">
+                                        <span class="summary-label">Tickets:</span>
+                                        <span class="summary-value" id="top_tickets_display">{{ $initialTickets }}</span>
+                                      </span>
+                                      <span class="summary-separator">•</span>
+                                      <span class="summary-item summary-total">
+                                        <span class="summary-label">Total:</span>
+                                        <span class="summary-value" id="top_total_display"></span>
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div id="payment_data_step0"></div>
+                                  <div class="copy-wrapper text-center">
+                                    <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 0.65rem 1.25rem; font-weight: 600; color: white; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);" onclick="copiarDatosCompletos(document.getElementById('payment_data_step0').innerHTML)" type="button">
+                                      <i class="fas fa-copy me-2"></i>Copiar datos
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
 
                               <div class="d-grid mt-2">
                                 <button type="button" class="btn modern-btn-success" id="btnPreOrder" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; font-size: 1.1rem; color: white; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
                                   <span class="d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-arrow-right me-2"></i>
-                                    Continuar
+                                    <i class="fas fa-eye me-2" id="btnIcon"></i>
+                                    <span id="btnText">Ver datos para el pago</span>
                                   </span>
                                 </button>
                               </div>
                             </form>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <!-- Segunda ventana: Datos del Pagador -->
-            <div class="row paso0_5 hidden" id="paso0_5">
-              <div class="col-md-6 col-sm-12 col-xs-12 mx-auto">
-                <div class="vc_row wpb_row vc_row-fluid slide_pasos">
-                  <div class="wpb_column container-fluid vc_col-sm-12">
-                    <div class="vc_column-inner">
-                      <div class="wpb_wrapper">
-                        <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
-                          <div class="card-body" style="padding: 2.5rem;">
-                            <!-- Progress Indicator -->
-                            <div class="d-flex justify-content-center mb-3">
-                              <div class="d-flex align-items-center" style="background: rgba(30, 41, 59, 0.4); padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2);">
-                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
-                                <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 0.5rem;"></div>
-                                <div style="width: 8px; height: 8px; background: rgba(148, 163, 184, 0.3); border-radius: 50%; margin-right: 0.75rem;"></div>
-                                <span class="text-slate-300" style="font-size: 0.8rem; font-weight: 500;">Paso 2 de 3</span>
-                              </div>
-                            </div>
 
-                            <!-- Header Section -->
-                            <div class="text-center mb-3">
-                              <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);">
-                                <i class="fas fa-mobile-alt" style="font-size: 1.5rem; color: white;"></i>
-                              </div>
-                              <h3 class="h3_responsive text-white mb-1" style="font-weight: 700; font-size: 1.5rem; letter-spacing: -0.025em;">Datos del Pagador</h3>
-                              
-                            </div>
-
-                            <!-- Indicador contextual superior -->
-                            <div class="text-center mb-3">
-                              <div class="d-inline-flex align-items-center justify-content-center px-3 py-1" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 20px;">
-                                <i class="fas fa-info-circle me-2" style="color: #10b981;"></i>
-                                <span class="text-emerald-400" style="font-weight: 700; font-size: 0.95rem; letter-spacing: 0.2px;">Datos de quien realiza el pago móvil</span>
-                              </div>
-                            </div>
-
-                            <!-- Form Fields -->
-                            <form>
-                              <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                  <div class="modern-input-group">
-                                    <label for="pre_emisor_cedula" class="modern-label">
-                                      <i class="fas fa-id-card me-2"></i>Cédula
-                                    </label>
-                                    <input type="number" id="pre_emisor_cedula" class="form-control modern-form-control" inputmode="numeric" placeholder="12345678">
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="modern-input-group">
-                                    <label for="pre_emisor_telefono" class="modern-label">
-                                      <i class="fas fa-phone me-2"></i>Teléfono
-                                    </label>
-                                    <input type="text" id="pre_emisor_telefono" class="form-control modern-form-control" maxlength="11" inputmode="numeric" placeholder="0412XXXXXXX">
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="mb-3">
-                                <div class="modern-input-group">
-                                  <label for="pre_bank_code" class="modern-label">
-                                    <i class="fas fa-university me-2"></i>Banco Emisor
-                                  </label>
-                                  <select id="pre_bank_code" class="form-select modern-form-control">
-                                    <option value="" style="background: #1e293b; color: white;">Seleccione banco</option>
-                                    <option value="0102" style="background: #1e293b; color: white;">0102 - Banco de Venezuela S.A.C.A. Banco Universal</option>
-                                    <option value="0104" style="background: #1e293b; color: white;">0104 - Venezolano de Crédito, S.A. Banco Universal</option>
-                                    <option value="0105" style="background: #1e293b; color: white;">0105 - Mercantil Banco, C.A. Banco Universal</option>
-                                    <option value="0108" style="background: #1e293b; color: white;">0108 - BBVA Provincial, S.A. Banco Universal</option>
-                                    <option value="0114" style="background: #1e293b; color: white;">0114 - Bancaribe C.A. Banco Universal</option>
-                                    <option value="0115" style="background: #1e293b; color: white;">0115 - Banco Exterior C.A. Banco Universal</option>
-                                    <option value="0128" style="background: #1e293b; color: white;">0128 - Banco Caroní C.A. Banco Universal</option>
-                                    <option value="0134" style="background: #1e293b; color: white;">0134 - Banesco, Banco Universal S.A.C.A.</option>
-                                    <option value="0137" style="background: #1e293b; color: white;">0137 - Banco Sofitasa, Banco Universal</option>
-                                    <option value="0138" style="background: #1e293b; color: white;">0138 - Banco Plaza, Banco Universal</option>
-                                    <option value="0146" style="background: #1e293b; color: white;">0146 - Bangente C.A</option>
-                                    <option value="0151" style="background: #1e293b; color: white;">0151 - BFC Banco Fondo Común C.A. Banco Universal</option>
-                                    <option value="0156" style="background: #1e293b; color: white;">0156 - 100% Banco, Banco Universal C.A.</option>
-                                    <option value="0157" style="background: #1e293b; color: white;">0157 - DelSur Banco Universal C.A.</option>
-                                    <option value="0163" style="background: #1e293b; color: white;">0163 - Banco del Tesoro, C.A. Banco Universal</option>
-                                    <option value="0166" style="background: #1e293b; color: white;">0166 - Banco Agrícola de Venezuela, C.A. Banco Universal</option>
-                                    <option value="0168" style="background: #1e293b; color: white;">0168 - Bancrecer, S.A. Banco Microfinanciero</option>
-                                    <option value="0169" style="background: #1e293b; color: white;">0169 - R4, Banco Microfinanciero C.A.</option>
-                                    <option value="0171" style="background: #1e293b; color: white;">0171 - Banco Activo, Banco Universal</option>
-                                    <option value="0172" style="background: #1e293b; color: white;">0172 - Bancamiga, Banco Universal C.A.</option>
-                                    <option value="0173" style="background: #1e293b; color: white;">0173 - Banco Internacional de Desarrollo, C.A. Banco Universal</option>
-                                    <option value="0174" style="background: #1e293b; color: white;">0174 - Banplus Banco Universal, C.A</option>
-                                    <option value="0175" style="background: #1e293b; color: white;">0175 - Banco Digital de Los Trabajadores</option>
-                                    <option value="0177" style="background: #1e293b; color: white;">0177 - Banco de la Fuerza Armada Nacional Bolivariana, B.U.</option>
-                                    <option value="0178" style="background: #1e293b; color: white;">0178 - N58 Banco Digital, S.A. J503581107</option>
-                                    <option value="0191" style="background: #1e293b; color: white;">0191 - Banco Nacional de Crédito, C.A. Banco Universal</option>
-                                    <option value="0601" style="background: #1e293b; color: white;">0601 - Instituto Municipal de Crédito Popular</option>
-                                  </select>
-                                </div>
-                              </div>
-
-                              <div class="d-grid mt-4">
-                                <button type="button" class="btn modern-btn-success" id="btnPreOrder2" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; font-size: 1.1rem; color: white; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
-                                  <span class="d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-arrow-right me-2"></i>
-                                    Continuar
-                                  </span>
-                                </button>
-                              </div>
-                            </form>
-                          </div>
-                        </div>
+    <!-- Pantalla de verificación automática -->
+    <div class="row paso_verificando hidden" id="paso_verificando">
+      <div class="col-md-6 col-sm-12 col-xs-12 mx-auto">
+        <div class="vc_row wpb_row vc_row-fluid slide_pasos">
+          <div class="wpb_column container-fluid vc_col-sm-12">
+            <div class="vc_column-inner">
+              <div class="wpb_wrapper">
+                <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 30px 50px -12px rgba(0, 0, 0, 0.55);">
+                  <div class="card-body text-center" style="padding: 2.5rem 2rem;">
+                    <div class="mb-4">
+                      <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
                       </div>
                     </div>
+                    <h2 class="text-white mb-2" style="font-weight: 700;">Verificando tu pago...</h2>
+                    <p class="text-slate-300" style="font-size: 1rem;">Estamos validando la confirmación con tu banco. Este proceso puede tardar unos minutos. Te notificaremos automáticamente cuando se acrediten tus números.</p>
+                    <p class="text-slate-400 mt-4" id="verificando_uuid" style="font-size: 0.9rem;"></p>
                   </div>
                 </div>
               </div>
             </div>
-            
+          </div>
+        </div>
+      </div>
+    </div>
+
             <!-- <div data-vc-full-width="true" data-vc-full-width-init="false" class="vc_row wpb_row vc_row-fluid row">
               <div class="wpb_column container-fluid vc_col-sm-12">
                 <div class="vc_column-inner">
@@ -742,66 +1000,6 @@
                             <h3 class="h4_responsive ptop_0" style="text-align: center; color: white">Cantidad mínima permitida: <span class="yellow_color">{{$cantidad_minima}}</span></h3>
                           </div>
                         </div> -->
-                        <!-- Modern Payment Methods Section -->
-                        <div class="modern-card" style="background: rgba(15, 23, 42, 0.6); border-radius: 20px; padding: 2rem; border: 1px solid rgba(148, 163, 184, 0.1); margin-bottom: 1.5rem;">
-                          <!-- Header -->
-                          <div class="text-center mb-3">
-                            <div class="d-inline-flex align-items-center justify-content-center mb-2" style="width: 4rem; height: 4rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);">
-                              <i class="fas fa-credit-card" style="font-size: 2rem; color: white;"></i>
-                            </div>
-                            <h3 class="text-white mb-2" style="font-weight: 700; font-size: 1.875rem; letter-spacing: -0.025em;">Datos para el Pago</h3>
-                          </div>
-
-                          <!-- Payment Methods Grid -->
-                          <div class="row g-3 mb-3">
-                            @foreach($metodos as $i => $metodo)
-                            <div class="col-12">
-                              <div class="payment-method-card" style="background: rgba(30, 41, 59, 0.4); border: 2px solid rgba(148, 163, 184, 0.2); border-radius: 16px; padding: 1.5rem; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden;" id="metodo_{{$metodo->id}}" data-metodo='@json($metodo->only(["id","metodo","descripcion"]))' onclick="showPaymentData(this)">
-                                <div class="d-flex align-items-center">
-                                  <div class="payment-logo me-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.1); border-radius: 50%; backdrop-filter: blur(10px);">
-                                    <img src="{{Storage::url($metodo->logo)}}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" class="img_payment">
-                                  </div>
-                                  <div class="flex-grow-1">
-                                    <div class="payment-name mb-2" style="color: white; font-weight: 600; font-size: 1.2rem;">
-                                      {!!$metodo['metodo']!!}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            @endforeach
-                          </div>
-
-                          <!-- Payment Data Display -->
-                          <div class="modern-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1)); border: 2px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 2rem; text-align: center; position: relative; overflow: hidden;">
-                            <div class="d-inline-flex align-items-center justify-content-center mb-3" style="width: 3rem; height: 3rem; background: linear-gradient(135deg, #10b981, #059669); border-radius: 50%; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);">
-                              <i class="fas fa-university" style="font-size: 1.5rem; color: white;"></i>
-                            </div>
-                            <h4 class="text-emerald-400 mb-2" style="font-weight: 700; font-size: 1.25rem;">Datos para el Pago</h4>
-                            <!-- Top summary: tickets y total -->
-                            <div class="d-flex justify-content-center mb-3">
-                              <div class="d-inline-flex align-items-center px-3 py-1" style="background: rgba(30, 41, 59, 0.2); border: 1px solid rgba(148, 163, 184, 0.2); border-radius: 9999px; gap: 0.75rem;">
-                                <span class="text-slate-200" style="font-weight: 600; font-size: 0.9rem;">Tickets: <span id="top_tickets_display">{{ $initialTickets }}</span></span>
-                                <span style="opacity: .5;">•</span>
-                                <span class="text-emerald-400" style="font-weight: 700; font-size: 0.95rem;">Total: <span id="top_total_display"></span></span>
-                              </div>
-                            </div>
-                            <div id="payment_data" style="color: #10b981 !important; font-size: 1.5rem; font-weight: 700; font-family: 'Courier New', monospace; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); letter-spacing: 2px;">
-                              {!!$metodos[0]['descripcion']!!}
-                            </div>
-                            
-                            <!-- Copy Button -->
-                            <div class="mt-4">
-                              <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 0.75rem 1.5rem; font-weight: 600; color: white; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);" onclick="copiarDatosCompletos(document.getElementById('payment_data').innerHTML)" type="button">
-                                <i class="fas fa-copy me-2"></i>Copiar datos
-                              </button>
-                            </div>
-                            
-                            <!-- Purchase Summary oculto para evitar duplicación del total -->
-                            
-                          </div>
-
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -861,34 +1059,80 @@
 
                             <!-- Datos del concursante ya capturados en pasos previos; no se duplican inputs -->
 
-                            <!-- Payment Fields -->
-                            <div class="row g-4">
-                              <div class="col-12">
-                                <div class="modern-input-group">
-                                  <label for="archivo_pago" class="modern-label">
-                                    <i class="fas fa-camera me-2"></i>Comprobante de Pago
-                                  </label>
-                                  <input type="file" accept="image/jpeg,image/png,image/svg+xml" id="archivo_pago" name="archivo_pago" onblur="put_pago(this.id,this.value)" class="form-control modern-form-control" style="font-weight: 600; padding: 0.875rem 1rem;">
-                                  <div class="info-text mt-2">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span>Sube una imagen clara del comprobante (JPG, PNG, SVG)</span>
-                                  </div>
-                                </div>
+                            <div class="modern-card" style="background: rgba(15, 23, 42, 0.6); border-radius: 16px; padding: 2rem; border: 1px solid rgba(148, 163, 184, 0.1);">
+                              <div id="payment_data_step1" style="color: #e2e8f0;"></div>
+                            </div>
+
+                            <div id="auto_payment_section" class="hidden mt-4">
+                              <div class="alert alert-success" role="alert" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; border-radius: 12px;">
+                                <i class="fas fa-bolt me-2"></i>
+                                Validaremos tu pago automáticamente apenas llegue la notificación del banco.
+                              </div>
+                              <div class="d-grid gap-3 mt-4">
+                                <button type="button" id="btn_auto_paid" class="btn modern-btn-success" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 2rem; font-weight: 600; font-size: 1.1rem; color: white; box-shadow: 0 12px 30px rgba(16, 185, 129, 0.35);">
+                                  <span class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Ya pagué
+                                  </span>
+                                </button>
+                                <button type="button" class="btn modern-btn-secondary" id="btn_auto_back" style="background: transparent; border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 12px; padding: 0.85rem 2rem; font-weight: 600; color: #e2e8f0;">
+                                  <span class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Cambiar método de pago
+                                  </span>
+                                </button>
                               </div>
                             </div>
 
-                            <div class="row g-4 mt-2">
-                              <div class="col-md-6 col-12">
-                                <div class="modern-input-group">
-                                  <label for="ref" class="modern-label">
-                                    <i class="fas fa-hashtag me-2"></i>Referencia Bancaria
-                                  </label>
-                                  <input type="text" id="ref" name="ref" class="form-control modern-form-control" maxlength="8" placeholder="12345678" inputmode="numeric" autocomplete="off">
-                                  <div class="info-text-small mt-1">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span>Últimos 8 dígitos de la referencia</span>
+                            <div id="manual_payment_section" class="mt-4">
+                              <div class="alert alert-info" role="alert" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(96, 165, 250, 0.4); color: #60a5fa; border-radius: 12px;">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Adjunta el comprobante y la referencia para que podamos confirmar tu pago manualmente.
+                              </div>
+
+                              <div class="row g-4 mt-2">
+                                <div class="col-12">
+                                  <div class="modern-input-group">
+                                    <label for="archivo_pago" class="modern-label">
+                                      <i class="fas fa-camera me-2"></i>Comprobante de Pago
+                                    </label>
+                                    <input type="file" accept="image/jpeg,image/png,image/svg+xml" id="archivo_pago" name="archivo_pago" class="form-control modern-form-control" style="font-weight: 600; padding: 0.875rem 1rem;">
+                                    <div class="info-text mt-2">
+                                      <i class="fas fa-info-circle"></i>
+                                      <span>Sube una imagen clara del comprobante (JPG, PNG, SVG)</span>
+                                    </div>
                                   </div>
                                 </div>
+                              </div>
+
+                              <div class="row g-4 mt-2">
+                                <div class="col-md-6 col-12">
+                                  <div class="modern-input-group">
+                                    <label for="ref" class="modern-label">
+                                      <i class="fas fa-hashtag me-2"></i>Referencia Bancaria
+                                    </label>
+                                    <input type="text" id="ref" name="ref" class="form-control modern-form-control" maxlength="8" placeholder="12345678" inputmode="numeric" autocomplete="off">
+                                    <div class="info-text-small mt-1">
+                                      <i class="fas fa-info-circle"></i>
+                                      <span>Últimos 8 dígitos de la referencia</span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="d-grid mt-4">
+                                <button class="btn modern-btn-primary w-100" onclick="finalizar_compra(this)" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 1.5rem; font-weight: 700; color: white; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); position: relative; overflow: hidden;">
+                                  <span class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-shopping-cart me-2" style="font-size: 1.2rem;"></i>
+                                    Comprar
+                                  </span>
+                                </button>
+                                <button type="button" id="btn_manual_back" class="btn modern-btn-secondary w-100 mt-3" style="background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem 1.5rem; font-weight: 700; color: #ef4444;">
+                                  <span class="d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Volver
+                                  </span>
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -900,29 +1144,7 @@
                   </div>
                 </div>
               </div>
-              <!-- Modern Action Buttons -->
-              <div class="col-12 mt-4">
-                <div class="row g-3">
-                  @if($queda < 9999 || $logged)
-                  <div class="col-md-6 col-12" id="boton_comprar">
-                    <button class="btn modern-btn-primary w-100" onclick="finalizar_compra(this)" style="background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 12px; padding: 1rem 1.5rem; font-weight: 700; color: white; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); position: relative; overflow: hidden;">
-                      <span class="d-flex align-items-center justify-content-center">
-                        <i class="fas fa-shopping-cart me-2" style="font-size: 1.2rem;"></i>
-                        Comprar
-                      </span>
-                    </button>
-                  </div>
-                  @endif
-                  <div class="col-md-6 col-12">
-                    <button class="btn modern-btn-secondary w-100" onclick="atras()" style="background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1rem 1.5rem; font-weight: 700; color: #ef4444; font-size: 1.1rem; transition: all 0.3s ease; backdrop-filter: blur(10px);">
-                      <span class="d-flex align-items-center justify-content-center">
-                        <i class="fas fa-arrow-left me-2" style="font-size: 1.2rem;"></i>
-                        Volver
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
+
             </div>
 
             <div class="vc_row-full-width vc_clearfix"></div>
@@ -1092,8 +1314,15 @@
       const defaultMetodoPagoId = @json(optional($metodos->first())->id);
       let selectedMetodoPagoId = defaultMetodoPagoId;
       window.selectedMetodoPagoId = selectedMetodoPagoId;
+      let paymentFlowMode = null;
+      window.paymentFlowMode = paymentFlowMode;
+      let paymentPayerCedula = null;
+      window.paymentPayerCedula = paymentPayerCedula;
+      let currentOrderUuid = null;
+      window.currentOrderUuid = currentOrderUuid;
       const proximoSorteoMensaje = @json($rifa->mensaje_proximo_sorteo);
       const proximoSorteoFecha = @json($fechaInicialProximoSorteo);
+      let paymentDataTemplate = '';
 
       function parseMetodoPago(metodo) {
         if (typeof metodo !== 'string') {
@@ -1113,91 +1342,195 @@
         }
       }
 
-      function showPaymentData(element, metodo) {
+      // Variable para controlar si ya se mostraron los datos de pago
+      let paymentDataShown = false;
+      window.paymentDataShown = paymentDataShown;
+
+      // Función para seleccionar método de pago (sin mostrar datos aún)
+      function selectPaymentMethod(element, metodo) {
         // Remove active class from all payment methods
         document.querySelectorAll('.payment-method-card').forEach(card => {
           card.classList.remove('active');
         });
-        
+
         // Add active class to selected method
         element.classList.add('active');
-        
-        // Update payment data display
-        const paymentDataDiv = document.getElementById('payment_data');
+
         const rawMetodo = metodo ?? element?.dataset?.metodo ?? null;
         metodo = parseMetodoPago(rawMetodo);
+        const requiresCedula = element?.dataset?.requiresCedula === '1';
+        paymentFlowMode = requiresCedula ? 'auto' : 'manual';
+        window.paymentFlowMode = paymentFlowMode;
+        togglePayerCedulaInput(requiresCedula);
+        if (!requiresCedula) {
+          paymentPayerCedula = null;
+          window.paymentPayerCedula = paymentPayerCedula;
+        }
 
         if (metodo && metodo.id) {
           selectedMetodoPagoId = metodo.id;
           window.selectedMetodoPagoId = selectedMetodoPagoId;
         }
 
-        if (paymentDataDiv && metodo && metodo.descripcion) {
-          // Guardamos el texto base del método para poder re-aplicar el reemplazo
-          paymentDataDiv.setAttribute('data-base', metodo.descripcion);
-          paymentDataDiv.innerHTML = metodo.descripcion;
-          applyPayerCedulaToPaymentData();
-        }
-        
-        // Smooth scroll to payment data
-        paymentDataDiv.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'nearest' 
-        });
-        
-        // Add pulse animation
-        paymentDataDiv.style.animation = 'none';
-        setTimeout(() => {
-          paymentDataDiv.style.animation = 'pulseGlow 2s infinite';
-        }, 100);
+        paymentDataTemplate = metodo?.descripcion || '';
+
+        // Verificar si todos los campos están completos
+        checkFieldsComplete();
       }
 
-      // Reemplaza únicamente la cédula por la ingresada por el pagador en el bloque "Datos para el Pago".
-      function applyPayerCedulaToPaymentData(){
-        const paymentDataDiv = document.getElementById('payment_data');
-        if (!paymentDataDiv) return;
+      // Función para mostrar los datos de pago
+      function showPaymentData(element, metodo) {
+        selectPaymentMethod(element, metodo);
 
-        // Base sin modificar para el método seleccionado
-        let base = paymentDataDiv.getAttribute('data-base');
-        if (!base) {
-          base = paymentDataDiv.innerHTML;
-          paymentDataDiv.setAttribute('data-base', base);
+        const paymentDataDivStep0 = document.getElementById('payment_data_step0');
+        renderPaymentDataViews();
+        updateStep1Sections();
+
+        // Mostrar el contenedor de datos de pago
+        const paymentDataContainer = document.getElementById('payment_data_container');
+        if (paymentDataContainer) {
+          paymentDataContainer.style.display = 'block';
+          paymentDataShown = true;
+          window.paymentDataShown = paymentDataShown;
+
+          // Auto-scroll al contenedor de datos de pago después de un pequeño delay
+          setTimeout(() => {
+            paymentDataContainer.scrollIntoView({
+              behavior: 'smooth',
+              block: 'end',
+              inline: 'nearest'
+            });
+          }, 300);
+
+          // Cambiar el botón a "Continuar"
+          const btnText = document.getElementById('btnText');
+          const btnIcon = document.getElementById('btnIcon');
+          if (btnText) btnText.textContent = 'Continuar';
+          if (btnIcon) {
+            btnIcon.classList.remove('fa-eye');
+            btnIcon.classList.add('fa-arrow-right');
+          }
         }
 
-        // Cedula del pagador
-        const cedulaInput = document.getElementById('pre_emisor_cedula');
-        const digits = (cedulaInput && cedulaInput.value) ? String(cedulaInput.value).replace(/\D+/g,'') : '';
-        const placeholder = '{' + '{' + 'CEDULA_PAGADOR' + '}' + '}';
+        if (paymentDataDivStep0) {
+          paymentDataDivStep0.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          });
+          paymentDataDivStep0.style.animation = 'none';
+          setTimeout(() => {
+            paymentDataDivStep0.style.animation = 'pulseGlow 2s infinite';
+          }, 100);
+        }
+      }
 
-        if (!base.includes(placeholder)) {
-          paymentDataDiv.innerHTML = base;
-          return;
+      function getPayerCedulaDigits() {
+        const input = document.getElementById('pre_emisor_cedula');
+        const raw = input ? String(input.value || '') : '';
+        return raw.replace(/[^0-9]/g, '').slice(0, 12);
+      }
+
+      function renderPaymentDataViews() {
+        const templates = paymentDataTemplate || '';
+        const digits = paymentPayerCedula || getPayerCedulaDigits();
+        const placeholder = '@{{CEDULA_PAGADOR}}';
+        const ids = ['payment_data_step0', 'payment_data_step1'];
+
+        ids.forEach(id => {
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          if (!templates) {
+            el.innerHTML = '<span style="color:#94a3b8;">Selecciona un método de pago para ver los detalles.</span>';
+            return;
+          }
+
+          let updated = templates;
+          if (templates.includes(placeholder)) {
+            updated = templates.split(placeholder).join(digits || '');
+          }
+          const cleanText = updated.replace(/<\/?p>/g, '');
+          el.innerHTML = `<span style="color: #10b981;">${cleanText}</span>`;
+        });
+      }
+
+      function togglePayerCedulaInput(shouldShow) {
+        const row = document.getElementById('payer_cedula_row');
+        const input = document.getElementById('pre_emisor_cedula');
+        if (!row) return;
+
+        if (shouldShow) {
+          row.style.display = 'flex';
+          if (input) {
+            input.setAttribute('required', 'required');
+          }
+        } else {
+          row.style.display = 'none';
+          if (input) {
+            input.removeAttribute('required');
+            input.value = '';
+          }
+          paymentPayerCedula = null;
+          window.paymentPayerCedula = paymentPayerCedula;
+          renderPaymentDataViews();
+        }
+      }
+
+      // Función para verificar si todos los campos están completos
+      function checkFieldsComplete() {
+        const pre = {
+          cedula: jQuery('#pre_cedula').val().trim(),
+          nombre_completo: jQuery('#pre_nombre').val().trim(),
+          correo: jQuery('#pre_correo').val().trim(),
+          telefono: jQuery('#pre_telefono').val().trim(),
+        };
+
+        const hasMethod = !!window.selectedMetodoPagoId;
+        const requiresCedula = paymentFlowMode === 'auto';
+        const payerCedula = jQuery('#pre_emisor_cedula').val().trim();
+
+        let allFieldsComplete = pre.cedula && pre.nombre_completo && pre.correo && pre.telefono && hasMethod;
+
+        if (requiresCedula) {
+          allFieldsComplete = allFieldsComplete && payerCedula && payerCedula.replace(/[^0-9]/g, '').length >= 6;
         }
 
-        const updated = digits
-          ? base.split(placeholder).join(digits)
-          : base.split(placeholder).join('');
-        // Quitar el <p> y aplicar estilo verde directamente
-        const cleanText = updated.replace(/<\/?p>/g, '');
-        paymentDataDiv.innerHTML = `<span style="color: #10b981 !important;">${cleanText}</span>`;
+        const btn = document.getElementById('btnPreOrder');
+        if (btn) {
+          if (allFieldsComplete) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+          } else {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+          }
+        }
       }
 
       // Listener para actualizar automáticamente al escribir la cédula del pagador
       document.addEventListener('DOMContentLoaded', () => {
-        const paymentDataDiv = document.getElementById('payment_data');
-        if (paymentDataDiv && !paymentDataDiv.getAttribute('data-base')) {
-          paymentDataDiv.setAttribute('data-base', paymentDataDiv.innerHTML);
-        }
         const cedulaInput = document.getElementById('pre_emisor_cedula');
         if (cedulaInput) {
-          ['input','change','blur'].forEach(evt => cedulaInput.addEventListener(evt, applyPayerCedulaToPaymentData));
+          const clampCedula = () => {
+            cedulaInput.value = (cedulaInput.value || '').replace(/[^0-9]/g, '').slice(0, 12);
+            renderPaymentDataViews();
+            checkFieldsComplete();
+          };
+          ['input','change','blur'].forEach(evt => cedulaInput.addEventListener(evt, clampCedula));
         }
-        if (defaultMetodoPagoId) {
-          const firstMethodCard = document.querySelector('.payment-method-card');
-          if (firstMethodCard) {
-            firstMethodCard.classList.add('active');
+
+        // Agregar listeners a todos los campos para verificar completitud
+        ['pre_cedula', 'pre_nombre', 'pre_correo', 'pre_telefono'].forEach(id => {
+          const field = document.getElementById(id);
+          if (field) {
+            ['input', 'change', 'blur'].forEach(evt => field.addEventListener(evt, checkFieldsComplete));
           }
-        }
+        });
+
+        togglePayerCedulaInput(false);
+
         const fechaSorteoElement = document.querySelector('.fecha_sorteo');
         if (fechaSorteoElement) {
           if (proximoSorteoMensaje) {
@@ -1208,7 +1541,9 @@
             fechaSorteoElement.textContent = '';
           }
         }
-        applyPayerCedulaToPaymentData();
+
+        // Verificar el estado inicial del botón
+        checkFieldsComplete();
       });
 
       function copiarDatosCompletos(bankData){
@@ -1274,8 +1609,8 @@
 
       calcular_total();
 
-      // Step 1: Datos del Concursante
-      jQuery('#btnPreOrder').on('click', async function(){
+      // Paso 1: Datos del concursante y preparación de pre-orden
+      jQuery('#btnPreOrder').on('click', async function() {
         const pre = {
           cedula: jQuery('#pre_cedula').val().trim(),
           nombre_completo: jQuery('#pre_nombre').val().trim(),
@@ -1283,109 +1618,138 @@
           telefono: jQuery('#pre_telefono').val().trim(),
         };
 
-        if(!pre.cedula || !pre.nombre_completo || !pre.correo || !pre.telefono){
+        if (!pre.cedula || !pre.nombre_completo || !pre.correo || !pre.telefono) {
           Swal.fire('Completa todos los campos del concursante');
           return;
         }
 
-        // Validar teléfono de 11 dígitos exactos
-        if(pre.telefono.replace(/[^0-9]/g, '').length !== 11){
+        if (pre.telefono.replace(/[^0-9]/g, '').length !== 11) {
           Swal.fire('El teléfono del concursante debe tener exactamente 11 dígitos');
           return;
         }
 
-        // Almacenar datos del concursante
-        window.contestantData = pre;
-        
-        // Mostrar total en el paso siguiente
-        jQuery('#pre_final_bs_2').text(jQuery('#pre_final_bs').text());
-        jQuery('#pre_tickets_count_2').text(datos.cant_boletos);
-        
-        // Pasar al paso 0.5 (Datos del Pagador)
-        jQuery('#paso0').addClass('hidden');
-        jQuery('#paso0_5').removeClass('hidden');
-
-        // Al cambiar a Paso 2, subir scroll y enfocar el primer campo
-        setTimeout(() => {
-          try {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          } catch (e) {
-            window.scrollTo(0, 0);
-          }
-          const firstField = document.getElementById('pre_emisor_cedula');
-          if (firstField) {
-            firstField.focus();
-            // resaltar sutilmente el foco
-            firstField.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.2)';
-            setTimeout(() => { firstField.style.boxShadow = ''; }, 1500);
-          }
-        }, 150);
-      });
-
-      // Step 2: Datos del Pagador
-      jQuery('#btnPreOrder2').on('click', async function(){
-        const metodoPagoId = window.selectedMetodoPagoId;
-        const emisor = {
-          emisor_cedula: jQuery('#pre_emisor_cedula').val().trim(),
-          emisor_telefono: jQuery('#pre_emisor_telefono').val().trim(),
-          bank_code: jQuery('#pre_bank_code').val(),
-        };
-
-        if(!metodoPagoId){
+        if (!window.selectedMetodoPagoId) {
           Swal.fire('Selecciona un método de pago');
           return;
         }
 
-        if(!emisor.emisor_cedula || !emisor.emisor_telefono || !emisor.bank_code){
-          Swal.fire('Completa todos los datos del pagador');
-          return;
-        }
+        const requiresCedula = paymentFlowMode === 'auto';
+        const payerCedulaRaw = jQuery('#pre_emisor_cedula').val().trim();
+        const payerCedulaDigits = payerCedulaRaw.replace(/[^0-9]/g, '');
 
-        // Validar teléfono del emisor de 11 dígitos exactos
-        if(emisor.emisor_telefono.replace(/[^0-9]/g, '').length !== 11){
-          Swal.fire('El teléfono del pagador debe tener exactamente 11 dígitos');
-          return;
-        }
-
-        // Ya no replicamos campos; el resumen muestra la info y se usa memoria (window.*)
-
-        // Almacenar datos del emisor
-        window.emisorData = emisor;
-
-        try {
-          const resp = await fetch('{{config('app.url')}}/api/preOrder', {
-            method: 'POST',
-            headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: toFormData({
-              raffle_id: {{$rifa->id}},
-              cantidad: datos.cant_boletos,
-              // Datos principales (del pagador/emisor)
-              cedula: emisor.emisor_cedula,
-              telefono: emisor.emisor_telefono,
-              // Datos del concursante
-              nombre_completo: window.contestantData.nombre_completo,
-              correo: window.contestantData.correo,
-              // Datos adicionales del emisor
-              emisor_cedula: emisor.emisor_cedula,
-              emisor_telefono: emisor.emisor_telefono,
-              bank_code: emisor.bank_code,
-              metodo_pago_id: metodoPagoId,
-            })
-          });
-          const data = await resp.json();
-          if(!data.success){
-            Swal.fire('No se pudo crear la pre-orden');
+        if (requiresCedula) {
+          if (!payerCedulaDigits) {
+            Swal.fire('Ingresa la cédula del pagador');
             return;
           }
-          PRE_ORDER_UUID = data.pre_order.uuid;
-          jQuery('#paso0_5').addClass('hidden');
-          jQuery('#paso1').removeClass('hidden');
-          // Actualizar el resumen al entrar en la ventana de Reporte de Pago
-          try { updateSummary(); } catch (e) {}
-        } catch (e) {
-          Swal.fire('Error de red creando pre-orden');
+          if (payerCedulaDigits.length < 6 || payerCedulaDigits.length > 12) {
+            Swal.fire('La cédula del pagador debe tener entre 6 y 12 dígitos');
+            return;
+          }
+        }
+
+        window.contestantData = pre;
+        paymentPayerCedula = requiresCedula ? payerCedulaDigits : null;
+        window.paymentPayerCedula = paymentPayerCedula;
+
+        // Si los datos aún no se han mostrado, crearlos y mostrarlos
+        if (!window.paymentDataShown) {
+          // Si requiere cédula del pagador, crear la preorden primero
+          if (requiresCedula) {
+            const preOrderPayload = {
+              raffle_id: {{$rifa->id}},
+              cantidad: datos.cant_boletos,
+              nombre_completo: pre.nombre_completo,
+              correo: pre.correo,
+              telefono: pre.telefono,
+              metodo_pago_id: window.selectedMetodoPagoId,
+              cedula: payerCedulaDigits,
+            };
+
+            try {
+              const resp = await fetch('{{config('app.url')}}/api/preOrder', {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: toFormData(preOrderPayload)
+              });
+              const data = await resp.json();
+              if (!data.success) {
+                Swal.fire('No se pudo crear la pre-orden');
+                return;
+              }
+              PRE_ORDER_UUID = data.pre_order.uuid;
+            } catch (error) {
+              Swal.fire('Error de red creando pre-orden');
+              return;
+            }
+          }
+
+          // Mostrar los datos de pago
+          renderPaymentDataViews();
+          const paymentDataContainer = document.getElementById('payment_data_container');
+          if (paymentDataContainer) {
+            paymentDataContainer.style.display = 'block';
+            window.paymentDataShown = true;
+
+            // Auto-scroll al contenedor de datos de pago después de un pequeño delay
+            setTimeout(() => {
+              paymentDataContainer.scrollIntoView({
+                behavior: 'smooth',
+                block: 'end',
+                inline: 'nearest'
+              });
+            }, 300);
+
+            // Cambiar el botón a "Continuar"
+            const btnText = document.getElementById('btnText');
+            const btnIcon = document.getElementById('btnIcon');
+            if (btnText) btnText.textContent = 'Continuar';
+            if (btnIcon) {
+              btnIcon.classList.remove('fa-eye');
+              btnIcon.classList.add('fa-arrow-right');
+            }
+          }
+        } else {
+          // Si ya se mostraron los datos, crear preorden (si no se hizo antes) y avanzar al siguiente paso
+          if (!requiresCedula || !PRE_ORDER_UUID) {
+            const preOrderPayload = {
+              raffle_id: {{$rifa->id}},
+              cantidad: datos.cant_boletos,
+              nombre_completo: pre.nombre_completo,
+              correo: pre.correo,
+              telefono: pre.telefono,
+              metodo_pago_id: window.selectedMetodoPagoId,
+              cedula: requiresCedula ? payerCedulaDigits : pre.cedula,
+            };
+
+            try {
+              const resp = await fetch('{{config('app.url')}}/api/preOrder', {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: toFormData(preOrderPayload)
+              });
+              const data = await resp.json();
+              if (!data.success) {
+                Swal.fire('No se pudo crear la pre-orden');
+                return;
+              }
+              PRE_ORDER_UUID = data.pre_order.uuid;
+            } catch (error) {
+              Swal.fire('Error de red creando pre-orden');
+              return;
+            }
+          }
+
+          jQuery('#pre_final_bs_2').text(jQuery('#pre_final_bs').text());
+          jQuery('#pre_tickets_count_2').text(datos.cant_boletos);
+          updateSummary();
+
+          jQuery('#paso0').addClass('hidden');
+          showPaso1();
         }
       });
 
@@ -1395,39 +1759,88 @@
         return fd;
       }
 
+      function showPaso1() {
+        jQuery('#paso1').removeClass('hidden');
+        jQuery('#paso_verificando').addClass('hidden');
+        updateStep1Sections();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function updateStep1Sections() {
+        const isAuto = paymentFlowMode === 'auto';
+        const autoSection = document.getElementById('auto_payment_section');
+        const manualSection = document.getElementById('manual_payment_section');
+        if (autoSection) {
+          autoSection.classList.toggle('hidden', !isAuto);
+        }
+        if (manualSection) {
+          manualSection.classList.toggle('hidden', isAuto);
+        }
+      }
+
+      function showVerificationScreen(uuid) {
+        currentOrderUuid = uuid || null;
+        window.currentOrderUuid = currentOrderUuid;
+        const uuidLabel = document.getElementById('verificando_uuid');
+        if (uuidLabel) {
+          uuidLabel.textContent = uuid
+            ? `Tu compra #${uuid} está en revisión. Recibirás una notificación en cuanto el pago sea aprobado.`
+            : 'Estamos confirmando tu pago con el banco. Recibirás una notificación automática apenas se apruebe.';
+        }
+        jQuery('#paso1').addClass('hidden');
+        jQuery('#paso_verificando').removeClass('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function goBackToStep0() {
+        jQuery('#paso1').addClass('hidden');
+        jQuery('#paso_verificando').addClass('hidden');
+        jQuery('#paso0').removeClass('hidden');
+        PRE_ORDER_UUID = null;
+        paymentPayerCedula = null;
+        window.paymentPayerCedula = paymentPayerCedula;
+        jQuery('#pre_emisor_cedula').val('');
+        togglePayerCedulaInput(paymentFlowMode === 'auto');
+        renderPaymentDataViews();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
       function volver_comprar(){
-        cant_boletos.value = cantidad_minima;
-        document.getElementById("ref").value = "";
-        // document.getElementById("fecha").value = "";
-        document.getElementById("archivo_pago").value = "";
-        
-        // Limpiar datos almacenados
+        const cantBoletosInput = document.getElementById('cant_boletos');
+        if (cantBoletosInput) {
+          cantBoletosInput.value = cantidad_minima;
+        }
+        document.getElementById('ref').value = '';
+        document.getElementById('archivo_pago').value = '';
+
         window.contestantData = null;
-        window.emisorData = null;
-        
-        // Resetear campos de los pasos anteriores
+        paymentPayerCedula = null;
+        window.paymentPayerCedula = paymentPayerCedula;
+        PRE_ORDER_UUID = null;
+        currentOrderUuid = null;
+        window.currentOrderUuid = currentOrderUuid;
+
         jQuery('#pre_cedula').val('');
         jQuery('#pre_nombre').val('');
         jQuery('#pre_correo').val('');
         jQuery('#pre_telefono').val('');
         jQuery('#pre_emisor_cedula').val('');
-        jQuery('#pre_emisor_telefono').val('');
-        jQuery('#pre_bank_code').val('');
-        
-        datos.cant_boletos = 2;
-        datos.pago.archivo_pago = "";
-        datos.pago.ref = "";
-        // datos.pago.fecha = "";
-        
+
+        datos.cant_boletos = cantidad_minima;
+        datos.pago.archivo_pago = '';
+        datos.pago.ref = '';
+
         selectedMetodoPagoId = defaultMetodoPagoId;
         window.selectedMetodoPagoId = selectedMetodoPagoId;
+        paymentFlowMode = null;
+        window.paymentFlowMode = paymentFlowMode;
+        togglePayerCedulaInput(false);
 
-        // Volver al primer paso
-        jQuery("#paso_final").addClass("hidden");
-        jQuery("#paso0_5").addClass("hidden");
-        jQuery("#paso1").addClass("hidden");
-        jQuery("#paso0").removeClass("hidden");
-        paso = 0;
+        jQuery('#paso_final').addClass('hidden');
+        jQuery('#paso1').addClass('hidden');
+        jQuery('#paso_verificando').addClass('hidden');
+        jQuery('#paso0').removeClass('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       // function minus_cant(){
@@ -1527,7 +1940,6 @@
 
       // Forzar solo números y 11 dígitos en teléfonos
       (function enforceNumericPhones(){
-        // Teléfono del concursante
         const phoneInput = document.getElementById('pre_telefono');
         if(phoneInput) {
           const clampPhone = () => {
@@ -1537,26 +1949,7 @@
           phoneInput.addEventListener('keyup', clampPhone);
           phoneInput.addEventListener('change', clampPhone);
         }
-        
-        // Teléfono del emisor
-        const emisorPhoneInput = document.getElementById('pre_emisor_telefono');
-        if(emisorPhoneInput) {
-          const clampEmisorPhone = () => {
-            emisorPhoneInput.value = (emisorPhoneInput.value || '').replace(/[^0-9]/g, '').slice(0, 11);
-          };
-          emisorPhoneInput.addEventListener('input', clampEmisorPhone);
-          emisorPhoneInput.addEventListener('keyup', clampEmisorPhone);
-          emisorPhoneInput.addEventListener('change', clampEmisorPhone);
-        }
       })();
-
-      function validar_datos() {
-        // Validar que lo capturado en pasos previos está completo
-        const c = window.contestantData || {};
-        const e = window.emisorData || {};
-        const arr = [c.nombre_completo, c.cedula, c.telefono, c.correo, e.bank_code];
-        return arr.every(v => !!(v !== undefined && v !== null && String(v).trim() !== ''));
-      }
 
       function atras() {
         window.location.href = "{{config('app.url')}}";
@@ -1623,14 +2016,23 @@
           jQuery('#summary_contestant').html(contestantText);
         }
 
-        if (window.emisorData) {
-          const payerText = `Cédula: V-${window.emisorData.emisor_cedula}<br><small style="color: #94a3b8;">Telf: ${window.emisorData.emisor_telefono}</small>`;
-          jQuery('#summary_payer').html(payerText);
-          
-          // Obtener nombre del banco desde el select
-          const bankSelect = jQuery('#pre_bank_code');
-          const bankText = bankSelect.find('option:selected').text() || 'No seleccionado';
-          jQuery('#summary_bank').text(bankText.replace(/^\d{4} - /, ''));
+        const payerSummary = jQuery('#summary_payer');
+        const bankSummary = jQuery('#summary_bank');
+
+        if (payerSummary.length) {
+          if (paymentFlowMode === 'auto' && paymentPayerCedula) {
+            payerSummary.html(`Cédula: V-${paymentPayerCedula}`);
+          } else {
+            payerSummary.html('Será validado por el equipo de soporte');
+          }
+        }
+
+        if (bankSummary.length) {
+          if (paymentFlowMode === 'auto') {
+            bankSummary.text('Validación automática');
+          } else {
+            bankSummary.text('Pendiente');
+          }
         }
 
         // Total
@@ -1651,60 +2053,50 @@
       } 
 
       function finalizar_compra(_this) {
-        // Usar directamente los datos capturados en pasos anteriores
-        const archivo_pago = document.querySelector("#archivo_pago");
-
+        const archivo_pago = document.querySelector('#archivo_pago');
         const contestant = window.contestantData || {};
-        const emisor = window.emisorData || {};
-
-        const ref = jQuery("#ref").val();
-        const bank_code = emisor.bank_code;
         const metodoPagoId = window.selectedMetodoPagoId;
 
-        if(!ref) {
-          Swal.fire("Debes colocar la referencia");
-          return;
-        }
-        if(!bank_code) {
-          Swal.fire("Debes seleccionar el banco emisor");
-          return;
-        }
-        if(archivo_pago.files.length != 1) {
-          Swal.fire("Debes subir el capture bancario");
-          return;
-        }
-        if(!validar_datos()) {
-          Swal.fire("todos los campos son obligatorios");
-          return;
-        }
-
-        if(!metodoPagoId) {
+        if (!metodoPagoId) {
           Swal.fire('Selecciona un método de pago');
           return;
         }
 
-        // Normalizar payload a partir de los objetos ya capturados
-        const nombre_completo = (contestant.nombre_completo || '').trim();
-        const correo = (contestant.correo || '').trim();
-        const telefono = (contestant.telefono || '').trim();
-        const cedula = (contestant.cedula || '').trim();
-        const emisor_cedula = (emisor.emisor_cedula || '').trim();
-        const emisor_telefono = (emisor.emisor_telefono || telefono || '').trim();
+        if (!contestant.cedula || !contestant.nombre_completo || !contestant.telefono || !contestant.correo) {
+          Swal.fire('Completa los datos del concursante antes de continuar');
+          return;
+        }
+
+        const refRaw = jQuery('#ref').val().trim();
+        const refDigits = refRaw.replace(/[^0-9]/g, '').slice(-8);
+        if (!refDigits || refDigits.length !== 8) {
+          Swal.fire('La referencia bancaria debe tener 8 dígitos');
+          return;
+        }
+
+        if (!archivo_pago || archivo_pago.files.length !== 1) {
+          Swal.fire('Debes subir el comprobante de pago');
+          return;
+        }
+
+        const telefonoNormalizado = (contestant.telefono || '').replace(/[^0-9]/g, '').slice(0, 11);
 
         const formData = new FormData();
-        formData.append("raffle_id", {{$rifa->id}});
-        formData.append("nombre_completo", nombre_completo);
-        formData.append("correo", correo);
-        formData.append("tlf", telefono);
-        formData.append("cantidad", datos.cant_boletos);
-        formData.append("cedula", cedula);
-        formData.append("ref_banco", ref);
-        formData.append("bank_code", bank_code);
-        formData.append("metodo_pago_id", metodoPagoId);
-        if(emisor_cedula) formData.append("emisor_cedula", emisor_cedula);
-        if(emisor_telefono) formData.append("emisor_telefono", emisor_telefono);
-        if(PRE_ORDER_UUID){ formData.append("pre_order_uuid", PRE_ORDER_UUID); }
-        formData.append("ref_imagen", archivo_pago.files[0]);
+        formData.append('raffle_id', {{$rifa->id}});
+        formData.append('nombre_completo', (contestant.nombre_completo || '').trim());
+        formData.append('correo', (contestant.correo || '').trim());
+        formData.append('tlf', (contestant.telefono || '').trim());
+        formData.append('cantidad', datos.cant_boletos);
+        formData.append('cedula', (contestant.cedula || '').trim());
+        formData.append('ref_banco', refDigits);
+        formData.append('metodo_pago_id', metodoPagoId);
+        if (telefonoNormalizado.length === 11) {
+          formData.append('emisor_telefono', telefonoNormalizado);
+        }
+        if (PRE_ORDER_UUID) {
+          formData.append('pre_order_uuid', PRE_ORDER_UUID);
+        }
+        formData.append('ref_imagen', archivo_pago.files[0]);
 
         const linkGuardar = "{{config('app.url')}}/api/orderCliente";
         let UUID_COMPRA;
@@ -1769,12 +2161,94 @@
         });
       }
 
-      // Sincronizar resumen al cambiar el banco en Paso 0.5
-      jQuery('#pre_bank_code').on('change', function(){
-        if (!window.emisorData) window.emisorData = {};
-        window.emisorData.bank_code = this.value;
-        try { updateSummary(); } catch (e) {}
+      async function finalizar_compra_auto(button) {
+        const contestant = window.contestantData || {};
+        if (!contestant.cedula || !contestant.telefono || !contestant.nombre_completo) {
+          Swal.fire('Completa los datos del concursante antes de continuar');
+          return;
+        }
+
+        if (!window.selectedMetodoPagoId) {
+          Swal.fire('Selecciona un método de pago');
+          return;
+        }
+
+        if (!paymentPayerCedula) {
+          Swal.fire('Ingresa la cédula del pagador para continuar');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('raffle_id', {{$rifa->id}});
+        formData.append('nombre_completo', (contestant.nombre_completo || '').trim());
+        formData.append('correo', (contestant.correo || '').trim());
+        formData.append('tlf', (contestant.telefono || '').trim());
+        formData.append('cantidad', datos.cant_boletos);
+        formData.append('cedula', (contestant.cedula || '').trim());
+        formData.append('metodo_pago_id', window.selectedMetodoPagoId);
+        formData.append('emisor_cedula', paymentPayerCedula);
+        const telefonoNormalizado = (contestant.telefono || '').replace(/[^0-9]/g, '').slice(0, 11);
+        if (telefonoNormalizado.length === 11) {
+          formData.append('emisor_telefono', telefonoNormalizado);
+        }
+        if (PRE_ORDER_UUID) {
+          formData.append('pre_order_uuid', PRE_ORDER_UUID);
+        }
+
+        button.disabled = true;
+        const originalLabel = button.innerHTML;
+        button.innerHTML = `
+          <span class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-spinner fa-spin me-2"></i>
+            Registrando pago...
+          </span>
+        `;
+
+        try {
+          const resp = await fetch('{{config('app.url')}}/api/orderCliente', {
+            method: 'POST',
+            cache: 'no-cache',
+            body: formData
+          });
+          const res = await resp.json();
+          if (res.success === true) {
+            const uuid = res.compra?.uuid || null;
+            Swal.fire({
+              icon: 'success',
+              title: '¡Pago registrado! ',
+              text: 'Estamos validando tu pago automáticamente.',
+              timer: 1800,
+              showConfirmButton: false
+            }).then(() => {
+              showVerificationScreen(uuid);
+            });
+            button.disabled = false;
+            button.innerHTML = originalLabel;
+          } else {
+            let errorMessage = res.message || 'Error en la validación';
+            if (res.errors && typeof res.errors === 'object') {
+              const firstError = Object.values(res.errors)[0];
+              if (Array.isArray(firstError) && firstError.length > 0) {
+                errorMessage = firstError[0];
+              }
+            }
+            Swal.fire({ icon: 'error', title: 'Error', text: errorMessage });
+            button.disabled = false;
+            button.innerHTML = originalLabel;
+          }
+        } catch (error) {
+          Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar el pago. Inténtalo nuevamente.' });
+          button.disabled = false;
+          button.innerHTML = originalLabel;
+        }
+      }
+
+      jQuery('#btn_auto_paid').on('click', function() {
+        finalizar_compra_auto(this);
       });
+
+      jQuery('#btn_auto_back').on('click', goBackToStep0);
+      jQuery('#btn_manual_back').on('click', goBackToStep0);
 
       function showTickets(uuid) {
         let timeLeft = 5;
@@ -1999,6 +2473,28 @@
             }
           });
         });
+      });
+
+      // Tooltip toggle function for info icons
+      function toggleTooltip(element) {
+        // Close all other tooltips first
+        document.querySelectorAll('.info-tooltip.active').forEach(function(tooltip) {
+          if (tooltip !== element) {
+            tooltip.classList.remove('active');
+          }
+        });
+
+        // Toggle current tooltip
+        element.classList.toggle('active');
+      }
+
+      // Close tooltips when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('.info-tooltip')) {
+          document.querySelectorAll('.info-tooltip.active').forEach(function(tooltip) {
+            tooltip.classList.remove('active');
+          });
+        }
       });
     </script>
   </body>
