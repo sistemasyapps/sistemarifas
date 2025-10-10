@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Order;
+use App\Jobs\CreateTickets;
 use App\Models\PreOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ApproveOrderJob implements ShouldQueue
 {
@@ -31,9 +33,27 @@ class ApproveOrderJob implements ShouldQueue
 
         // Ensure tickets assigned match quantity
         if ($order->numbers_count !== $order->cantidad) {
-            // requeue to wait for ticket assignment
-            $this->release($this->backoff);
-            return;
+            try {
+                // Regenerar tickets de forma síncrona como fallback
+                $order->numbers()->delete();
+                (new CreateTickets($order))->handle();
+            } catch (\Throwable $e) {
+                Log::warning('ApproveOrderJob: error regenerando tickets', [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+
+            $order = Order::withCount('numbers')->with(['client','raffle'])->find($this->orderId);
+            if (!$order) return;
+
+            if ($order->numbers_count !== $order->cantidad) {
+                // still inconsistent -> requeue if running through queue, otherwise abort
+                if (isset($this->job)) {
+                    $this->release($this->backoff);
+                }
+                return;
+            }
         }
 
         // Check related pre-order state (if any)
@@ -58,7 +78,34 @@ class ApproveOrderJob implements ShouldQueue
 
         // Pending case: R4notifica llegó antes -> pendiente_por_orden con '00'
         if (($pre->estatus_preorden ?? null) === 'pendiente_por_orden' && ($pre->codigo_red ?? null) === '00') {
-            // Require strict match: reference, bank last3, and phone
+            // PRIMERO: Copiar datos de pago de pre-orden a orden si llegaron antes que la orden
+            $orderUpdated = false;
+            if (empty($order->ref_banco) && !empty($pre->ref_banco)) {
+                $order->ref_banco = $pre->ref_banco;
+                $orderUpdated = true;
+            }
+            if (empty($order->bank_code) && !empty($pre->bank_code)) {
+                $order->bank_code = $pre->bank_code;
+                $orderUpdated = true;
+            }
+            if (empty($order->emisor_cedula) && !empty($pre->cedula)) {
+                $order->emisor_cedula = $pre->cedula;
+                $orderUpdated = true;
+            }
+            if (empty($order->emisor_telefono) && !empty($pre->telefono_emisor)) {
+                $order->emisor_telefono = $pre->telefono_emisor;
+                $orderUpdated = true;
+            }
+
+            if ($orderUpdated) {
+                $order->save();
+                // Refrescar variables de validación con los nuevos valores
+                $ordRef = (string) $order->ref_banco;
+                $ordBank3 = substr((string) $order->bank_code, -3);
+                $ordPhone = preg_replace('/[^0-9]/', '', (string) ($order->client->telefono ?? ''));
+            }
+
+            // LUEGO: Validar con los datos actualizados
             $refOk = ($preRef !== '' && $ordRef === $preRef);
             $bankOk = ($preBank3 !== '' && $ordBank3 === $preBank3);
             $phoneOk = ($prePhone !== '' && $ordPhone === $prePhone);

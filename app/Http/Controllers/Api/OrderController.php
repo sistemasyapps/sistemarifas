@@ -259,11 +259,7 @@ class OrderController extends Controller
         // }
 
         Log::info('Creando numeros');
-        try{
-            CreateTickets::dispatch($order);
-        } catch(Exception $e) {
-            Log::error("Error al crear numeros en la orden ".$e->getMessage());
-        }
+        $this->dispatchTicketsNow($order);
 
         // Programar aprobación post-asignación de tickets (maneja ambos casos: R4notifica antes o después)
         try {
@@ -271,6 +267,7 @@ class OrderController extends Controller
         } catch (\Throwable $e) {
             // best-effort; no romper el flujo al usuario
         }
+        $this->runApproveJobNow($order->id);
 
         Log::info('Termina la creacion de datos');
 
@@ -436,7 +433,7 @@ class OrderController extends Controller
 
             if($cantidadAnterior == $cantidadNueva){
                 $order->numbers()->delete();
-                CreateTickets::dispatch($order);
+                $this->dispatchTicketsNow($order);
             }
             
             if($cantidadAnterior > $cantidadNueva){
@@ -448,7 +445,7 @@ class OrderController extends Controller
                 //borrar los numeros que ya tiene asignado
                 $order->numbers()->delete();
 
-                CreateTickets::dispatch($order);
+                $this->dispatchTicketsNow($order);
             }
 
             if($cantidadAnterior < $cantidadNueva){
@@ -472,11 +469,7 @@ class OrderController extends Controller
 
                     //vuelvo a crear los tickets 
                     Log::info('Creando numeros');
-                    try{
-                        CreateTickets::dispatch($order);
-                    } catch(Exception $e) {
-                        Log::error("Error al crear numeros en la orden ".$e->getMessage());
-                    }
+                    $this->dispatchTicketsNow($order);
                 }
             }
 
@@ -491,6 +484,105 @@ class OrderController extends Controller
             'success' => true, 
             'message' => 'Orden modificada con exito'
         ]);
+    }
+
+    public function status(string $uuid)
+    {
+        $order = Order::with([
+                'numbers' => function ($query) {
+                    $query->orderBy('numero_generado');
+                },
+                'raffle:id,nombre,precio'
+            ])
+            ->where('uuid', $uuid)
+            ->first();
+
+        if (! $order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Orden no encontrada.',
+            ], 404);
+        }
+
+        $preOrderStatus = null;
+        if ($order->pre_order_id) {
+            $preOrderStatus = optional(
+                PreOrder::select('estatus_preorden')->find($order->pre_order_id)
+            )->estatus_preorden;
+        }
+
+        $statusLabels = [
+            '0' => 'pendiente',
+            '1' => 'aprobada',
+            '2' => 'cancelada',
+            '9' => 'devuelta',
+        ];
+
+        $numbers = $order->numbers
+            ->pluck('numero_generado')
+            ->map(fn ($value) => trim((string) $value))
+            ->filter(fn ($value) => $value !== '')
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+
+        return response()->json([
+            'success' => true,
+            'order' => [
+                'id' => $order->id,
+                'uuid' => $order->uuid,
+                'estatus' => $order->estatus,
+                'estatus_label' => $statusLabels[$order->estatus] ?? 'desconocido',
+                'cantidad' => $order->cantidad,
+                'pre_order_status' => $preOrderStatus,
+                'created_at' => optional($order->created_at)->toIso8601String(),
+                'updated_at' => optional($order->updated_at)->toIso8601String(),
+                'numbers' => $numbers,
+                'links' => [
+                    'ticket' => url('/ticket/'.$order->uuid),
+                    'order' => url('/orden/'.$order->uuid),
+                ],
+                'raffle' => $order->raffle ? [
+                    'id' => $order->raffle->id,
+                    'nombre' => $order->raffle->nombre,
+                    'precio' => $order->raffle->precio,
+                ] : null,
+            ],
+        ]);
+    }
+
+    private function dispatchTicketsNow(Order $order): void
+    {
+        try {
+            CreateTickets::dispatch($order);
+        } catch (Exception $e) {
+            Log::error("Error al crear numeros en la orden ".$e->getMessage());
+        }
+
+        try {
+            $orderForTickets = $order->fresh(['raffle']);
+            if ($orderForTickets) {
+                (new CreateTickets($orderForTickets))->handle();
+            }
+        } catch (\Throwable $e) {
+            Log::warning('CreateTickets inline fallback falló', [
+                'order_id' => $order->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    private function runApproveJobNow(int $orderId): void
+    {
+        try {
+            (new \App\Jobs\ApproveOrderJob($orderId))->handle();
+        } catch (\Throwable $e) {
+            Log::warning('ApproveOrderJob inline fallback falló', [
+                'order_id' => $orderId,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 
     private function normalizarTelefono($telefono) {

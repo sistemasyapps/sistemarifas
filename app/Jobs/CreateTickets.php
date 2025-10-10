@@ -31,20 +31,51 @@ class CreateTickets implements ShouldQueue
      */
     public function handle(): void
     {
-        if($this->order->estatus != 2){
-            try{
-                Log::info('Creando numeros en CreateTickets');
-                $numbers = $this->generateUniqueNumber($this->order->raffle_id, $this->order->cantidad, $this->order->raffle->cantidad_max);
+        if ($this->order->estatus == 2) {
+            return;
+        }
 
-                foreach ($numbers as $number) {
-                    $this->order->numbers()->create([
-                        'numero_generado' => $number,
-                        'raffle_id'=> $this->order->raffle_id
-                    ]);
-                }
-            } catch(Exception $e) {
-                Log::error("Error al crear numeros en la orden ".$e->getMessage());
+        try {
+            $this->order->loadMissing('raffle');
+            if (!$this->order->raffle) {
+                Log::warning('CreateTickets: orden sin rifa asociada', [
+                    'order_id' => $this->order->id ?? null,
+                ]);
+                return;
             }
+
+            $currentCount = $this->order->numbers()->count();
+            if ($currentCount >= $this->order->cantidad) {
+                // Números ya asignados; no reproducirlos.
+                return;
+            }
+
+            if ($currentCount > 0) {
+                // Estado inconsistente: regenerar desde cero para evitar duplicados.
+                $this->order->numbers()->delete();
+            }
+
+            Log::info('Creando numeros en CreateTickets', [
+                'order_id' => $this->order->id ?? null,
+            ]);
+
+            $numbers = $this->generateUniqueNumber(
+                $this->order->raffle_id,
+                $this->order->cantidad,
+                $this->order->raffle->cantidad_max
+            );
+
+            foreach ($numbers as $number) {
+                $this->order->numbers()->create([
+                    'numero_generado' => $number,
+                    'raffle_id' => $this->order->raffle_id,
+                ]);
+            }
+        } catch (Exception $e) {
+            Log::error('Error al crear numeros en la orden', [
+                'order_id' => $this->order->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 

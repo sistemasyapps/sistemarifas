@@ -110,13 +110,16 @@ class R4WebhookController extends Controller
         if ($cedulaPagador !== '' && is_numeric($monto)) {
             $preCedula = PreOrder::with('metodoPago')
                 ->where('created_at', '>=', now()->subDay())
-                ->whereIn('estatus_preorden', [null, 'pendiente_por_orden'])
+                ->where(function ($query) {
+                    $query->whereNull('estatus_preorden')
+                        ->orWhere('estatus_preorden', 'pendiente_por_orden');
+                })
                 ->where('cedula', $cedulaPagador)
                 ->where('monto', round((float) $monto, 2))
                 ->latest('id')
                 ->first();
 
-            if ($preCedula && $this->preOrderRequiresCedula($preCedula)) {
+            if ($preCedula) {
                 $this->handleCedulaBasedNotification($preCedula, [
                     'codigoRed' => $codigoRed,
                     'ref_digits' => $refDigits,
@@ -132,112 +135,6 @@ class R4WebhookController extends Controller
 
                 return response()->json(['abono' => true]);
             }
-        }
-
-        // Si el código no es 00, actualizar (pendiente) y terminar
-        if ($codigoRed !== '00') {
-            // Buscar pre-orden por referencia si ya existe, o por monto + banco (3 últimos dígitos) + vigencia
-            $banco3 = substr($banco, -3);
-            $pre = null;
-            if ($refDigits !== '') {
-                $pre = PreOrder::where('ref_banco', $refDigits)
-                    ->where('telefono', $telEmi)
-                    ->whereNull('estatus_preorden')
-                    ->latest('id')->first();
-            }
-            if (!$pre) {
-                $pre = PreOrder::query()
-                    ->whereNull('estatus_preorden')
-                    ->where('telefono', $telEmi)
-                    ->where('monto', is_numeric($monto) ? round((float)$monto, 2) : -1)
-                    ->where('bank_code_last3', $banco3)
-                    ->where('created_at', '>=', now()->subDay())
-                    ->latest('id')
-                    ->first();
-            }
-
-            if ($pre) {
-                // estatus_preorden ya fue filtrado (solo nulos). No reprocesar estados asignados
-                $pre->codigo_red = $codigoRed;
-                $pre->codigo_red_texto = $codigos[$codigoRed] ?? null;
-                $pre->ref_banco = $refDigits ?: $pre->ref_banco;
-                $pre->id_comercio = $idComercio ?: $pre->id_comercio;
-                $pre->telefono_comercio = $telCom ?: $pre->telefono_comercio;
-                $pre->telefono_emisor = preg_replace('/[^0-9]/', '', (string)$telefonoEmisor) ?: $pre->telefono_emisor;
-                $pre->concepto = $concepto ?: $pre->concepto;
-                $pre->banco_emisor = substr($banco ?? '', 0, 3) ?: $pre->banco_emisor;
-                if (is_numeric($monto)) {
-                    $pre->monto_notificado = round((float)$monto, 2);
-                }
-                $pre->fecha_hora = (strtotime($fechaHora) ? date('Y-m-d H:i:s', strtotime($fechaHora)) : now());
-                $pre->save();
-                // Establecer estatus interno pendiente_por_orden si aún no tiene
-                if (empty($pre->estatus_preorden)) {
-                    $pre->estatus_preorden = 'pendiente_por_orden';
-                    $pre->save();
-                }
-                return response()->json(['abono' => true]);
-            }
-            return response()->json(['abono' => false]);
-        }
-
-        // No se procesan Orders en este flujo. Solo pre_ordenes.
-
-        // 2) Marcar la pre_orden correspondiente (sin tocar Orders)
-        // Criterio: referencia exacta (si pre ya la tiene, debe coincidir), monto exacto, banco emisor (3 últimos dígitos de bank_code), vigencia 24h
-        $banco3 = substr($banco, -3);
-        $pre = PreOrder::query()
-            ->where('created_at', '>=', now()->subDay())
-            ->whereNull('estatus_preorden')
-            ->where('telefono', $telEmi)
-            ->where('monto', is_numeric($monto) ? round((float)$monto, 2) : -1)
-            ->where('bank_code_last3', $banco3)
-            ->latest('id')
-            ->first();
-
-        if ($pre) {
-            // Si la pre ya tiene referencia y no coincide, no avanzar a aprobación
-            if (!empty($pre->ref_banco) && $pre->ref_banco !== $refDigits) {
-                $pre->codigo_red = $codigoRed;
-                $pre->codigo_red_texto = $codigos[$codigoRed] ?? null;
-                $pre->fecha_hora = (strtotime($fechaHora) ? date('Y-m-d H:i:s', strtotime($fechaHora)) : now());
-                $pre->save();
-                return response()->json(['abono' => false]);
-            }
-
-            // Persistir datos del payload
-            $pre->ref_banco = $refDigits ?: $pre->ref_banco;
-            $pre->codigo_red = $codigoRed ?: $pre->codigo_red;
-            $pre->codigo_red_texto = $codigos[$codigoRed] ?? null;
-            $pre->fecha_hora = (strtotime($fechaHora) ? date('Y-m-d H:i:s', strtotime($fechaHora)) : now());
-            if (is_numeric($monto)) {
-                $pre->monto_notificado = round((float)$monto, 2);
-            }
-            $pre->id_comercio = $idComercio ?: $pre->id_comercio;
-            $pre->telefono_comercio = $telCom ?: $pre->telefono_comercio;
-            $pre->telefono_emisor = preg_replace('/[^0-9]/', '', (string)$telefonoEmisor) ?: $pre->telefono_emisor;
-            $pre->concepto = $concepto ?: $pre->concepto;
-            $pre->banco_emisor = substr($banco ?? '', 0, 3) ?: $pre->banco_emisor;
-
-            // Si hay una Order no aprobada con esta referencia, marcamos preorden como aprobada, si no, queda pendiente_por_orden
-            $order = \App\Models\Order::where('ref_banco', $refDigits)
-                ->whereRaw('RIGHT(bank_code,3) = ?', [$banco3])
-                ->where('emisor_telefono', $telEmi)
-                ->where('estatus', '<>', '1')
-                ->latest('id')
-                ->first();
-            if ($order) {
-                $pre->estatus_preorden = 'aprobada';
-                $pre->notificado = true;
-                $pre->notificado_at = now();
-                // Programar aprobación post-asignación de tickets
-                try { \App\Jobs\ApproveOrderJob::dispatch($order->id)->delay(now()->addSeconds(5)); } catch (\Throwable $e) {}
-            } else {
-                $pre->estatus_preorden = 'pendiente_por_orden';
-            }
-
-            $pre->save();
-            return response()->json(['abono' => true]);
         }
 
         Log::warning('R4notifica sin pre_orden u orden', ['Banco' => $banco, 'Referencia' => $refDigits, 'Monto' => $monto]);
@@ -335,6 +232,15 @@ class R4WebhookController extends Controller
                     \App\Jobs\ApproveOrderJob::dispatch($order->id)->delay(now()->addSeconds(5));
                 } catch (\Throwable $e) {
                     // best effort
+                }
+
+                try {
+                    (new \App\Jobs\ApproveOrderJob($order->id))->handle();
+                } catch (\Throwable $e) {
+                    Log::warning('ApproveOrderJob inline fallback falló', [
+                        'order_id' => $order->id,
+                        'error' => $e->getMessage(),
+                    ]);
                 }
             } else {
                 $pre->estatus_preorden = 'pendiente_por_orden';

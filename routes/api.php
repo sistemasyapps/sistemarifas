@@ -22,6 +22,7 @@ Route::post('/orderAdmin/{order}/cancel', [OrderController::class, 'cancel']);
 Route::post('/orderAdmin/{order}/returnOrder', [OrderController::class, 'returnOrder']);
 Route::post('/orderAdmin/{order}/delete', [OrderController::class, 'delete']);
 Route::post('/orderAdmin/{order}/modifyOrder', [OrderController::class, 'modifyOrder']);
+Route::get('/order-status/{uuid}', [OrderController::class, 'status']);
 
 Route::get('/getBarra/{raffle?}', [OrderController::class,'getBarra'])->name("barraRealTime");
 

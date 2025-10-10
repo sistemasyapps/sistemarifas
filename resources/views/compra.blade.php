@@ -771,6 +771,37 @@
       }
     </style>
     
+    <style>
+      .ticket-chip-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
+
+      .ticket-chip {
+        background: rgba(16, 185, 129, 0.18);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.45);
+        border-radius: 9999px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25);
+        text-transform: uppercase;
+      }
+
+      .order-approved-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2.5rem;
+      }
+    </style>
+    
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-56EB9E6237"></script>
     <script>
@@ -1029,28 +1060,18 @@
               <div class="wpb_column container-fluid vc_col-sm-12">
                 <div class="vc_column-inner">
                   <div class="wpb_wrapper">
-                    <div class="vc_separator wpb_content_element vc_separator_align_center vc_sep_width_100 vc_sep_border_width_2 vc_sep_pos_align_center vc_separator_no_text vc_sep_color_white vc_custom_1712884726693  vc_custom_1712884726693" ><span class="vc_sep_holder vc_sep_holder_l"><span class="vc_sep_line"></span></span><span class="vc_sep_holder vc_sep_holder_r"><span class="vc_sep_line"></span></span>
-                    </div>
-                    <div class="wpb_raw_code wpb_content_element wpb_raw_html" >
-                      <p class="wpb_wrapper">
-                        <h2 style="text-align: center;"> GRACIAS POR SU COMPRA </h2>
-                        <p>Hemos recibido su compra satisfactoriamente, una vez nuestro equipo verifique el pago en un lapso de 24 a 36 horas, recibirás un mensaje vía WhatsApp y a tu correo electrónico donde conocerás tus tickets asignados.</p>
-                      </div>
-                    </div>
-                    <div class="vc_separator wpb_content_element vc_separator_align_center vc_sep_width_100 vc_sep_border_width_2 vc_sep_pos_align_center vc_separator_no_text vc_sep_color_white vc_custom_1712884726693  vc_custom_1712884726693" ><span class="vc_sep_holder vc_sep_holder_l"><span class="vc_sep_line"></span></span><span class="vc_sep_holder vc_sep_holder_r"><span class="vc_sep_line"></span></span>
-                    </div>
-                    <div class="vc_row wpb_row vc_inner vc_row-fluid">
-                      <div class="wpb_column container-fluid vc_col-sm-6">
-                        <div class="vc_column-inner">
-                          <div class="wpb_wrapper">
-                            <div class="vc_btn3-container vc_btn3-center" ><button class="vc_general vc_btn3 vc_btn3-size-lg vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-block vc_btn3-color-danger" onclick="atras()">Ir al Inicio</button></div>
+                    <div class="modern-card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border-radius: 20px; border: 1px solid rgba(148, 163, 184, 0.2); box-shadow: 0 30px 50px -12px rgba(0, 0, 0, 0.55);">
+                      <div class="card-body text-center" style="padding: 2.75rem 2.25rem;">
+                        <div id="order_result_content">
+                          <div class="mb-4">
+                            <i class="fas fa-clock" style="font-size: 3rem; color: #fbbf24;"></i>
                           </div>
-                        </div>
-                      </div>
-                      <div class="wpb_column container-fluid vc_col-sm-6">
-                        <div class="vc_column-inner">
-                          <div class="wpb_wrapper">
-                            <div class="vc_btn3-container  disabled vc_btn3-center" ><button class="vc_general vc_btn3 vc_btn3-size-lg vc_btn3-shape-rounded vc_btn3-style-flat vc_btn3-block vc_btn3-icon-right vc_btn3-color-success" onclick="volver_comprar()">Volver a Comprar <i class="vc_btn3-icon far fa-money-bill-alt"></i></button></div>
+                          <h2 class="text-white mb-3" style="font-weight: 700;">Estamos preparando tu confirmación</h2>
+                          <p class="text-slate-300" style="font-size: 1rem;">En cuanto el banco confirme tu pago, verás aquí tus números asignados y un enlace directo para consultarlos.</p>
+                          <div class="order-approved-actions">
+                            <button class="btn btn-outline-light" type="button" onclick="volver_comprar()">
+                              <i class="fas fa-shopping-cart me-2"></i>Hacer otra compra
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -1059,7 +1080,7 @@
                 </div>
               </div>
             </div>
-          </div>      
+          </div>
         </div>
       </article>
       <div class="vc_row-full-width vc_clearfix"></div>
@@ -1196,6 +1217,14 @@
       window.paymentPayerCedula = paymentPayerCedula;
       let currentOrderUuid = null;
       window.currentOrderUuid = currentOrderUuid;
+      let orderStatusInterval = null;
+      window.orderStatusInterval = orderStatusInterval;
+      const ORDER_STATUS_ENDPOINT = {!! json_encode(url('/api/order-status')) !!};
+      const ORDER_TICKET_BASE = {!! json_encode(url('/ticket')) !!};
+      const ORDER_VIEW_BASE = {!! json_encode(url('/orden')) !!};
+      const orderResultContainer = document.getElementById('order_result_content');
+      const defaultOrderResultHtml = orderResultContainer ? orderResultContainer.innerHTML : '';
+      const ORDER_STATUS_INTERVAL_MS = 5000;
       const proximoSorteoMensaje = @json($rifa->mensaje_proximo_sorteo);
       const proximoSorteoFecha = @json($fechaInicialProximoSorteo);
       let paymentDataTemplate = '';
@@ -1768,17 +1797,200 @@
         return fd;
       }
 
+      function escapeHtml(value) {
+        if (value === null || value === undefined) {
+          return '';
+        }
+        return String(value)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function shortUuid(uuid) {
+        if (!uuid) return '';
+        const str = String(uuid);
+        return str.length > 6 ? str.slice(-6) : str;
+      }
+
+      function formatDateTime(value) {
+        if (!value) return '';
+        try {
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) {
+            return '';
+          }
+          return date.toLocaleString('es-VE', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+        } catch (error) {
+          return '';
+        }
+      }
+
+      function renderTicketChips(numbers) {
+        if (!Array.isArray(numbers) || numbers.length === 0) {
+          return '<p class="text-slate-300 mt-3">Tus números se están generando. Esta pantalla se actualizará automáticamente.</p>';
+        }
+
+        const chips = numbers
+          .map((value) => `<span class="ticket-chip">${escapeHtml(value)}</span>`)
+          .join('');
+
+        return `<div class="ticket-chip-container">${chips}</div>`;
+      }
+
+      function stopOrderStatusPolling() {
+        if (orderStatusInterval) {
+          clearInterval(orderStatusInterval);
+          orderStatusInterval = null;
+          window.orderStatusInterval = orderStatusInterval;
+        }
+      }
+
+      function startOrderStatusPolling(uuid) {
+        stopOrderStatusPolling();
+        if (!uuid) return;
+
+        const poll = () => {
+          checkOrderStatus(uuid);
+        };
+
+        poll();
+        orderStatusInterval = setInterval(poll, ORDER_STATUS_INTERVAL_MS);
+        window.orderStatusInterval = orderStatusInterval;
+      }
+
+      async function checkOrderStatus(uuid) {
+        if (!uuid) return;
+
+        try {
+          const resp = await fetch(`${ORDER_STATUS_ENDPOINT}/${encodeURIComponent(uuid)}?t=${Date.now()}`, {
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store',
+          });
+
+          if (!resp.ok) {
+            return;
+          }
+
+          const payload = await resp.json();
+          if (!payload?.success || !payload.order) {
+            return;
+          }
+
+          const status = payload.order.estatus;
+          if (status === '1') {
+            showOrderApproved(payload.order);
+          } else if (status === '2' || status === '9') {
+            showOrderCanceled(payload.order);
+          }
+        } catch (error) {
+          console.warn('No fue posible consultar el estado de la orden', error);
+        }
+      }
+
+      function showOrderApproved(order) {
+        stopOrderStatusPolling();
+        jQuery('#paso_verificando').addClass('hidden');
+        jQuery('#paso_final').removeClass('hidden');
+        currentOrderUuid = null;
+        window.currentOrderUuid = currentOrderUuid;
+
+        if (!orderResultContainer) {
+          return;
+        }
+
+        const uuid = order?.uuid || '';
+        const shortId = shortUuid(uuid);
+        const approvalDate = formatDateTime(order?.updated_at);
+        const numbersHtml = renderTicketChips(order?.numbers || []);
+        const ticketLink = order?.links?.ticket || (uuid ? `${ORDER_TICKET_BASE}/${encodeURIComponent(uuid)}` : null);
+        const orderLink = order?.links?.order || (uuid ? `${ORDER_VIEW_BASE}/${encodeURIComponent(uuid)}` : null);
+        const statusLabel = order?.estatus_label ? escapeHtml(order.estatus_label) : 'aprobada';
+        const dateText = approvalDate ? ` el ${escapeHtml(approvalDate)}` : '';
+
+        const actions = [
+          orderLink ? `<a class="btn btn-success" href="${orderLink}" target="_blank" rel="noopener"><i class="fas fa-receipt me-2"></i>Ver detalles</a>` : '',
+          '<button class="btn btn-outline-light" type="button" onclick="volver_comprar()"><i class="fas fa-shopping-cart me-2"></i>Hacer otra compra</button>',
+        ].filter(Boolean).join('');
+
+        orderResultContainer.innerHTML = `
+          <div class="mb-4">
+            <i class="fas fa-check-circle" style="font-size: 3rem; color: #10b981;"></i>
+          </div>
+          <h2 class="text-white mb-3" style="font-weight: 700;">¡Pago verificado!</h2>
+          <p class="text-slate-300" style="font-size: 1rem;">
+            Tu compra <strong>#${escapeHtml(shortId || uuid)}</strong> fue ${statusLabel}${dateText}.
+          </p>
+          ${numbersHtml}
+          <div class="order-approved-actions">
+            ${actions}
+          </div>
+        `;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function showOrderCanceled(order) {
+        stopOrderStatusPolling();
+        jQuery('#paso_verificando').addClass('hidden');
+        jQuery('#paso_final').removeClass('hidden');
+        currentOrderUuid = null;
+        window.currentOrderUuid = currentOrderUuid;
+
+        if (!orderResultContainer) {
+          return;
+        }
+
+        const uuid = order?.uuid || '';
+        const shortId = shortUuid(uuid);
+        const ticketLink = order?.links?.ticket || (uuid ? `${ORDER_TICKET_BASE}/${encodeURIComponent(uuid)}` : null);
+        const statusLabel = order?.estatus_label ? escapeHtml(order.estatus_label) : 'pendiente';
+
+        orderResultContainer.innerHTML = `
+          <div class="mb-4">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f97316;"></i>
+          </div>
+          <h2 class="text-white mb-3" style="font-weight: 700;">Pago en revisión manual</h2>
+          <p class="text-slate-300" style="font-size: 1rem;">
+            La orden <strong>#${escapeHtml(shortId || uuid)}</strong> quedó en estado <strong>${statusLabel}</strong>.
+            Nuestro equipo la revisará y te notificará por correo o WhatsApp. Si ya tienes comprobante, escríbenos por soporte.
+          </p>
+          <div class="order-approved-actions">
+            ${ticketLink ? `<a class="btn btn-outline-light" href="${ticketLink}" target="_blank" rel="noopener"><i class="fas fa-ticket-alt me-2"></i>Ver tickets</a>` : ''}
+            <button class="btn btn-outline-light" type="button" onclick="volver_comprar()"><i class="fas fa-shopping-cart me-2"></i>Hacer otra compra</button>
+          </div>
+        `;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
       function showVerificationScreen(uuid) {
         currentOrderUuid = uuid || null;
         window.currentOrderUuid = currentOrderUuid;
+        if (orderResultContainer) {
+          orderResultContainer.innerHTML = defaultOrderResultHtml;
+        }
+        stopOrderStatusPolling();
         const uuidLabel = document.getElementById('verificando_uuid');
         if (uuidLabel) {
           uuidLabel.textContent = uuid
-            ? `Tu compra #${uuid} está en revisión. Recibirás una notificación en cuanto el pago sea aprobado.`
+            ? `Tu compra #${shortUuid(uuid)} está en revisión. Recibirás una notificación en cuanto el pago sea aprobado.`
             : 'Estamos confirmando tu pago con el banco. Recibirás una notificación automática apenas se apruebe.';
         }
         jQuery('#paso0').addClass('hidden');
+        jQuery('#paso_final').addClass('hidden');
         jQuery('#paso_verificando').removeClass('hidden');
+        if (uuid) {
+          startOrderStatusPolling(uuid);
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
@@ -1797,6 +2009,10 @@
         window.PRE_ORDER_UUID = PRE_ORDER_UUID;
         currentOrderUuid = null;
         window.currentOrderUuid = currentOrderUuid;
+        stopOrderStatusPolling();
+        if (orderResultContainer) {
+          orderResultContainer.innerHTML = defaultOrderResultHtml;
+        }
         setPreOrderRequestState(false);
 
         jQuery('#pre_cedula').val('');
