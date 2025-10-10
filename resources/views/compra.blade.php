@@ -2639,20 +2639,27 @@
                 const checkIcon = document.createElement('div');
                 checkIcon.className = 'field-valid-icon';
                 checkIcon.innerHTML = '<i class="fas fa-check-circle text-success"></i>';
-                checkIcon.style.cssText = `
-                  position: absolute;
-                  right: 15px;
-                  top: 50%;
-                  transform: translateY(-50%);
-                  z-index: 10;
-                  pointer-events: none;
-                `;
-                
+
                 // Make parent relative if not already
                 if (getComputedStyle(this.parentNode).position === 'static') {
                   this.parentNode.style.position = 'relative';
                 }
-                
+
+                // Calculate the position of the input within its parent
+                const inputRect = this.getBoundingClientRect();
+                const parentRect = this.parentNode.getBoundingClientRect();
+                const inputTopRelativeToParent = inputRect.top - parentRect.top;
+                const inputCenterY = inputTopRelativeToParent + (inputRect.height / 2);
+
+                checkIcon.style.cssText = `
+                  position: absolute;
+                  right: 15px;
+                  top: ${inputCenterY}px;
+                  transform: translateY(-50%);
+                  z-index: 10;
+                  pointer-events: none;
+                `;
+
                 this.parentNode.appendChild(checkIcon);
               }
             } else {
