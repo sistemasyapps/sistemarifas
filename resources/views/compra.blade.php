@@ -2269,7 +2269,12 @@
           return;
         }
 
-        if (!archivo_pago || archivo_pago.files.length !== 1) {
+        const requiresPaymentProof = paymentFlowMode !== 'auto';
+        const archivoPagoFile = archivo_pago && archivo_pago.files.length > 0
+          ? archivo_pago.files[0]
+          : null;
+
+        if (requiresPaymentProof && !archivoPagoFile) {
           Swal.fire('Debes subir el comprobante de pago');
           return;
         }
@@ -2291,7 +2296,9 @@
         if (paymentFlowMode === 'auto' && PRE_ORDER_UUID) {
           formData.append('pre_order_uuid', PRE_ORDER_UUID);
         }
-        formData.append('ref_imagen', archivo_pago.files[0]);
+        if (archivoPagoFile) {
+          formData.append('ref_imagen', archivoPagoFile);
+        }
 
         const linkGuardar = "{{config('app.url')}}/api/orderCliente";
         let UUID_COMPRA;

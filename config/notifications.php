@@ -16,7 +16,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'whatsapp' => [
-        'enabled' => env('NOTIFICATIONS_WHATSAPP_ENABLED', false),
+        'enabled' => env('NOTIFICATIONS_WHATSAPP_ENABLED', true),
     ],
 
     /*

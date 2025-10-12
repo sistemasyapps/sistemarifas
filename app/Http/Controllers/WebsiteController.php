@@ -27,18 +27,7 @@ class WebsiteController extends Controller
             return [$raffle->id => $this->getBarraOptimizado($raffle)];
         });
 
-        $staticData = Cache::remember('home_static_data', 1440, function() {
-            $options = Option::All()->pluck('valor', 'clave');
-            $whatsapp = $options->get('Whatsapp');
-            $logo = $options->get('logo');
-
-            return [
-                'whatsapp' => $whatsapp,
-                'logo' => $logo,
-                'patrocinadores' => Sponsor::all(['id', 'nombre', 'imagen']),
-                'rrss' => Rrss::where("estatus",1)->get(['id', 'tipo', 'link'])
-            ];
-        });
+        $staticData = $this->getHomeStaticData();
 
         $raffles->each(function($raffle) use ($rafflesData, $meses) {
             $barra = ($raffle->estatus_compra == 0) ? 0 : $rafflesData[$raffle->id];
@@ -66,30 +55,7 @@ class WebsiteController extends Controller
             return [$raffle->id => $this->getBarraOptimizado($raffle)];
         });
 
-        $staticData = Cache::remember('home_static_data', 1440, function() {
-            $options = Option::all()->pluck('valor', 'clave');
-            $whatsapp = $options->get('Whatsapp');
-            $logo = $options->get('logo');
-            $minimumTickets = max((int) ($options->get('cantidad_minima') ?? 1), 1);
-
-            $patrocinadores = collect();
-            if (Schema::hasTable('sponsors')) {
-                $patrocinadores = Sponsor::query()->select('id','nombre','imagen')->get();
-            }
-
-            $rrss = collect();
-            if (Schema::hasTable('rrsses') && Schema::hasColumn('rrsses','estatus')) {
-                $rrss = Rrss::where('estatus',1)->get(['id','tipo','link']);
-            }
-
-            return [
-                'whatsapp' => $whatsapp,
-                'logo' => $logo,
-                'patrocinadores' => $patrocinadores,
-                'rrss' => $rrss,
-                'minimumTickets' => $minimumTickets,
-            ];
-        });
+        $staticData = $this->getHomeStaticData();
 
         $enrichedRaffles = $raffles->map(function ($raffle, $index) use ($rafflesData, $meses) {
             $barra = $raffle->estatus_compra == 0
@@ -197,6 +163,64 @@ class WebsiteController extends Controller
             Log::error("Error para uuid {uuid} -> ".$e->getMessage(),["uuid"=>$uuid]);
         }
         return view('emails.purchase-approved',$data);
+    }
+
+    protected function getHomeStaticData(): array
+    {
+        $cacheKey = 'home_static_data';
+        $expiration = now()->addMinutes(1440);
+
+        $staticData = Cache::get($cacheKey);
+
+        if (! $this->isValidHomeStaticData($staticData)) {
+            $staticData = $this->buildHomeStaticData();
+            Cache::put($cacheKey, $staticData, $expiration);
+        }
+
+        return $staticData;
+    }
+
+    protected function isValidHomeStaticData($payload): bool
+    {
+        if (! is_array($payload)) {
+            return false;
+        }
+
+        $requiredKeys = ['whatsapp', 'logo', 'patrocinadores', 'rrss', 'minimumTickets'];
+
+        foreach ($requiredKeys as $key) {
+            if (! array_key_exists($key, $payload)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function buildHomeStaticData(): array
+    {
+        $options = Option::all()->pluck('valor', 'clave');
+        $whatsapp = $options->get('Whatsapp');
+        $logo = $options->get('logo');
+        $minimumTickets = max((int) ($options->get('cantidad_minima') ?? 1), 1);
+
+        $patrocinadores = collect();
+        if (Schema::hasTable('sponsors')) {
+            $patrocinadores = Sponsor::query()->select('id', 'nombre', 'imagen')->get();
+        }
+
+        $rrss = collect();
+        if (Schema::hasTable('rrsses') && Schema::hasColumn('rrsses', 'estatus')) {
+            $rrss = Rrss::where('estatus', 1)->get(['id', 'tipo', 'link']);
+        }
+
+        return [
+            'whatsapp' => $whatsapp,
+            'logo' => $logo,
+            'patrocinadores' => $patrocinadores,
+            'rrss' => $rrss,
+            'minimumTickets' => $minimumTickets,
+        ];
     }
 
     public function listadoTickets($raffleId)

@@ -1,0 +1,1 @@
+ejecutar php artisan cache:forget home_static_data para limpiar cualquier valor legado antes de recibir tráfico real.

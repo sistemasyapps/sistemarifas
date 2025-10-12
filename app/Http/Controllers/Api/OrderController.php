@@ -554,10 +554,20 @@ class OrderController extends Controller
 
     private function dispatchTicketsNow(Order $order): void
     {
+        $dispatched = false;
+
         try {
             CreateTickets::dispatch($order);
+            $dispatched = true;
         } catch (Exception $e) {
-            Log::error("Error al crear numeros en la orden ".$e->getMessage());
+            Log::error('Error al despachar CreateTickets', [
+                'order_id' => $order->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        if ($dispatched) {
+            return;
         }
 
         try {

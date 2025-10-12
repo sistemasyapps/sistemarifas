@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+const baseUrl = (process.env.PLAYWRIGHT_BASE_URL || process.env.APP_URL || 'http://localhost:8000').replace(/\/+$/, '');
+
 test.describe('Analyze Comprar Modal', () => {
   test('capture homepage and modal screenshots', async ({ page }) => {
     // Navigate to homepage
-    await page.goto('http://192.168.1.121:8000/');
+    await page.goto(`${baseUrl}/`);
 
     // Wait for page to load completely
     await page.waitForLoadState('networkidle');
