@@ -24,6 +24,7 @@ class PreOrderController extends Controller
         $validator = Validator::make($request->all(), [
             'raffle_id' => 'required|integer|exists:raffles,id',
             'cantidad' => 'required|integer|min:1',
+            'cliente_cedula' => 'required|string',
             'cedula' => ($requiresCedulaPagador ? 'required' : 'nullable') . '|string',
             'nombre_completo' => 'required|string',
             'correo' => 'required|string',
@@ -43,7 +44,9 @@ class PreOrderController extends Controller
 
         $monto = round($raffle->precio * $request->cantidad, 2);
 
-        // Normalizar cédula a solo números para guardar en pre_orden
+        // Normalizar cédulas y teléfono a solo números para guardar en pre_orden
+        $clienteCedula = $request->filled('cliente_cedula') ? preg_replace('/[^0-9]/', '', (string) $request->cliente_cedula) : null;
+        $clienteCedula = $clienteCedula === '' ? null : $clienteCedula;
         $cedulaNumerica = $request->filled('cedula') ? preg_replace('/[^0-9]/', '', (string) $request->cedula) : null;
         $cedulaNumerica = $cedulaNumerica === '' ? null : $cedulaNumerica;
         $telefonoNormalizado = $request->filled('telefono') ? preg_replace('/[^0-9]/', '', (string) $request->telefono) : null;
@@ -55,6 +58,8 @@ class PreOrderController extends Controller
             'raffle_id' => (int) $request->raffle_id,
             'cantidad' => (int) $request->cantidad,
             'cedula' => $cedulaNumerica,
+            'cliente_cedula' => $clienteCedula,
+            'emisor_cedula' => $cedulaNumerica,
             'nombre_completo' => trim((string) $request->nombre_completo),
             'correo' => trim((string) $request->correo),
             'telefono' => $telefonoNormalizado,
@@ -96,12 +101,55 @@ class PreOrderController extends Controller
 
         Log::info(
             $created ? 'PreOrder creada' : 'PreOrder reutilizada',
-            ['uuid' => $preOrder->uuid, 'cedula' => $preOrder->cedula, 'monto' => $preOrder->monto]
+            [
+                'uuid' => $preOrder->uuid,
+                'cliente_cedula' => $preOrder->cliente_cedula,
+                'cedula_pagador' => $preOrder->cedula,
+                'monto' => $preOrder->monto
+            ]
         );
 
         return response()->json([
             'success' => true,
             'pre_order' => $preOrder,
         ], $created ? 201 : 200);
+    }
+
+    public function status(string $uuid)
+    {
+        $preOrder = PreOrder::with(['order' => function ($query) {
+            $query->select('id', 'uuid', 'estatus', 'pre_order_id', 'updated_at');
+        }])->where('uuid', $uuid)->first();
+
+        if (! $preOrder) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pre-orden no encontrada.',
+            ], 404);
+        }
+
+        $statusLabels = [
+            '0' => 'pendiente',
+            '1' => 'aprobada',
+            '2' => 'cancelada',
+            '9' => 'devuelta',
+        ];
+
+        $order = $preOrder->order;
+
+        return response()->json([
+            'success' => true,
+            'pre_order' => [
+                'uuid' => $preOrder->uuid,
+                'estatus_preorden' => $preOrder->estatus_preorden,
+                'codigo_red' => $preOrder->codigo_red,
+                'codigo_red_texto' => $preOrder->codigo_red_texto,
+                'notificado' => (bool) $preOrder->notificado,
+                'order_uuid' => $order?->uuid,
+                'order_estatus' => $order?->estatus,
+                'order_estatus_label' => $order ? ($statusLabels[$order->estatus] ?? 'desconocido') : null,
+                'order_updated_at' => optional($order?->updated_at)->toIso8601String(),
+            ],
+        ]);
     }
 }

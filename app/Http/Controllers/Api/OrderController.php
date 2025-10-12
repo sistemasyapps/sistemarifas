@@ -46,12 +46,12 @@ class OrderController extends Controller
         $requiresCedulaPagador = $metodoPago && stripos((string) $metodoPago->descripcion, '{{CEDULA_PAGADOR}}') !== false;
 
         $validator = Validator::make($request->all(), [
-            'raffle_id' => 'required',
+            'raffle_id' => 'required|integer|exists:raffles,id',
             'cedula' => 'required',
             'nombre_completo' => 'required',
             'correo' => 'required',
             'tlf' => 'required',
-            'cantidad' => 'required',
+            'cantidad' => 'required|integer|min:1',
             'ref_banco' => ($requiresCedulaPagador ? 'nullable' : 'required') . '|digits:6',
             'bank_code' => 'nullable|digits:4',
             'ref_imagen' => ($requiresCedulaPagador ? 'sometimes' : 'required') . '|file|mimes:jpeg,png,svg|max:4096',
@@ -109,6 +109,7 @@ class OrderController extends Controller
         Log::info('Empieza a crear datos personalizados para la orden');
 
         $data = $request->except('ref_imagen');
+        $data['cantidad'] = (int) $request->input('cantidad');
         $data["uuid"] = Str::uuid()->toString();
         $data['client_id'] = $cliente->id;
         $data['estatus'] = '0';
@@ -160,11 +161,11 @@ class OrderController extends Controller
         }
 
         if (!$requiresCedulaPagador && $data['ref_banco']) {
-            $repetido = Order::where('client_id','=',$cliente->id)
-                ->where('ref_banco','=',$data['ref_banco'])
-                ->where('raffle_id','=',$data['raffle_id'])
+            $repetido = Order::where('client_id', '=', $cliente->id)
+                ->where('ref_banco', '=', $data['ref_banco'])
+                ->where('raffle_id', '=', $data['raffle_id'])
                 ->exists();
-            if($repetido) {
+            if ($repetido) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Esta compra esta repetida'
@@ -172,13 +173,31 @@ class OrderController extends Controller
             }
         }
 
-        $disponibles = $this->getDisponibles($data['raffle_id']);
-
-        if($disponibles >= 9999) {
+        $raffle = Raffle::find($data['raffle_id']);
+        if (! $raffle) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tickets agotados, por favor escriba a soporte'
+                'message' => 'La rifa seleccionada no existe'
             ], 422);
+        }
+
+        $maxTickets = (int) ($raffle->cantidad_max ?? 0);
+        $vendidos = $this->getDisponibles($raffle->id);
+        if ($maxTickets > 0) {
+            if ($vendidos >= $maxTickets) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tickets agotados, por favor escriba a soporte'
+                ], 422);
+            }
+
+            $disponibles = max(0, $maxTickets - $vendidos);
+            if ($data['cantidad'] > $disponibles) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Solo quedan '.$disponibles.' tickets disponibles'
+                ], 422);
+            }
         }
 
         try{
@@ -408,7 +427,7 @@ class OrderController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'cantidad' => 'required',
+            'cantidad' => 'required|integer|min:1',
             'clave' => 'required',
         ]);
 
@@ -425,10 +444,19 @@ class OrderController extends Controller
         $clave = $request->clave;
 
         if($clave === "Modificar$123$"){
+            $raffle = $order->raffle ?: Raffle::find($order->raffle_id);
+            if (! $raffle) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'La rifa asociada a la orden no existe'
+                ], 422);
+            }
+
+            $maxTickets = (int) ($raffle->cantidad_max ?? 0);
             //verificamos si la nueva cantidad alcanza
             $cantidadAnterior = $order->cantidad;
             Log::info("cantidad anterior: $cantidadAnterior");
-            $cantidadNueva = abs($request->cantidad);
+            $cantidadNueva = abs((int) $request->cantidad);
             Log::info("cantidad nueva: $cantidadNueva");
 
             if($cantidadAnterior == $cantidadNueva){
@@ -452,12 +480,14 @@ class OrderController extends Controller
                 Log::info("entro por la cantidad nueva mayor");
                 //la cantidad nueva es mayor es decir coloco 2 y eran 10, debo verificar si hay disponibilidad
                 $disponibles = $this->getDisponibles($order->raffle_id);
-                $total = $disponibles + $cantidadNueva - $cantidadAnterior;
+                $total = $disponibles - $cantidadAnterior + $cantidadNueva;
                 Log::info("hay $disponibles y en total seran $total");
-                if($total > 9999){
+
+                if ($maxTickets > 0 && $total > $maxTickets) {
+                    $disponiblesRestantes = max(0, $maxTickets - ($disponibles - $cantidadAnterior));
                     return response()->json([
                         'success' => false, 
-                        'message' => 'No hay numeros disponibles, hay: '.$disponibles.' vendidos'
+                        'message' => 'Solo quedan '.$disponiblesRestantes.' tickets disponibles'
                     ]);
                 }else{
                     //guardo la nueva cantidad

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\WebsiteTestController;
+use App\Http\Controllers\Api\OrderController as ApiOrderController;
 use App\Models\Order;
 use App\Jobs\CreateTickets;
 
@@ -29,6 +30,14 @@ Route::get('/compraTest/{raffle?}', [WebsiteTestController::class,'RafflePage'])
 Route::get('/listadoTickets/{raflle}',[WebsiteController::class,'listadoTickets'])->middleware('auth');
 Route::get('/topten',[OrderController::class,'getTopTen'])->middleware('auth');
 Route::get('/verificador/{raffle?}',[WebsiteController::class,'Verificador'])->name("verificador");
+
+Route::middleware(['auth'])->prefix('api')->group(function () {
+    Route::post('/orderAdmin/{order}/approve', [ApiOrderController::class, 'approve'])->name('api.order.approve');
+    Route::post('/orderAdmin/{order}/cancel', [ApiOrderController::class, 'cancel'])->name('api.order.cancel');
+    Route::post('/orderAdmin/{order}/returnOrder', [ApiOrderController::class, 'returnOrder'])->name('api.order.return');
+    Route::post('/orderAdmin/{order}/delete', [ApiOrderController::class, 'delete'])->name('api.order.delete');
+    Route::post('/orderAdmin/{order}/modifyOrder', [ApiOrderController::class, 'modifyOrder'])->name('api.order.modify');
+});
 
 Route::get('/generar/{id?}',function(Request $request, $id){
     $orders = Order::with("raffle")

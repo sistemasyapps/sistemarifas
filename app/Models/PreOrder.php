@@ -20,6 +20,8 @@ class PreOrder extends Model
         'raffle_id',
         'cantidad',
         'cedula',
+        'cliente_cedula',
+        'emisor_cedula',
         'nombre_completo',
         'correo',
         'telefono',
@@ -49,11 +51,12 @@ class PreOrder extends Model
         $fields = [
             $attributes['raffle_id'] ?? '',
             $attributes['cantidad'] ?? '',
-            $attributes['cedula'] ?? '',
+            $attributes['cliente_cedula'] ?? $attributes['cedula'] ?? '',
             strtolower((string) ($attributes['correo'] ?? '')),
             $attributes['telefono'] ?? '',
             $attributes['metodo_pago_id'] ?? '',
             number_format((float) ($attributes['monto'] ?? 0), 2, '.', ''),
+            $attributes['cedula'] ?? '',
         ];
 
         return hash('sha256', implode('|', $fields));

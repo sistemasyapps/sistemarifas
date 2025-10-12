@@ -1219,7 +1219,12 @@
       window.currentOrderUuid = currentOrderUuid;
       let orderStatusInterval = null;
       window.orderStatusInterval = orderStatusInterval;
+      let preOrderStatusInterval = null;
+      window.preOrderStatusInterval = preOrderStatusInterval;
+      let currentPreOrderUuid = null;
+      window.currentPreOrderUuid = currentPreOrderUuid;
       const ORDER_STATUS_ENDPOINT = {!! json_encode(url('/api/order-status')) !!};
+      const PRE_ORDER_STATUS_ENDPOINT = {!! json_encode(url('/api/preOrder/status')) !!};
       const ORDER_TICKET_BASE = {!! json_encode(url('/ticket')) !!};
       const ORDER_VIEW_BASE = {!! json_encode(url('/orden')) !!};
       const orderResultContainer = document.getElementById('order_result_content');
@@ -1664,6 +1669,7 @@
               nombre_completo: pre.nombre_completo,
               correo: pre.correo,
               telefono: pre.telefono,
+              cliente_cedula: pre.cedula,
               metodo_pago_id: window.selectedMetodoPagoId,
               cedula: payerCedulaDigits,
             };
@@ -1756,6 +1762,7 @@
               nombre_completo: pre.nombre_completo,
               correo: pre.correo,
               telefono: pre.telefono,
+              cliente_cedula: pre.cedula,
               metodo_pago_id: window.selectedMetodoPagoId,
               cedula: payerCedulaDigits,
             };
@@ -1844,6 +1851,73 @@
           .join('');
 
         return `<div class="ticket-chip-container">${chips}</div>`;
+      }
+
+      function stopPreOrderStatusPolling() {
+        if (preOrderStatusInterval) {
+          clearInterval(preOrderStatusInterval);
+          preOrderStatusInterval = null;
+          window.preOrderStatusInterval = preOrderStatusInterval;
+        }
+      }
+
+      function startPreOrderStatusPolling(preOrderUuid) {
+        stopPreOrderStatusPolling();
+        if (!preOrderUuid) {
+          return;
+        }
+
+        const poll = () => {
+          checkPreOrderStatus(preOrderUuid);
+        };
+
+        currentPreOrderUuid = preOrderUuid;
+        window.currentPreOrderUuid = currentPreOrderUuid;
+        poll();
+        preOrderStatusInterval = setInterval(poll, ORDER_STATUS_INTERVAL_MS);
+        window.preOrderStatusInterval = preOrderStatusInterval;
+      }
+
+      async function checkPreOrderStatus(preOrderUuid) {
+        if (!preOrderUuid) {
+          return;
+        }
+
+        try {
+          const resp = await fetch(`${PRE_ORDER_STATUS_ENDPOINT}/${encodeURIComponent(preOrderUuid)}?t=${Date.now()}`, {
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store',
+          });
+
+          if (!resp.ok) {
+            return;
+          }
+
+          const payload = await resp.json();
+          const pre = payload?.pre_order;
+          if (!payload?.success || !pre) {
+            return;
+          }
+
+          if (pre.codigo_red && pre.codigo_red !== '00') {
+            stopPreOrderStatusPolling();
+            Swal.fire({
+              icon: 'error',
+              title: 'Pago rechazado',
+              text: pre.codigo_red_texto || 'El banco rechazó la operación. Revisa los datos o intenta nuevamente.',
+            }).then(() => {
+              volver_comprar();
+            });
+            return;
+          }
+
+          if (pre.order_uuid) {
+            stopPreOrderStatusPolling();
+            showVerificationScreen(pre.order_uuid);
+          }
+        } catch (error) {
+          console.warn('No fue posible consultar el estado de la pre-orden', error);
+        }
       }
 
       function stopOrderStatusPolling() {
@@ -1973,6 +2047,9 @@
       }
 
       function showVerificationScreen(uuid) {
+        stopPreOrderStatusPolling();
+        currentPreOrderUuid = null;
+        window.currentPreOrderUuid = currentPreOrderUuid;
         currentOrderUuid = uuid || null;
         window.currentOrderUuid = currentOrderUuid;
         if (orderResultContainer) {
@@ -2010,6 +2087,9 @@
         currentOrderUuid = null;
         window.currentOrderUuid = currentOrderUuid;
         stopOrderStatusPolling();
+        stopPreOrderStatusPolling();
+        currentPreOrderUuid = null;
+        window.currentPreOrderUuid = currentPreOrderUuid;
         if (orderResultContainer) {
           orderResultContainer.innerHTML = defaultOrderResultHtml;
         }
@@ -2391,21 +2471,9 @@
           return;
         }
 
-        const formData = new FormData();
-        formData.append('raffle_id', {{$rifa->id}});
-        formData.append('nombre_completo', (contestant.nombre_completo || '').trim());
-        formData.append('correo', (contestant.correo || '').trim());
-        formData.append('tlf', (contestant.telefono || '').trim());
-        formData.append('cantidad', datos.cant_boletos);
-        formData.append('cedula', (contestant.cedula || '').trim());
-        formData.append('metodo_pago_id', window.selectedMetodoPagoId);
-        formData.append('emisor_cedula', paymentPayerCedula);
-        const telefonoNormalizado = (contestant.telefono || '').replace(/[^0-9]/g, '').slice(0, 11);
-        if (telefonoNormalizado.length === 11) {
-          formData.append('emisor_telefono', telefonoNormalizado);
-        }
-        if (PRE_ORDER_UUID) {
-          formData.append('pre_order_uuid', PRE_ORDER_UUID);
+        if (!PRE_ORDER_UUID) {
+          Swal.fire({ icon: 'error', title: 'Pre-orden faltante', text: 'No se pudo localizar la pre-orden. Intenta nuevamente.' });
+          return;
         }
 
         button.disabled = true;
@@ -2413,47 +2481,17 @@
         button.innerHTML = `
           <span class="d-flex align-items-center justify-content-center">
             <i class="fas fa-spinner fa-spin me-2"></i>
-            Registrando pago...
+            Confirmando pago...
           </span>
         `;
 
-        try {
-          const resp = await fetch('{{config('app.url')}}/api/orderCliente', {
-            method: 'POST',
-            cache: 'no-cache',
-            body: formData
-          });
-          const res = await resp.json();
-          if (res.success === true) {
-            const uuid = res.compra?.uuid || null;
-            Swal.fire({
-              icon: 'success',
-              title: '¡Pago registrado! ',
-              text: 'Estamos validando tu pago automáticamente.',
-              timer: 1800,
-              showConfirmButton: false
-            }).then(() => {
-              showVerificationScreen(uuid);
-            });
-            button.disabled = false;
-            button.innerHTML = originalLabel;
-          } else {
-            let errorMessage = res.message || 'Error en la validación';
-            if (res.errors && typeof res.errors === 'object') {
-              const firstError = Object.values(res.errors)[0];
-              if (Array.isArray(firstError) && firstError.length > 0) {
-                errorMessage = firstError[0];
-              }
-            }
-            Swal.fire({ icon: 'error', title: 'Error', text: errorMessage });
-            button.disabled = false;
-            button.innerHTML = originalLabel;
-          }
-        } catch (error) {
-          Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar el pago. Inténtalo nuevamente.' });
+        showVerificationScreen(null);
+        startPreOrderStatusPolling(PRE_ORDER_UUID);
+
+        setTimeout(() => {
           button.disabled = false;
           button.innerHTML = originalLabel;
-        }
+        }, 600);
       }
 
       function showTickets(uuid) {

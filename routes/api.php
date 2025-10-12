@@ -17,11 +17,6 @@ Route::get('/',function(Request $request) {
 });
 
 Route::post('/orderCliente', [OrderController::class, 'create']);
-Route::post('/orderAdmin/{order}/approve', [OrderController::class, 'approve']);
-Route::post('/orderAdmin/{order}/cancel', [OrderController::class, 'cancel']);
-Route::post('/orderAdmin/{order}/returnOrder', [OrderController::class, 'returnOrder']);
-Route::post('/orderAdmin/{order}/delete', [OrderController::class, 'delete']);
-Route::post('/orderAdmin/{order}/modifyOrder', [OrderController::class, 'modifyOrder']);
 Route::get('/order-status/{uuid}', [OrderController::class, 'status']);
 
 Route::get('/getBarra/{raffle?}', [OrderController::class,'getBarra'])->name("barraRealTime");
@@ -33,6 +28,7 @@ Route::get('/pruebaNotificaction', [FirebasePushController::class, 'testSending'
 
 // Pre-orden: crea registro previo para validación R4consulta
 Route::post('/preOrder', [PreOrderController::class, 'create']);
+Route::get('/preOrder/status/{uuid}', [PreOrderController::class, 'status']);
 
 
 // R4 Webhook endpoints (push flow)
