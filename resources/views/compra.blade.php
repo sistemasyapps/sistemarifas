@@ -1008,7 +1008,7 @@
                                     </button>
                                   </div>
                                   <div class="payment-data-note" id="payment_data_note" style="display: none; font-size: 0.7rem; color: #fbbf24; opacity: 0.9; margin-top: 0.4rem; text-align: center; font-style: italic; line-height: 1.3;">
-                                    Nota: la cédula es la del titular de la cuenta.
+                                    Nota: ver tu cédula es normal; el banco confirma al pagador.
                                   </div>
                                 </div>
                                 <div id="manual_upload_container" style="display: none; margin-top: 1rem;">
