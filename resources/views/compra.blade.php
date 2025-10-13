@@ -763,10 +763,51 @@
           .modern-card .text-center {
             margin-bottom: 1rem !important;
           }
-          
+
           .modern-card .row {
             margin-bottom: 0.75rem !important;
           }
+        }
+      }
+
+      /* Desktop styles - para pantallas grandes */
+      @media (min-width: 992px) {
+        /* Centrar "Datos para el Pago" en escritorio */
+        #payment_data_container {
+          max-width: 600px;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+
+        .payment-data-card {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        /* Centrar verticalmente los iconos de validación */
+        .modern-input-group {
+          position: relative;
+        }
+
+        .modern-input-group .fa-check-circle,
+        .modern-input-group .fa-times-circle {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          margin-top: 0 !important;
+        }
+
+        /* Centrar iconos dentro de los recuadros de método de pago */
+        .payment-method-card .payment-logo {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+
+        .payment-method-card .payment-logo img {
+          display: block;
+          margin: auto;
         }
       }
     </style>
@@ -2072,50 +2113,8 @@
       }
 
       function volver_comprar(){
-        const cantBoletosInput = document.getElementById('cant_boletos');
-        if (cantBoletosInput) {
-          cantBoletosInput.value = cantidad_minima;
-        }
-        document.getElementById('ref').value = '';
-        document.getElementById('archivo_pago').value = '';
-
-        window.contestantData = null;
-        paymentPayerCedula = null;
-        window.paymentPayerCedula = paymentPayerCedula;
-        PRE_ORDER_UUID = null;
-        window.PRE_ORDER_UUID = PRE_ORDER_UUID;
-        currentOrderUuid = null;
-        window.currentOrderUuid = currentOrderUuid;
-        stopOrderStatusPolling();
-        stopPreOrderStatusPolling();
-        currentPreOrderUuid = null;
-        window.currentPreOrderUuid = currentPreOrderUuid;
-        if (orderResultContainer) {
-          orderResultContainer.innerHTML = defaultOrderResultHtml;
-        }
-        setPreOrderRequestState(false);
-
-        jQuery('#pre_cedula').val('');
-        jQuery('#pre_nombre').val('');
-        jQuery('#pre_correo').val('');
-        jQuery('#pre_telefono').val('');
-        jQuery('#pre_emisor_cedula').val('');
-
-        datos.cant_boletos = cantidad_minima;
-        datos.pago.archivo_pago = '';
-        datos.pago.ref = '';
-
-        selectedMetodoPagoId = null;
-        window.selectedMetodoPagoId = selectedMetodoPagoId;
-        paymentFlowMode = null;
-        window.paymentFlowMode = paymentFlowMode;
-        togglePayerCedulaInput(false);
-
-        jQuery('#paso_final').addClass('hidden');
-        jQuery('#paso1').addClass('hidden');
-        jQuery('#paso_verificando').addClass('hidden');
-        jQuery('#paso0').removeClass('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Redirigir al home page
+        window.location.href = '/';
       }
 
       // function minus_cant(){

@@ -93,7 +93,7 @@
                   <a class="raffle-card__ghost" href="{{ route('verificador', ['raffle' => $raffle->id]) }}">
                     Consultar mis tickets
                   </a>
-                  <a class="raffle-card__community" href="#">
+                  <a class="raffle-card__community" href="https://whatsapp.com/channel/0029Vb6VD2E9sBII3vJ5J229" target="_blank" rel="noopener noreferrer">
                     Únete a mi comunidad
                   </a>
                 </div>
