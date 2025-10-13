@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\PreOrder;
 use App\Models\MetodoPago;
+use App\Models\NotificacionBanco;
+use App\Models\NotificacionBancoConsulta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -13,6 +15,8 @@ class R4WebhookController extends Controller
     // POST /R4consulta
     public function consulta(Request $request)
     {
+        $this->storeRawBancoPayload((string) $request->getContent(), true);
+
         // PDF (R4consulta): { IdCliente, Monto, TelefonoComercio }
         $payload = $request->all();
         $idCliente = (string) data_get($payload, 'IdCliente', data_get($payload, 'Cedula'));
@@ -62,6 +66,8 @@ class R4WebhookController extends Controller
     // POST /R4notifica
     public function notifica(Request $request)
     {
+        $this->storeRawBancoPayload((string) $request->getContent(), false);
+
         // Payload (PDF - vía SIMF): IdComercio, TelefonoComercio, TelefonoEmisor, Concepto, BancoEmisor, Monto, FechaHora, Referencia, CodigoRed
         $payload = $request->all();
         $idComercio = (string) data_get($payload, 'IdComercio');
@@ -139,6 +145,27 @@ class R4WebhookController extends Controller
 
         Log::warning('R4notifica sin pre_orden u orden', ['Banco' => $banco, 'Referencia' => $refDigits, 'Monto' => $monto]);
         return response()->json(['abono' => false]);
+    }
+
+    private function storeRawBancoPayload(string $rawBody, bool $isConsulta): void
+    {
+        try {
+            $payload = [
+                'request' => $rawBody,
+                'reintentos' => 0,
+            ];
+
+            if ($isConsulta) {
+                NotificacionBancoConsulta::create($payload);
+            } else {
+                NotificacionBanco::create($payload);
+            }
+        } catch (\Throwable $exception) {
+            Log::error('Error guardando notificación del banco', [
+                'tipo' => $isConsulta ? 'consulta' : 'notifica',
+                'error' => $exception->getMessage(),
+            ]);
+        }
     }
 
     private function preOrderRequiresCedula(PreOrder $pre): bool
