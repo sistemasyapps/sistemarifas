@@ -8,7 +8,7 @@
 body {
     font-family: Arial, sans-serif;
     /* background: url('/assets/images/bg/fondo.webp'); */
-    background-color: #800020;
+    background-color: #5d2138;
     background-size: cover;
     color: #f9f7fb;
 }
@@ -4042,8 +4042,9 @@ body {
     min-height: 100vh;
     margin: 0;
     background-attachment: fixed;
-    background-color: var(--color-surface-primary);
-    background-size: 100vw 100vh
+    background-color: #800020;
+    background-size: 100vw 100vh;
+    color: #f9f7fb;
 }
 
 .active-item {
@@ -5425,4 +5426,21 @@ body.quick-buy-open {
         font-size: 0.95rem;
         min-height: 46px;
     }
+}
+
+/* Home overrides */
+body.text-black {
+    background: #5d2138 !important;
+    color: #f9f7fb;
+}
+
+body.text-black .home-hero__copy,
+body.text-black .home-hero__title,
+body.text-black .home-hero__subtitle,
+body.text-black .raffle-section__title {
+    color: #f9f7fb;
+}
+
+body.text-black .raffle-section__subtitle {
+    color: rgba(249, 247, 251, 0.82);
 }
