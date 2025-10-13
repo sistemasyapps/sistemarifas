@@ -7,7 +7,7 @@
     <title>{{config('app.name')}} - Gran Sorteo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="{{asset('assets/css/nuevo.css')}}?ver=0.1.0" rel="stylesheet" defer>
+    <link href="{{asset('assets/css/nuevo.css')}}?ver=0.1.1" rel="stylesheet" defer>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://static.cloudflareinsights.com 'unsafe-inline'">
     <meta name="gcm_sender_id" content="103953800507">
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
