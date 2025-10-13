@@ -41,12 +41,20 @@ class ProcessAutoPreOrders extends Command
             ->whereDoesntHave('order')
             ->whereNotNull('codigo_red')
             ->where('codigo_red', '00')
+            ->where('created_at', '>=', now()->subDay())
+            ->whereExists(function ($query) {
+                $query->selectRaw(1)
+                    ->from('raffles')
+                    ->whereColumn('raffles.id', 'pre_orders.raffle_id')
+                    ->where('raffles.estatus_compra', 1)
+                    ->where('raffles.estatus', 1);
+            })
             ->where(function ($query) {
                 $query->where('estatus_preorden', 'aprobada')
                     ->orWhere('estatus_preorden', 'pendiente_por_orden')
                     ->orWhereNull('estatus_preorden');
             })
-            ->orderBy('id')
+            ->orderByDesc('id')
             ->limit($limit)
             ->get();
 
@@ -180,12 +188,21 @@ class ProcessAutoPreOrders extends Command
             $payload['emisor_telefono'] = preg_replace('/[^0-9]/', '', (string) $preOrder->telefono_emisor);
         }
         if (! empty($preOrder->ref_banco)) {
-            $payload['ref_banco'] = preg_replace('/[^0-9]/', '', (string) $preOrder->ref_banco);
+            $cleanRef = preg_replace('/[^0-9]/', '', (string) $preOrder->ref_banco);
+            if ($cleanRef !== '') {
+                $payload['ref_banco'] = substr($cleanRef, -6);
+            }
         }
         if (! empty($preOrder->bank_code)) {
-            $payload['bank_code'] = substr(preg_replace('/[^0-9]/', '', (string) $preOrder->bank_code), 0, 4);
+            $cleanCode = preg_replace('/[^0-9]/', '', (string) $preOrder->bank_code);
+            if ($cleanCode !== '') {
+                $payload['bank_code'] = substr($cleanCode, -3);
+            }
         } elseif (! empty($preOrder->banco_emisor)) {
-            $payload['bank_code'] = substr(preg_replace('/[^0-9]/', '', (string) $preOrder->banco_emisor), 0, 4);
+            $cleanCode = preg_replace('/[^0-9]/', '', (string) $preOrder->banco_emisor);
+            if ($cleanCode !== '') {
+                $payload['bank_code'] = substr($cleanCode, -3);
+            }
         }
 
         return $payload;

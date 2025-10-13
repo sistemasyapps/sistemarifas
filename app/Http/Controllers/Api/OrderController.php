@@ -45,6 +45,11 @@ class OrderController extends Controller
         $metodoPago = MetodoPago::find($metodoPagoId);
         $requiresCedulaPagador = $metodoPago && stripos((string) $metodoPago->descripcion, '{{CEDULA_PAGADOR}}') !== false;
 
+        $refImagenRule = $requiresCedulaPagador ? 'sometimes' : 'required';
+        if ($request->filled('pre_order_uuid')) {
+            $refImagenRule = 'nullable';
+        }
+
         $validator = Validator::make($request->all(), [
             'raffle_id' => 'required|integer|exists:raffles,id',
             'cedula' => 'required',
@@ -52,15 +57,15 @@ class OrderController extends Controller
             'correo' => 'required',
             'tlf' => 'required',
             'cantidad' => 'required|integer|min:1',
-            'ref_banco' => ($requiresCedulaPagador ? 'nullable' : 'required') . '|digits:6',
-            'bank_code' => 'nullable|digits:4',
-            'ref_imagen' => ($requiresCedulaPagador ? 'sometimes' : 'required') . '|file|mimes:jpeg,png,svg|max:4096',
+            'ref_banco' => ($requiresCedulaPagador ? 'nullable' : 'required') . "|regex:/^\\d{6,}$/",
+            'bank_code' => 'nullable|regex:/^\d+$/',
+            'ref_imagen' => $refImagenRule . '|file|mimes:jpeg,png,svg|max:4096',
             'metodo_pago_id' => 'required|integer|exists:metodo_pagos,id',
             'emisor_cedula' => ($requiresCedulaPagador ? 'required' : 'nullable') . '|digits_between:6,12',
             'emisor_telefono' => 'nullable|digits:11',
         ], [
-            'ref_banco.digits' => 'La referencia bancaria debe tener exactamente 6 dígitos',
-            'bank_code.digits' => 'El código del banco debe tener exactamente 4 dígitos',
+            'ref_banco.regex' => 'La referencia bancaria debe ser numérica; se validan los últimos 6 dígitos',
+            'bank_code.regex' => 'El código del banco debe ser numérico; se validarán sus últimos 3 dígitos',
             'ref_imagen.required' => 'Debes adjuntar el comprobante de pago',
             'ref_imagen.file' => 'El comprobante de pago debe ser una imagen válida',
             'ref_imagen.mimes' => 'Formato inválido. Usa JPG o PNG',
@@ -121,12 +126,18 @@ class OrderController extends Controller
         }
         if ($request->filled('ref_banco')) {
             $cleanRef = preg_replace('/[^0-9]/', '', (string) $request->input('ref_banco'));
-            $data['ref_banco'] = substr($cleanRef, -6) ?: null;
+            $data['ref_banco'] = $cleanRef === '' ? null : substr($cleanRef, -6);
         } else {
             $data['ref_banco'] = null;
         }
-        $bankCode = $request->filled('bank_code') ? substr(preg_replace('/[^0-9]/', '', (string) $request->bank_code), 0, 4) : null;
-        $data['bank_code'] = $bankCode ?: null;
+        $bankDigits = $request->filled('bank_code')
+            ? preg_replace('/[^0-9]/', '', (string) $request->bank_code)
+            : '';
+        $data['bank_code'] = $bankDigits === '' ? null : substr($bankDigits, -3);
+        $request->merge([
+            'ref_banco' => $data['ref_banco'],
+            'bank_code' => $data['bank_code'],
+        ]);
         if (empty($data['ref_fecha'])) {
             $data['ref_fecha'] = now()->toDateString();
         }
@@ -206,9 +217,24 @@ class OrderController extends Controller
             $data['IP'] = "::1";
         }
 
+        $ipInfo = $request->attributes->get('ipquery', $request->ipquery ?? []);
+        $countryName = data_get($ipInfo, 'location.country');
+        $stateName = data_get($ipInfo, 'location.state');
+        $cityName = data_get($ipInfo, 'location.city');
+
+        if (! is_string($countryName) || $countryName === '') {
+            $countryName = 'Venezuela';
+        }
+        if (! is_string($stateName) || $stateName === '') {
+            $stateName = 'Automática';
+        }
+        if (! is_string($cityName) || $cityName === '') {
+            $cityName = 'Automática';
+        }
+
         try{
             Log::info('Obteniendo datos de la IP -> Pais');
-            $country_id = $this->getOrCreateCountry($request->ipquery['location']['country']);
+            $country_id = $this->getOrCreateCountry($countryName);
             // $country_id = 1;
         } catch(Exception $e) {
             $country_id = 1;
@@ -217,7 +243,7 @@ class OrderController extends Controller
 
         try{
             Log::info('Obteniendo datos de la IP -> Region');
-            $region_id = $this->getOrCreateRegion($request->ipquery['location']['state'],$country_id);
+            $region_id = $this->getOrCreateRegion($stateName,$country_id);
             // $region_id = 1;
         }catch(Exception $e) {
             $region_id = 1;
@@ -226,7 +252,7 @@ class OrderController extends Controller
 
         try{
             Log::info('Obteniendo datos de la IP -> City');
-            $city_id = $this->getOrCreateCity($request->ipquery['location']['city'],$region_id);
+            $city_id = $this->getOrCreateCity($cityName,$region_id);
             // $city_id = 1;
         }catch(Exception $e) {
             $city_id = 1;

@@ -63,10 +63,19 @@ class ApproveOrderJob implements ShouldQueue
         if (!$pre) return;
 
         // Helper normalizers
-        $ordRef = (string) $order->ref_banco;
-        $preRef = (string) ($pre->ref_banco ?? '');
-        $ordBank3 = substr((string) $order->bank_code, -3);
-        $preBank3 = substr((string) ($pre->banco_emisor ?? $pre->bank_code_last3 ?? ''), -3);
+        $normalizeRef = static function ($value): string {
+            $digits = preg_replace('/[^0-9]/', '', (string) $value);
+            return $digits === '' ? '' : substr($digits, -6);
+        };
+        $normalizeBank = static function ($value): string {
+            $digits = preg_replace('/[^0-9]/', '', (string) $value);
+            return $digits === '' ? '' : substr($digits, -3);
+        };
+
+        $ordRef = $normalizeRef($order->ref_banco);
+        $preRef = $normalizeRef($pre->ref_banco ?? '');
+        $ordBank3 = $normalizeBank($order->bank_code);
+        $preBank3 = $normalizeBank($pre->banco_emisor ?? $pre->bank_code_last3 ?? '');
         $ordPhone = preg_replace('/[^0-9]/', '', (string) ($order->client->telefono ?? ''));
         $prePhone = preg_replace('/[^0-9]/', '', (string) ($pre->telefono ?? ''));
 
@@ -81,11 +90,11 @@ class ApproveOrderJob implements ShouldQueue
             // PRIMERO: Copiar datos de pago de pre-orden a orden si llegaron antes que la orden
             $orderUpdated = false;
             if (empty($order->ref_banco) && !empty($pre->ref_banco)) {
-                $order->ref_banco = $pre->ref_banco;
+                $order->ref_banco = $normalizeRef($pre->ref_banco);
                 $orderUpdated = true;
             }
             if (empty($order->bank_code) && !empty($pre->bank_code)) {
-                $order->bank_code = $pre->bank_code;
+                $order->bank_code = $normalizeBank($pre->bank_code);
                 $orderUpdated = true;
             }
             if (empty($order->emisor_cedula) && !empty($pre->cedula)) {
@@ -100,8 +109,8 @@ class ApproveOrderJob implements ShouldQueue
             if ($orderUpdated) {
                 $order->save();
                 // Refrescar variables de validación con los nuevos valores
-                $ordRef = (string) $order->ref_banco;
-                $ordBank3 = substr((string) $order->bank_code, -3);
+                $ordRef = $normalizeRef($order->ref_banco);
+                $ordBank3 = $normalizeBank($order->bank_code);
                 $ordPhone = preg_replace('/[^0-9]/', '', (string) ($order->client->telefono ?? ''));
             }
 
