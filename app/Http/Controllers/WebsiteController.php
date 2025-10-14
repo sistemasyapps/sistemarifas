@@ -294,6 +294,7 @@ class WebsiteController extends Controller
                         ->pluck('numero_generado')
                         ->map(fn ($value) => trim((string) $value))
                         ->filter()
+                        ->map(fn ($value) => str_pad($value, 4, '0', STR_PAD_LEFT))
                         ->unique()
                         ->sort()
                         ->values()
