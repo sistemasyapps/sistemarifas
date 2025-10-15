@@ -12,29 +12,33 @@ class ToptenStats extends Widget
 
     protected function getViewData(): array
     {
-        $currentRaffle = RaffleHelper::getActiveRaffles()[0] ?? null;
+        $activeRaffles = RaffleHelper::getActiveRaffles();
 
-        if (! $currentRaffle) {
-            return ['data' => []];
+        if (! $activeRaffles || $activeRaffles->isEmpty()) {
+            return ['raffles' => collect()];
         }
 
-        $top = DB::select("SELECT
-            client_id, sum(cantidad) as tickets, UPPER(clients.nombre_completo) as nombre
-        FROM
-            orders
-        INNER JOIN clients on clients.id = orders.client_id
-        WHERE
-            estatus = 1 and raffle_id = ".$currentRaffle->id."
-        GROUP BY
-            client_id
-        ORDER BY
-            tickets DESC
-        limit 10");
-        
-        usort($top, fn ($a, $b) => $a->tickets < $b->tickets);
-        
         return [
-            'data' => $top,
+            'raffles' => $activeRaffles->map(function ($raffle) {
+                $top = DB::select(
+                    "SELECT
+                        client_id,
+                        SUM(orders.cantidad) AS tickets,
+                        UPPER(clients.nombre_completo) AS nombre
+                    FROM orders
+                    INNER JOIN clients ON clients.id = orders.client_id
+                    WHERE orders.estatus = 1 AND orders.raffle_id = ?
+                    GROUP BY client_id, clients.nombre_completo
+                    ORDER BY tickets DESC
+                    LIMIT 10",
+                    [$raffle->id]
+                );
+
+                return [
+                    'raffle' => $raffle,
+                    'data' => $top,
+                ];
+            }),
         ];
     }
 }
