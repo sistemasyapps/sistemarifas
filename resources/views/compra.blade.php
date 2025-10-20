@@ -1581,6 +1581,11 @@
           }
         }
 
+        const defaultPaymentCard = document.querySelector('.payment-method-card');
+        if (defaultPaymentCard) {
+          selectPaymentMethod(defaultPaymentCard);
+        }
+
         // Verificar el estado inicial del botón
         checkFieldsComplete();
       });
