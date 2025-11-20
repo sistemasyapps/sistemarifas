@@ -384,6 +384,12 @@ class OrderController extends Controller
         $order->save();
         
         $emailEnabled = (bool) config('notifications.email.enabled');
+        Log::info('Verificando notificación por correo', [
+            'order_id' => $order->id,
+            'email_enabled' => $emailEnabled,
+            'client_email' => $order->client->correo,
+            'client_name' => $order->client->nombre_completo,
+        ]);
         if($emailEnabled && strtolower($order->client->correo) != "soporte@gmail.com" ) {
             try{
                 $numbers = $order->numbers;

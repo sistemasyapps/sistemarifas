@@ -7,7 +7,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'email' => [
-        'enabled' => env('NOTIFICATIONS_EMAIL_ENABLED', false),
+        'enabled' => env('NOTIFICATIONS_EMAIL_ENABLED', true),
     ],
 
     /*
@@ -16,7 +16,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'whatsapp' => [
-        'enabled' => env('NOTIFICATIONS_WHATSAPP_ENABLED', true),
+        'enabled' => env('NOTIFICATIONS_WHATSAPP_ENABLED', false),
     ],
 
     /*
