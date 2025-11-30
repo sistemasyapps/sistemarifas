@@ -57,23 +57,23 @@
                 @endif
               </div>
               <div class="raffle-card__body">
-                <div class="raffle-card__meta">
+                <!-- <div class="raffle-card__meta">
                   <span class="raffle-card__badge">{{ $raffle->sorteo_label }}</span>
                   <span class="raffle-card__price">Bs {{ number_format($raffle->precio, 2, ',', '.') }}</span>
                 </div>
-                <h3 class="raffle-card__title">{{ $raffle->nombre }}</h3>
-                @if($raffle->descripcion)
-                  <p class="raffle-card__description">
-                    {{ Str::limit(strip_tags($raffle->descripcion), 120) }}
+                <h3 class="raffle-card__title">{{ $raffle->nombre }}</h3> -->
+                
+                  <p style="color: var(--secondary); font-weight: bold; font-size: 18px">
+                    {{$raffle->descripcion}}
                   </p>
-                @endif
-                <div class="raffle-card__progress" role="progressbar" aria-valuenow="{{ $soldPercent }}" aria-valuemin="0" aria-valuemax="100">
+                
+                <!-- <div class="raffle-card__progress" role="progressbar" aria-valuenow="{{ $soldPercent }}" aria-valuemin="0" aria-valuemax="100">
                   <div class="raffle-card__progress-bar" style="width: {{ $soldPercent }}%"></div>
                 </div>
                 <div class="raffle-card__progress-hint">
                   <span>{{ $soldPercent }}% vendido</span>
                   <span>{{ $ticketsLeft }} tickets disponibles</span>
-                </div>
+                </div> -->
                 <div class="raffle-card__actions">
                   @if($raffle->is_buyable)
                     <a class="raffle-card__cta js-quick-buy"

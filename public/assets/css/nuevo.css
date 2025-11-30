@@ -1,4 +1,4 @@
-@import './root.css?ver=5';
+@import './root.css';
 * {
     margin: 0;
     padding: 0;
@@ -120,7 +120,7 @@ header .sponsors{
     align-items: center;
 }
 header .sponsors img {
-    width: 40px;
+    width: 60px;
 }
 .navbar-toggler-icon{
     filter: brightness(0) invert(1);
@@ -5430,7 +5430,7 @@ body.quick-buy-open {
 
 /* Home overrides */
 body.text-black {
-    background: #5d2138 !important;
+    background: black !important;
     color: #f9f7fb;
 }
 

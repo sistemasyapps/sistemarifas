@@ -972,9 +972,9 @@
                                 <div class="col-md-12">
                                   <div class="modern-input-group">
                                     <label for="pre_emisor_cedula" class="modern-label">
-                                      <i class="fas fa-id-badge me-2"></i>Cédula del titular de la cuenta
+                                      <i class="fas fa-id-badge me-2"></i>Cédula de quien realiza el pago movil
                                     </label>
-                                    <input type="text" id="pre_emisor_cedula" class="form-control modern-form-control" maxlength="12" inputmode="numeric" placeholder="Ingresa la cédula del titular de la cuenta">
+                                    <input type="text" id="pre_emisor_cedula" class="form-control modern-form-control" maxlength="12" inputmode="numeric" placeholder="Ingresa la Cédula de quien realiza el pago movil">
                                   </div>
                                 </div>
                               </div>

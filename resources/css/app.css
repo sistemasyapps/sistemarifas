@@ -239,7 +239,7 @@ body {
 }
 
 .raffle-card__badge {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 600;
   padding: 0.35rem 0.85rem;
   border-radius: 999px;
@@ -314,7 +314,7 @@ body {
 
 .raffle-card__cta {
   background: var(--home-accent);
-  color: var(--home-accent-contrast);
+  color: black;
   box-shadow: 0 15px 35px rgba(93, 33, 56, 0.22);
 }
 
@@ -333,8 +333,10 @@ body {
 
 .raffle-card__ghost {
   border: 1px solid rgba(17, 24, 39, 0.12);
-  color: var(--home-text-strong);
-  background: transparent;
+  /* color: var(--home-text-strong);
+  background: transparent; */
+  background: #dd0000;
+  color: white;
 }
 
 .raffle-card__ghost:hover {
@@ -342,8 +344,8 @@ body {
 }
 
 .raffle-card__community {
-  background: rgba(8, 70, 134, 0.08);
-  color: #084686;
+  background: #46C756;
+  color: white;
 }
 
 .raffle-card__community:hover {
@@ -432,7 +434,7 @@ body {
 
 @media (max-width: 991.98px) {
   .site-header__brand img {
-    height: 48px;
+    height: 75px;
   }
 }
 
@@ -549,7 +551,7 @@ footer p {
   padding: 0.65rem 1rem;
   border: none;
   border-radius: 8px;
-  font-size: 0.8rem;
+  /* font-size: 0.8rem; */
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -578,7 +580,7 @@ footer p {
 }
 
 .btn-nav-next {
-  background: #16a34a;
+  background: var(--secondary);
   color: white;
 }
 
@@ -621,7 +623,7 @@ footer p {
 /* Raffle cards mobile optimization - Swiper */
 .raffle-swiper {
   width: 100%;
-  padding: 2rem 0 !important;
+  padding: 0.5rem 0 !important;
   overflow: visible !important;
 }
 
@@ -639,7 +641,7 @@ footer p {
 
 .raffle-card {
   width: 100% !important;
-  max-width: 460px;
+  max-width: 300px;
   box-shadow: 0 8px 28px -10px rgba(15, 23, 42, 0.2) !important;
   display: flex;
   flex-direction: column;
@@ -702,7 +704,7 @@ footer p {
 
 .raffle-card__badge {
   font-size: 0.7rem !important;
-  padding: 0.25rem 0.6rem !important;
+  padding: 0.5rem 0.6rem !important;
   max-width: 65% !important;
   white-space: nowrap;
   overflow: hidden;
@@ -723,7 +725,7 @@ footer p {
 .raffle-card__ghost,
 .raffle-card__community {
   padding: 0.6rem 0.9rem !important;
-  font-size: 0.8rem !important;
+  font-size: 1.2rem !important;
   font-weight: 600 !important;
   border-radius: 7px !important;
 }

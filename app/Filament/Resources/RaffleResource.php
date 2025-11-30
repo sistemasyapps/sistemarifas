@@ -51,16 +51,14 @@ class RaffleResource extends Resource
                 Forms\Components\TextInput::make('precio')
                     ->required()
                     ->numeric(),
-                Forms\Components\Textarea::make('mensaje_proximo_sorteo')
-                    ->label('Mensaje próximo sorteo')
-                    ->helperText('Si se define, reemplaza la fecha inicial mostrada al comprar tickets.')
+                Forms\Components\Textarea::make('descripcion')
                     ->rows(2)
                     ->reactive(),
                 Forms\Components\DatePicker::make('fecha_inicial')
                     ->native(false)
                     ->displayFormat("d/m/Y")
                     ->nullable()
-                    ->required(fn (callable $get) => blank($get('mensaje_proximo_sorteo')))
+                    ->required()
                     ->minDate(Carbon::today()->subDay())
                     ->rule(fn (callable $get) => function (string $attribute, $value, Closure $fail) use ($get) {
                         if (blank($value)) {
@@ -71,21 +69,12 @@ class RaffleResource extends Resource
                         if (blank($final)) {
                             return;
                         }
-
-                        if (strtotime($value) > strtotime($final)) {
-                            $fail('La fecha inicial debe ser menor o igual a la fecha final.');
-                        }
-                    })
-                    ->validationMessages([
-                        'after_or_equal' => 'La fecha inicial debe ser igual o posterior a la fecha mínima permitida.',
-                        'before_or_equal' => 'La fecha inicial debe ser menor o igual a la fecha final.',
-                    ])
-                    ->helperText('Obligatoria cuando no se define un mensaje.'),
+                    }),
                 Forms\Components\DatePicker::make('fecha_final')
                     ->native(false)
                     ->displayFormat("d/m/Y")
                     ->nullable()
-                    ->required(fn (callable $get) => blank($get('mensaje_proximo_sorteo')))
+                    ->required()
                     ->minDate(fn (callable $get) => $get('fecha_inicial')
                         ? Carbon::parse($get('fecha_inicial'))
                         : Carbon::today()->subDay())
