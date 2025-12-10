@@ -17,6 +17,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('preorders:purge')
             ->dailyAt('02:30')
             ->withoutOverlapping();
+
+        // Procesa automáticamente las pre-órdenes aprobadas (R4)
+        // para generar las órdenes correspondientes.
+        $schedule->command('preorders:process-auto --limit=75')
+            ->everyMinute()
+            ->withoutOverlapping();
     }
 
     /**
