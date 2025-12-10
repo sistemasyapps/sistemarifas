@@ -63,7 +63,7 @@
                 </div>
                 <h3 class="raffle-card__title">{{ $raffle->nombre }}</h3> -->
                 
-                  <p style="color: var(--secondary); font-weight: bold; font-size: 18px">
+                  <p style="color: var(--secondary); font-weight: bold; font-size: 12px; margin-bottom: 0px">
                     {{$raffle->descripcion}}
                   </p>
                 
@@ -76,7 +76,7 @@
                 </div> -->
                 <div class="raffle-card__actions">
                   @if($raffle->is_buyable)
-                    <a class="raffle-card__cta js-quick-buy"
+                    <a class="raffle-card__ghost js-quick-buy w-90"
                        href="{{ route('compra', ['raffle' => $raffle->id]) }}"
                        data-purchase-url="{{ route('compra', ['raffle' => $raffle->id]) }}"
                        data-raffle-name="{{ $raffle->nombre }}"
@@ -90,12 +90,35 @@
                       Agotado
                     </span>
                   @endif
-                  <a class="raffle-card__ghost" href="{{ route('verificador', ['raffle' => $raffle->id]) }}">
+                  <a class="raffle-card__cta w-75" href="{{ route('verificador', ['raffle' => $raffle->id]) }}">
                     Consultar mis tickets
                   </a>
-                  <a class="raffle-card__community" href="https://whatsapp.com/channel/0029Vb6VD2E9sBII3vJ5J229" target="_blank" rel="noopener noreferrer">
+                  <a class="raffle-card__community  w-75" href="https://whatsapp.com/channel/0029Vb74RK3ATRSjA4y4mz3J" target="_blank" rel="noopener noreferrer">
                     Únete a mi comunidad
                   </a>
+                  <div class="raffle-card__info-boxes">
+                    <div class="raffle-card__info-box raffle-card__info-box--date">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <div class="raffle-card__info-content">
+                        <span class="raffle-card__info-label">Fecha del sorteo</span>
+                        <span class="raffle-card__info-value">{{ $raffle->dia }} {{ $raffle->mes }}</span>
+                      </div>
+                    </div>
+                    <div class="raffle-card__info-box raffle-card__info-box--progress">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                      </svg>
+                      <div class="raffle-card__info-content">
+                        <span class="raffle-card__info-label">Disponible</span>
+                        <span class="raffle-card__info-value">{{ $raffle->barra }}%</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               </article>
@@ -149,4 +172,8 @@
       </div>
     </main>
   </div>
+  <div class="telegram-support"><a href="http://T.me/Lottopana" target="_blank" class="fab-button">
+		<img src="/assets/images/icon/telegram.png" alt="Telegram"></a>
+		<div class="fab-label">SOPORTE</div>
+	</div>
 @endsection

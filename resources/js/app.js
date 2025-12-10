@@ -109,22 +109,22 @@ document.addEventListener('DOMContentLoaded', () => {
             nextEl: '#nextRaffle',
             prevEl: '#prevRaffle',
         },
-        breakpoints: {
-            320: {
-                slidesPerView: 1,
-                coverflowEffect: {
-                    depth: 100,
-                    modifier: 1.5,
-                },
-            },
-            768: {
-                slidesPerView: 'auto',
-                coverflowEffect: {
-                    depth: 150,
-                    modifier: 2,
-                },
-            },
-        },
+        // breakpoints: {
+        //     320: {
+        //         slidesPerView: 1.5,
+        //         coverflowEffect: {
+        //             depth: 100,
+        //             modifier: 1.5,
+        //         },
+        //     },
+        //     768: {
+        //         slidesPerView: 'auto',
+        //         coverflowEffect: {
+        //             depth: 150,
+        //             modifier: 2,
+        //         },
+        //     },
+        // },
     });
 });
 

@@ -272,6 +272,8 @@ footer a{
 .clash-card {
 	background: white;
 	width: 300px;
+	min-width: 300px;
+	max-width: 300px;
 	display: inline-block;
 	margin: auto;
 	border-radius: 19px;
@@ -283,10 +285,12 @@ footer a{
 
 .clash-card__image {
 	position: relative;
-	height: 540px;
+	width: 300px;
+	height: 300px;
 	margin-bottom: 30px;
 	border-top-left-radius: 14px;
 	border-top-right-radius: 14px;
+	overflow: hidden;
 }
 
 .clash-card__image--barbarian {
@@ -295,6 +299,8 @@ footer a{
 }
 .clash-card__image--barbarian img {
 	width: 300px;
+	height: 300px;
+	object-fit: cover;
 	/* position: absolute;
 	top: 0px;
 	left: 0px; */

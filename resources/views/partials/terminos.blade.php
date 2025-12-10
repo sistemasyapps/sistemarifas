@@ -5,7 +5,7 @@
                 <h5 class="modal-title" style="color: white" id="termsModalLabel">Términos y Condiciones</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="font-size: 13px">
+            <div class="modal-body text-white" style="font-size: 13px">
                 <p>1.- Los números disponibles para la compra en cada uno de nuestros sorteos se especificarán en la página de detalles correspondiente a cada sorteo.</p>
                 <p>2.- Solo podrán participar en nuestros sorteos personas naturales mayores de 18 años con nacionalidad venezolana o extranjeros que residan legalmente en Venezuela.</p>
                 <p>3.- Los premios deberán ser retirados en persona en la ubicación designada para cada sorteo. Solo se realizarán entregas personales en la dirección indicada por el ganador del primer premio o premio mayor.</p>

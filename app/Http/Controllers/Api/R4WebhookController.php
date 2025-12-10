@@ -24,10 +24,12 @@ class R4WebhookController extends Controller
         $monto = data_get($payload, 'Monto');
 
         if ($idCliente === '' || $telefonoComercio === '' || $monto === null) {
+            // echo 'problema 1';
             return response()->json(['status' => false, 'message' => 'Campos requeridos faltantes']);
         }
 
         if (!is_numeric($monto)) {
+            // echo 'problema 3';
             return response()->json(['status' => false, 'message' => 'Monto inválido']);
         }
 
@@ -36,12 +38,14 @@ class R4WebhookController extends Controller
 
         // Validación básica: teléfono de comercio debe tener 11 dígitos
         if (strlen($tel) !== 11) {
+            // echo 'problema 2';
             return response()->json(['status' => false, 'message' => 'TelefonoComercio inválido']);
         }
 
         // Si se configuró el teléfono del comercio en .env, exigir coincidencia
         $expectedTel = preg_replace('/[^0-9]/', '', (string) env('R4_TELEFONO_COMERCIO', ''));
         if ($expectedTel !== '' && $expectedTel !== $tel) {
+            // echo 'problema 4';
             return response()->json(['status' => false, 'message' => 'TelefonoComercio inválido']);
         }
 
